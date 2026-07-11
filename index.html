@@ -300,6 +300,34 @@ input:focus, select:focus, textarea:focus {
     font-weight: bold;
     letter-spacing: 1px;
 }
+
+/* نمط حقل التحقق الداخلي للجدول */
+.inline-lock-box {
+    background: #1c1515;
+    border: 1px dashed var(--danger);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+.inline-lock-box h5 { color: var(--danger); margin-bottom: 10px; font-size: 14px; }
+.inline-lock-box .flex-inputs { display: flex; gap: 10px; margin-bottom: 0; }
+.inline-lock-box .flex-inputs input { margin-bottom: 0; }
+.inline-lock-box .flex-inputs button { width: auto; white-space: nowrap; padding: 0 20px; }
+
+.delete-table-btn {
+    background: rgba(229, 62, 62, 0.2);
+    border: 1px solid var(--danger);
+    color: var(--danger);
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: 0.2s;
+}
+.delete-table-btn:hover {
+    background: var(--danger);
+    color: white;
+}
 </style>
 </head>
 <body>
@@ -381,47 +409,56 @@ input:focus, select:focus, textarea:focus {
             </div>
         </div>
 
-        <!-- ================= 4. صفحة الجدول المحدثة ================= -->
+        <!-- ================= 4. صفحة الجدول المحدثة بطلب الرمز داخلياً ================= -->
         <div id="schedulePanel" class="page">
             <div class="card-panel">
                 <div class="panel-title">
                     <span>📅 كشف وجدول أعضاء الفرقة</span>
-                    <button class="add-member-btn" onclick="triggerAddMember()">+</button>
+                    <button class="add-member-btn" onclick="showInlineLock()">+</button>
                 </div>
                 
+                <!-- صندوق التحقق من الرمز من داخل التطبيق -->
+                <div id="inlineLockBox" class="inline-lock-box" style="display: none;">
+                    <h5>🔒 يتطلب صلاحيات الإدارة - أدخل الرمز السري للتعديل</h5>
+                    <div class="flex-inputs">
+                        <input id="inlineCodeInput" type="password" placeholder="أدخل الرمز السري هنا">
+                        <button class="action-btn" onclick="verifyInlineCode()">تحقق ودخول</button>
+                    </div>
+                </div>
+
                 <!-- حقول إدخال عضو جديد (تظهر فقط بعد إدخال الرمز بنجاح) -->
                 <div id="addMemberForm" style="display:none; background:#121822; padding:15px; border-radius:8px; margin-bottom:15px; border:1px solid var(--gold);">
                     <h4 style="color:var(--gold); margin-bottom:10px;">➕ إضافة عضو جديد للجدول</h4>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom: 10px;">
                         <input id="newMemNo" placeholder="الرقم (مثال: 14)">
                         <input id="newMemName" placeholder="الاسم الكامل">
                         <input id="newMemRank" placeholder="الرتبة والتصنيف (R-0)">
-                        <input id="newMemUnit" placeholder="الوحدة / الكتيبة">
+                        <input id="newMemUnit" placeholder="الوحدة / 0 الكتيبة">
                     </div>
                     <button class="action-btn" onclick="saveNewMemberToFirebase()">تأكيد الحفظ بالسيرفر</button>
                 </div>
 
                 <table class="swat-table">
                     <thead>
-                        <tr><th>الرقم</th><th>الاسم</th><th>الرتبة</th><th>الوحدة</th></tr>
+                        <tr><th>الرقم</th><th>الاسم</th><th>الرتبة</th><th>الوحدة</th><th>الإجراءات</th></tr>
                     </thead>
                     <tbody id="staticMembersTable">
-                        <tr><td>01</td><td>FAHAD ALMUTAIRI</td><td style="color: var(--gold);">R-0 SWAT Chief</td><td>Command</td></tr>
-                        <tr><td>02</td><td>KARLOS ALMUTAIRI</td><td>R-1 Deputy Chief</td><td>Command</td></tr>
-                        <tr><td>03</td><td>Turki Al-Mutairi</td><td>R-2 Assistant Chief</td><td>Leader Alpha</td></tr>
-                        <tr><td>04</td><td>James Morgan</td><td>R-3 Supervisor</td><td>Leader Bravo</td></tr>
-                        <tr><td>05</td><td>Mov Marley</td><td>R-4 Member</td><td>Alpha</td></tr>
-                        <tr><td>06</td><td>Sicr Exxon</td><td>R-5 Member</td><td>Alpha</td></tr>
-                        <tr><td>07</td><td>Marcus Leno</td><td>R-6 Member</td><td>Alpha</td></tr>
-                        <tr><td>08</td><td>James Kruise</td><td>R-7 Member</td><td>Alpha</td></tr>
-                        <tr><td>09</td><td>Older Mohammed</td><td>R-8 Member</td><td>Alpha</td></tr>
-                        <tr><td>10</td><td>Badr Al-Mutairi</td><td>R-9 Member</td><td>Bravo</td></tr>
-                        <tr><td>11</td><td>ريان خالد</td><td>R-10 Member</td><td>Bravo</td></tr>
-                        <tr><td>12</td><td>JOHN Marly</td><td>R-11 Member</td><td>Bravo</td></tr>
-                        <tr><td>13</td><td>Ahmed Almutairi</td><td>R-12 Member</td><td>Bravo</td></tr>
+                        <tr><td>01</td><td>FAHAD ALMUTAIRI</td><td style="color: var(--gold);">R-0 SWAT Chief</td><td>Command</td><td>-</td></tr>
+                        <tr><td>02</td><td>KARLOS ALMUTAIRI</td><td>R-1 Deputy Chief</td><td>Command</td><td>-</td></tr>
+                        <tr><td>03</td><td>Turki Al-Mutairi</td><td>R-2 Assistant Chief</td><td>Leader Alpha</td><td>-</td></tr>
+                        <tr><td>04</td><td>James Morgan</td><td>R-3 Supervisor</td><td>Leader Bravo</td><td>-</td></tr>
+                        <tr><td>05</td><td>Mov Marley</td><td>R-4 Member</td><td>Alpha</td><td>-</td></tr>
+                        <tr><td>06</td><td>Sicr Exxon</td><td>R-5 Member</td><td>Alpha</td><td>-</td></tr>
+                        <tr><td>07</td><td>Marcus Leno</td><td>R-6 Member</td><td>Alpha</td><td>-</td></tr>
+                        <tr><td>08</td><td>James Kruise</td><td>R-7 Member</td><td>Alpha</td><td>-</td></tr>
+                        <tr><td>09</td><td>Older Mohammed</td><td>R-8 Member</td><td>Alpha</td><td>-</td></tr>
+                        <tr><td>10</td><td>Badr Al-Mutairi</td><td>R-9 Member</td><td>Bravo</td><td>-</td></tr>
+                        <tr><td>11</td><td>ريان خالد</td><td>R-10 Member</td><td>Bravo</td><td>-</td></tr>
+                        <tr><td>12</td><td>JOHN Marly</td><td>R-11 Member</td><td>Bravo</td><td>-</td></tr>
+                        <tr><td>13</td><td>Ahmed Almutairi</td><td>R-12 Member</td><td>Bravo</td><td>-</td></tr>
                     </tbody>
                     <tbody id="dynamicMembersTable">
-                        <!-- الأعضاء المضافين إلكترونياً سيظهرون هنا -->
+                        <!-- الأعضاء المضافين إلكترونياً سيظهرون هنا مع زر الحذف -->
                     </tbody>
                 </table>
             </div>
@@ -583,7 +620,6 @@ window.unlockSection = function(inputId, targetPanelId) {
     if(passValue === "1029") {
         document.getElementById(inputId).value = "";
         
-        // إخفاء قفل الواجهة المناسبة وعرض المحتوى الحقيقي
         if(targetPanelId === 'missionsRealView') {
             document.getElementById('missionsLockArea').style.display = 'none';
             document.getElementById('missionsRealView').style.display = 'block';
@@ -604,11 +640,20 @@ window.unlockSection = function(inputId, targetPanelId) {
     }
 };
 
-// طلب رمز الدخول قبل فتح خيار إضافة عضو جديد في الجدول
-window.triggerAddMember = function() {
-    let code = prompt("🔑 الرجاء إدخال الرمز الأمني المعتمد لتهيئة نظام التسجيل:");
-    if(code === "1029") {
+// إظهار حقل الرمز الداخلي للجدول عند الضغط على زر الزائد
+window.showInlineLock = function() {
+    let lockBox = document.getElementById("inlineLockBox");
+    lockBox.style.display = (lockBox.style.display === "none") ? "block" : "none";
+    document.getElementById("addMemberForm").style.display = "none";
+};
+
+// التحقق من الرمز من داخل الصفحة
+window.verifyInlineCode = function() {
+    let codeInput = document.getElementById("inlineCodeInput").value;
+    if(codeInput === "1029") {
+        document.getElementById("inlineLockBox").style.display = "none";
         document.getElementById("addMemberForm").style.display = "block";
+        document.getElementById("inlineCodeInput").value = "";
     } else {
         alert("❌ رمز خاطئ! لا تملك صلاحية تعديل الهيكل الإداري.");
     }
@@ -634,7 +679,18 @@ window.saveNewMemberToFirebase = async function() {
     }
 };
 
-// عرض الأعضاء المضافين ديناميكياً من الفايربيس في الجدول
+// آلية حذف عضو تطلّب الرمز السري من داخل الصفحة
+window.triggerDeleteMember = async function(id) {
+    let pass = prompt("🔒 يتطلب صلاحية إدارية - أدخل الرمز لتأكيد الحذف نهائياً:");
+    if(pass === "1029") {
+        await deleteDoc(doc(db, "custom_members", id));
+        alert("تم شطب العضو بنجاح وسحب ملفه الرقمي 🗑️");
+    } else {
+        alert("❌ رمز خاطئ! تم إلغاء عملية الحذف.");
+    }
+};
+
+// عرض الأعضاء المضافين ديناميكياً من الفايربيس في الجدول مع تفعيل زر الحذف
 onSnapshot(collection(db, "custom_members"), (snap) => {
     let table = document.getElementById("dynamicMembersTable");
     table.innerHTML = "";
@@ -646,6 +702,7 @@ onSnapshot(collection(db, "custom_members"), (snap) => {
                 <td>${m.name}</td>
                 <td style="color:var(--gold);">${m.rank}</td>
                 <td>${m.unit}</td>
+                <td><button class="delete-table-btn" onclick="triggerDeleteMember('${d.id}')">🗑️ حذف</button></td>
             </tr>`;
     });
 });
