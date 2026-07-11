@@ -148,7 +148,7 @@ padding:25px;
 text-align:center;
 }
 
-.nominee-card {
+.applicant-card {
 background:#1b232d;
 border:1px solid #3d4b59;
 border-radius:10px;
@@ -192,55 +192,55 @@ margin-top: 15px;
     <div id="home">
         <div class="swat-logo-css">
             <div class="swat-logo-text">SWAT</div>
-            <div class="swat-logo-subtext">RECRUIT</div>
+            <div class="swat-logo-subtext">JOIN</div>
         </div>
 
-        <h1>نظام ترشيحات وانضمام SWAT</h1>
-        <p class="subtitle">البوابة الرسمية لتقديم ورفع أسماء الكفاءات للفرقة</p>
+        <h1>بوابة التقديم على فرقة SWAT</h1>
+        <p class="subtitle">استمارة الانضمام الرسمية لوحدة العمليات الخاصة</p>
         
-        <button onclick="show('submitNomination')" style="color: #4caf50; border-color: #4caf50; font-size: 19px;">🗳️ ترشيح عضو جديد للفرقة</button>
-        <button onclick="show('nomineesLogin')" style="color: #ff9800; border-color: #ff9800;">📋 لوحة تحكم الإدارة والقادة (🔒)</button>
+        <button onclick="show('submitApplication')" style="color: #4caf50; border-color: #4caf50; font-size: 19px;">📝 تقديم طلب انضمام جديد</button>
+        <button onclick="show('applicantsLogin')" style="color: #ff9800; border-color: #ff9800;">📋 لوحة طلبات المتقدمين (🔒)</button>
     </div>
 
-    <!-- شاشة تقديم الترشيح -->
-    <div id="submitNomination" class="page">
-        <h1>🗳️ طلب ترشيح جديد</h1>
-        <p style="text-align:center; margin-bottom:20px; color:#aaa;">الرجاء إدخال البيانات بدقة ليتسنى للقادة مراجعتها.</p>
+    <!-- شاشة تقديم الطلب -->
+    <div id="submitApplication" class="page">
+        <h1>📝 استمارة تقديم جديدة</h1>
+        <p style="text-align:center; margin-bottom:20px; color:#aaa;">الرجاء تعبئة بياناتك الشخصية بدقة كاملة.</p>
         
-        <input id="nomByUser" placeholder="👮 اسم العسكري المُرشِّح (أنت)">
-        <input id="nomName" placeholder="👤 اسم الشخص المُرشَّح للانضمام">
-        <input id="nomRank" placeholder="🎖️ رتبته الحالية بالسلك">
-        <textarea id="nomReason" placeholder="📝 أسباب الترشيح بالتفصيل (ما هي كفاءته ومميزاته؟)" style="height:140px;"></textarea>
+        <input id="appName" placeholder="👤 الاسم الكامل">
+        <input id="appAge" placeholder="📅 العمر">
+        <input id="appRank" placeholder="🎖️ الرتبة الحالية في السلك العسكري">
+        <textarea id="appReason" placeholder="📝 لماذا تريد الانضمام لفرقة SWAT؟ وما هي المهارات التي تميزك؟" style="height:140px;"></textarea>
         
-        <button onclick="saveNomination()">📤 إرسال طلب الترشيح الرسمي</button>
+        <button onclick="saveApplication()">📤 إرسال طلب التقديم</button>
         <button class="back" onclick="home()">إلغاء والعودة</button>
     </div>
 
     <!-- شاشة قفل لوحة القادة -->
-    <div id="nomineesLogin" class="page">
+    <div id="applicantsLogin" class="page">
         <div class="login-box">
             <h1>🔒 تصريح دخول الإدارة</h1>
             <p style="color:#aaa; margin-bottom:15px;">هذه اللوحة مخصصة لقادة الفرقة فقط</p>
-            <input id="nomineesPassword" type="password" placeholder="أدخل رمز الدخول الخاص بالقادة">
-            <button onclick="checkNomineesPassword()">دخول اللوحة</button>
+            <input id="applicantsPassword" type="password" placeholder="أدخل رمز الدخول الخاص بالقادة">
+            <button onclick="checkApplicantsPassword()">دخول اللوحة</button>
             <button class="back" onclick="home()">رجوع</button>
         </div>
     </div>
 
-    <!-- شاشة عرض وإدارة الترشيحات (خاصة بالقادة) -->
-    <div id="nomineesList" class="page">
-        <h1>📋 طلبات الترشيح والطلبات الواردة</h1>
-        <p style="text-align:center; color:#ccc; margin-bottom:15px;">يمكنك هنا قبول، رفض، أو وضع الطلبات تحت المراجعة.</p>
+    <!-- شاشة عرض وإدارة المتقدمين (خاصة بالقادة) -->
+    <div id="applicantsList" class="page">
+        <h1>📋 ملفات المتقدمين الواردة</h1>
+        <p style="text-align:center; color:#ccc; margin-bottom:15px;">يمكنك هنا قبول، رفض، أو وضع طلبات المتقدمين تحت المراجعة.</p>
         
-        <div id="nomineesContainer"><p style="text-align:center;color:#aaa;">لا توجد ترشيحات حالياً في النظام.</p></div>
-        <button class="back" onclick="home()">تسجيل خروج والعودة الرئيسي</button>
+        <div id="applicantsContainer"><p style="text-align:center;color:#aaa;">لا توجد طلبات تقديم حالياً في النظام.</p></div>
+        <button class="back" onclick="home()">تسجيل خروج والعودة</button>
     </div>
 
 </div>
 
 <script>
-// قاعدة البيانات المحلية (مستقلة عن التطبيق الأول)
-let nomineesData = JSON.parse(localStorage.getItem("swat_standalone_nominees")) || [];
+// قاعدة البيانات المحلية الخاصة بطلبات التقديم
+let applicantsData = JSON.parse(localStorage.getItem("swat_recruitment_applicants")) || [];
 
 function show(id){
     document.getElementById("home").style.display="none";
@@ -256,100 +256,100 @@ function home(){
 }
 
 // التحقق من الرمز (1029)
-function checkNomineesPassword(){
-    let pass=document.getElementById("nomineesPassword").value;
+function checkApplicantsPassword(){
+    let pass=document.getElementById("applicantsPassword").value;
     if(pass==="1029"){
-        document.getElementById("nomineesPassword").value="";
-        displayNominees();
-        show("nomineesList");
+        document.getElementById("applicantsPassword").value="";
+        displayApplicants();
+        show("applicantsList");
     }else{ 
-        alert("❌ رمز الدخول غير صحيح! التسلل ممنوع."); 
+        alert("❌ رمز الدخول غير صحيح!"); 
     }
 }
 
-// حفظ طلب الترشيح
-function saveNomination(){
-    let byUser = document.getElementById("nomByUser").value.trim();
-    let name = document.getElementById("nomName").value.trim();
-    let rank = document.getElementById("nomRank").value.trim();
-    let reason = document.getElementById("nomReason").value.trim();
+// حفظ طلب التقديم
+function saveApplication(){
+    let name = document.getElementById("appName").value.trim();
+    let age = document.getElementById("appAge").value.trim();
+    let rank = document.getElementById("appRank").value.trim();
+    let reason = document.getElementById("appReason").value.trim();
 
-    if(!byUser || !name || !rank || !reason){
-        alert("❌ الرجاء ملء جميع خانات الترشيح!");
+    if(!name || !age || !rank || !reason){
+        alert("❌ الرجاء ملء جميع خانات الاستمارة!");
         return;
     }
 
-    nomineesData.push({
-        byUser: byUser, 
+    applicantsData.push({
         name: name, 
+        age: age, 
         rank: rank, 
         reason: reason, 
-        status: "pending" // الحالة المبدئية قيد الانتظار
+        status: "pending" // قيد الانتظار تلقائياً
     });
 
-    localStorage.setItem("swat_standalone_nominees", JSON.stringify(nomineesData));
-    alert("تم إرسال ترشيحك بنجاح للقيادة العُليا! 📥👍");
+    localStorage.setItem("swat_recruitment_applicants", JSON.stringify(applicantsData));
+    alert("تم إرسال طلب تقديمك بنجاح! بالتوفيق ✅");
     
     // تفريغ الحقول
-    document.getElementById("nomByUser").value = "";
-    document.getElementById("nomName").value = "";
-    document.getElementById("nomRank").value = "";
-    document.getElementById("nomReason").value = "";
+    document.getElementById("appName").value = "";
+    document.getElementById("appAge").value = "";
+    document.getElementById("appRank").value = "";
+    document.getElementById("appReason").value = "";
     home();
 }
 
-// عرض وإدارة المرشحين داخل لوحة التحكم
-function displayNominees(){
-    let container = document.getElementById("nomineesContainer");
+// عرض طلبات المتقدمين للقادة
+function displayApplicants(){
+    let container = document.getElementById("applicantsContainer");
     container.innerHTML = "";
 
-    if(nomineesData.length === 0){
-        container.innerHTML = '<p style="text-align:center;color:#aaa;padding:20px;">لا توجد طلبات ترشيح حالياً في النظام.</p>';
+    if(applicantsData.length === 0){
+        container.innerHTML = '<p style="text-align:center;color:#aaa;padding:20px;">لا توجد طلبات تقديم حالياً في النظام.</p>';
         return;
     }
 
-    nomineesData.forEach((nom, index) => {
+    applicantsData.forEach((app, index) => {
         let badgeClass = "badge-pending";
         let badgeText = "🟡 تحت المراجعة";
         let cardBorderColor = "#3d4b59";
 
-        if(nom.status === "accepted") {
-            badgeClass = "badge-success"; badgeText = "🟢 مقبول في الفرقة"; cardBorderColor = "#4caf50";
-        } else if(nom.status === "rejected") {
-            badgeClass = "badge-fail"; badgeText = "🔴 مرفوض الطلب"; cardBorderColor = "#f44336";
+        if(app.status === "accepted") {
+            badgeClass = "badge-success"; badgeText = "🟢 مقبول"; cardBorderColor = "#4caf50";
+        } else if(app.status === "rejected") {
+            badgeClass = "badge-fail"; badgeText = "🔴 مرفوض"; cardBorderColor = "#f44336";
         }
 
         container.innerHTML += `
-            <div class="nominee-card" style="border-color: ${cardBorderColor};">
-                <h3 style="color:#d8c27a; font-size:20px;">👤 الشخص المُرشَّح: ${nom.name} <span class="badge ${badgeClass}">${badgeText}</span></h3>
-                <p style="margin-top:8px; color:#8fa3b4;"><b>👮 تم الترشيح بواسطة العسكري:</b> ${nom.byUser}</p>
-                <p style="margin-top:4px;"><b>🎖️ رتبته الحالية بالسلك:</b> ${nom.rank}</p>
-                <p style="margin-top:12px; background:#151c24; padding:12px; border-radius:6px; white-space: pre-wrap; color:#e0e0e0;"><b>📝 أسباب وكفاءة الترشيح:</b>\n${nom.reason}</p>
+            <div class="applicant-card" style="border-color: ${cardBorderColor};">
+                <h3 style="color:#d8c27a; font-size:20px;">👤 المتقدم: ${app.name} <span class="badge ${badgeClass}">${badgeText}</span></h3>
+                <p style="margin-top:8px;"><b>📅 العمر:</b> ${app.age}</p>
+                <p><b>🎖️ الرتبة الحالية بالسلك:</b> ${app.rank}</p>
+                <p style="margin-top:12px; background:#151c24; padding:12px; border-radius:6px; white-space: pre-wrap; color:#e0e0e0;"><b>📝 رسالة وسبب الانضمام:</b>\n${app.reason}</p>
                 
                 <div class="btn-group">
-                    <button class="btn-accept" onclick="updateNomineeStatus(${index}, 'accepted')">✔ قبول</button>
-                    <button class="btn-review" onclick="updateNomineeStatus(${index}, 'pending')">⏳ مراجعة</button>
-                    <button class="btn-reject" onclick="updateNomineeStatus(${index}, 'rejected')">✖ رفض</button>
-                    <button onclick="deleteNominee(${index})" style="background:#444; color:white; width:auto; padding:10px; margin:0; border-color:#555;">🗑️ مسح نهائياً</button>
+                    <button class="btn-accept" onclick="updateApplicantStatus(${index}, 'accepted')">✔ قبول</button>
+                    <button class="btn-review" onclick="updateApplicantStatus(${index}, 'pending')">⏳ مراجعة</button>
+                    <button class="btn-reject" onclick="updateApplicantStatus(${index}, 'rejected')">✖ رفض</button>
+                    <button onclick="deleteApplicant(${index})" style="background:#444; color:white; width:auto; padding:10px; margin:0; border-color:#555;">🗑️ مسح الطلب</button>
                 </div>
             </div>
         `;
     });
 }
 
-// تحديث حالة الطلب
-function updateNomineeStatus(index, newStatus){
-    nomineesData[index].status = newStatus;
-    localStorage.setItem("swat_standalone_nominees", JSON.stringify(nomineesData));
-    displayNominees();
+// تحديث حالة طلب المتقدم
+function updateApplicantStatus(index, newStatus){
+    applicantsData[index].status = newStatus;
+    localStorage.setItem("swat_recruitment_applicants", JSON.stringify(applicantsData));
+    displayApplicants();
 }
 
 // مسح الطلب
-function deleteNominee(index){
-    if(confirm("هل أنت متأكد من مسح هذا الطلب بشكل نهائي من النظام؟")){
-        nomineesData.splice(index, 1);
-        localStorage.setItem("swat_standalone_nominees", JSON.stringify(nomineesData));
-        displayNominees();
+function deleteApplicant(index){
+    if(confirm("هل أنت متأكد من مسح ملف المتقدم هذا نهائياً؟")){
+        applicantsData.splice(index, 1);
+        localStorage.setItem("swat_recruitment_applicants", JSON.stringify(applicantsData));
+        displayApplicants();
     }
 }
 </script>
