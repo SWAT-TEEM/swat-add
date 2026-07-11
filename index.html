@@ -181,11 +181,11 @@ body {
     align-items: center;
 }
 
-/* حاوية الخريطة التكتيكية الجغرافية المحدثة */
+/* حاوية خريطة GTA V المحدثة برابط مباشر وسريع */
 .map-wrapper {
     position: relative;
     width: 100%;
-    height: 650px;
+    height: 680px;
     background-color: #0d121a;
     border: 2px solid var(--gold);
     border-radius: 12px;
@@ -200,10 +200,6 @@ body {
     background: #0d121a;
 }
 
-/* تخصيص مظهر أدوات الخريطة لتناسب الطابع العسكري */
-.leaflet-container {
-    background-color: #0b0f19 !important;
-}
 .leaflet-bar a {
     background-color: #111722 !important;
     color: var(--gold) !important;
@@ -231,33 +227,6 @@ body {
 }
 .stat-card .num { font-size: 28px; font-weight: bold; color: var(--gold); margin-bottom: 5px; }
 .stat-card .label { font-size: 13px; color: var(--text-muted); }
-
-input, select, textarea {
-    width: 100%;
-    padding: 12px 16px;
-    margin-bottom: 15px;
-    background: #121822;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    color: white;
-}
-
-.action-btn {
-    width: 100%;
-    padding: 14px;
-    background: linear-gradient(135deg, #1b2532 0%, #111822 100%);
-    border: 1px solid var(--gold);
-    border-radius: 8px;
-    color: var(--gold);
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.action-btn:hover {
-    background: var(--gold);
-    color: #000;
-}
 
 .swat-table {
     width: 100%;
@@ -304,7 +273,7 @@ input, select, textarea {
             <div class="dashboard-layout">
                 <div class="card-panel" style="grid-column: span 2;">
                     <h3 class="panel-title">📡 البث والتعميم الإداري الجديد</h3>
-                    <p style="color: var(--text-muted); line-height: 1.8;">مرحباً بك في نظام فرقة SWAT المطور بالكامل. تم دمج محرك الخرائط الجغرافية الذاتي لحل مشكلة الصور المكسورة، والآن يمكنك بدء التخطيط التكتيكي الآمن مع أفراد طاقمك مباشرة.</p>
+                    <p style="color: var(--text-muted); line-height: 1.8;">مرحباً بك في نظام فرقة SWAT المطور. تم تحديث محرك الخرائط بنجاح ليعرض خريطة الأقمار الصناعية والأطلس الأصلية لمدينة لوس سانتوس مباشرة مع تفعيل خاصية الـ Real-time Sync بين كل الأعضاء.</p>
                 </div>
                 <div class="stats-container">
                     <div class="stat-card"><div class="num">13</div><div class="label">الأعضاء بالجدول</div></div>
@@ -315,14 +284,14 @@ input, select, textarea {
             </div>
         </div>
 
-        <!-- ================= 2. قسم الخريطة التكتيكية الحية المحدثة ================= -->
+        <!-- ================= 2. قسم الخريطة الأصلية الحية ================= -->
         <div id="tacticalMapPanel" class="page">
             <div class="card-panel">
                 <div class="panel-title">
-                    <span>🗺️ خريطة لوس سانتوس التكتيكية التفاعلية (GTA V Live Map Layout)</span>
+                    <span>🗺️ خريطة لوس سانتوس (GTA V Satellite Interactive Map)</span>
                     <button class="delete-table-btn" onclick="clearFullMap()" style="padding: 6px 12px;">🗑️ مسح الرسوم بالكامل</button>
                 </div>
-                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 10px;">تم تحميل شبكة الشوارع والطرق الجغرافية لمدينة لوس سانتوس ومقاطعة بلين تلقائياً. استخدم الأدوات الجانبية لتحديد مناطق الاقتحام وتوزيع الفرق بالوقت الفعلي.</p>
+                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 10px;">خريطة اللعبة الرسمية والملونة متصلة الآن. استخدم أدوات الرسم على اليمين لتحديد الأهداف الساخنة والمداهمات.</p>
                 
                 <div class="map-wrapper">
                     <div id="map"></div>
@@ -330,7 +299,7 @@ input, select, textarea {
             </div>
         </div>
 
-        <!-- ================= Remaining Sections Built-in ================= -->
+        <!-- ================= باقي الأقسام الثابتة ================= -->
         <div id="rulesPanel" class="page">
             <div class="card-panel">
                 <h3 class="panel-title">قوانين الفرقة الصارمة</h3>
@@ -384,21 +353,22 @@ let mapLayers = {};
 function initTacticalMap() {
     if (map) return; 
 
-    // تهيئة الخريطة الذاتية بالكامل بالاعتماد على إسقاط كروي مخصص لا ينقطع
+    // إعداد إسقاط مخصص ومناسب لخريطة GTA V الرسمية ثلاثية الأبعاد والأطلس
     map = L.map('map', {
+        crs: L.CRS.Simple,
         minZoom: 1,
         maxZoom: 5,
         zoomControl: true,
-        attributionControl: false
-    }).setView([0, 0], 2);
+    }).setView([-100, 100], 2);
 
-    // بناء شبكة الشوارع التفاعلية الرقمية لقراند 5 بدون الاعتماد على صور خارجية ثابتة
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
-        maxZoom: 5,
-        minZoom: 1
+    // الرابط السريع والمفتوح العالمي المخصص لعرض صور خريطة GTA V الأصلية بالألوان الكاملة
+    L.tileLayer('https://media.githubusercontent.com/media/Gamer-Designs/GTA-V-Map-Tiles/master/atlas/{z}/{x}/{y}.png', {
+        noWrap: true,
+        bounds: [[-400, -400], [400, 400]],
+        attribution: 'GTA V Map'
     }).addTo(map);
 
-    // تفعيل أدوات الرسم الجغرافي السحابي المباشر
+    // تفعيل أدوات الرسم الجغرافي السحابي المباشر لقسم السوات
     map.pm.addControls({
         position: 'topright',
         drawMarker: true,
@@ -408,7 +378,7 @@ function initTacticalMap() {
         removalMode: true,
     });
 
-    // رفع الرسومات تلقائياً إلى الفايربيس
+    // رفع الرسومات التكتيكية وحفظها في قاعدة البيانات فوراً
     map.on('pm:create', async (e) => {
         const layer = e.layer;
         const geojson = layer.toGeoJSON();
@@ -431,7 +401,7 @@ function initTacticalMap() {
         }
     });
 
-    // استدعاء وعرض الرسوم عند الجميع بالوقت الفعلي
+    // سحب وعرض رسومات باقي أفراد الفرقة لايف وبنفس اللحظة
     onSnapshot(collection(db, "tactical_map_shapes"), (snapshot) => {
         for (let id in mapLayers) { map.removeLayer(mapLayers[id]); }
         mapLayers = {};
@@ -439,7 +409,7 @@ function initTacticalMap() {
             const shapeData = doc.data();
             const geojson = JSON.parse(shapeData.data);
             const geojsonLayer = L.geoJSON(geojson, {
-                style: function () { return { color: '#d8c27a', weight: 3, opacity: 0.8 }; }
+                style: function () { return { color: '#00ffcc', weight: 4, opacity: 0.9 }; }
             });
             geojsonLayer.addTo(map);
             mapLayers[doc.id] = geojsonLayer;
@@ -468,7 +438,7 @@ window.switchPage = function(pageId) {
 
     if (pageId === 'tacticalMapPanel') {
         initTacticalMap();
-        setTimeout(() => { map.invalidateSize(); }, 200);
+        setTimeout(() => { map.invalidateSize(); }, 250);
     }
 };
 </script>
