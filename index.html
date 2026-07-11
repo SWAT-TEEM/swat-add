@@ -3,355 +3,667 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SWAT - Recruitment System</title>
-
+<title>SWAT Central Command System</title>
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,sans-serif;
+:root {
+    --bg-dark: #06090e;
+    --panel-bg: #0d121a;
+    --border-color: #222d3a;
+    --gold: #d8c27a;
+    --gold-hover: #f1dc99;
+    --text-main: #e2e8f0;
+    --text-muted: #718096;
+    --success: #38a169;
+    --danger: #e53e3e;
+    --warning: #dd6b20;
+    --info: #3182ce;
 }
 
-body{
-background:#070b10;
-color:#e5e5e5;
-display:flex;
-justify-content:center;
-align-items:center;
-min-height:100vh;
-
-background-image:
-linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),
-linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);
-
-background-size:40px 40px;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.container{
-width:95%;
-max-width:800px;
-background:#11161d;
-border:1px solid #2a323d;
-border-radius:18px;
-padding:35px;
-box-shadow:0 0 40px rgba(0,0,0,.7);
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    background-image: 
+        radial-gradient(circle at 50% 50%, rgba(26, 54, 93, 0.15) 0%, transparent 80%),
+        linear-gradient(rgba(255,255,255,.01) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.01) 1px,transparent 1px);
+    background-size: 100% 100%, 30px 30px, 30px 30px;
 }
 
-.swat-logo-css {
-width: 130px;
-height: 130px;
-background: radial-gradient(circle, #1a232d 40%, #0d131a 100%);
-border: 4px double #d8c27a;
-border-radius: 50%;
-margin: 0 auto 20px;
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-box-shadow: 0 0 20px rgba(216, 194, 122, 0.2), inset 0 0 15px rgba(0,0,0,0.6);
-position: relative;
+/* الشريط الجانبي التكتيكي */
+.sidebar {
+    width: 280px;
+    background: var(--panel-bg);
+    border-left: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    z-index: 10;
 }
 
-.swat-logo-css::before {
-content: '★ ★ ★';
-color: #d8c27a;
-font-size: 10px;
-position: absolute;
-top: 15px;
-letter-spacing: 2px;
+.logo-area {
+    text-align: center;
+    padding: 20px 0;
+    border-bottom: 1px dashed var(--border-color);
+    margin-bottom: 25px;
 }
 
-.swat-logo-text {
-color: #d8c27a;
-font-size: 28px;
-font-weight: 900;
-letter-spacing: 2px;
-text-shadow: 0 0 10px rgba(216, 194, 122, 0.6), 2px 2px 2px #000;
-font-family: 'Impact', 'Arial Black', sans-serif;
-margin-top: 10px;
+.logo-icon {
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle, #1a232d 40%, #06090e 100%);
+    border: 3px double var(--gold);
+    border-radius: 50%;
+    margin: 0 auto 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 15px rgba(216, 194, 122, 0.2);
 }
 
-.swat-logo-subtext {
-color: #8fa3b4;
-font-size: 9px;
-font-weight: bold;
-letter-spacing: 3px;
-text-transform: uppercase;
-margin-top: -2px;
+.logo-text {
+    color: var(--gold);
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-shadow: 0 0 8px rgba(216, 194, 122, 0.4);
 }
 
-h1{
-text-align:center;
-color:#d8c27a;
-letter-spacing:3px;
-margin-bottom:10px;
+.nav-btn {
+    width: 100%;
+    padding: 14px 18px;
+    margin: 6px 0;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    color: var(--text-main);
+    font-size: 15px;
+    font-weight: 600;
+    text-align: right;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.25s ease;
 }
 
-p.subtitle {
-text-align: center;
-color: #8fa3b4;
-margin-bottom: 30px;
-font-size: 15px;
+.nav-btn:hover, .nav-btn.active {
+    background: #141c26;
+    border-color: var(--border-color);
+    color: var(--gold);
+    box-shadow: inset 3px 0 0 var(--gold);
 }
 
-button{
-width:100%;
-padding:16px;
-margin:12px 0;
-background:#1b232d;
-border:1px solid #3d4b59;
-border-radius:8px;
-color:#d8c27a;
-font-size:17px;
-font-weight:bold;
-cursor:pointer;
-transition: background 0.2s, border-color 0.2s;
+/* المنطقة الرئيسية لعرض الصفحات */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding: 30px;
 }
 
-button:hover{
-background:#2b3642;
-border-color:#d8c27a;
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 15px;
 }
 
-.back{
-background:#333;
-color:white;
+.system-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--success);
+    background: rgba(56, 161, 105, 0.1);
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(56, 161, 105, 0.2);
 }
 
-.page{
-display:none;
-animation:fade .25s;
+.pulse {
+    width: 8px;
+    height: 8px;
+    background: var(--success);
+    border-radius: 50%;
+    animation: blink 1.5s infinite;
 }
 
-@keyframes fade{
-from{ opacity:0; transform:translateY(10px); }
-to{ opacity:1; transform:translateY(0); }
+@keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+/* الكروت التفاعلية للوحة الرئيسية */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
 }
 
-textarea, input{
-width:100%;
-padding:15px;
-margin:10px 0;
-background:#1b232d;
-border:1px solid #3d4b59;
-border-radius:8px;
-color:white;
-font-size:15px;
+.stat-card {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
 }
 
-.login-box{
-background:#11161d;
-border:1px solid #3d4b59;
-border-radius:15px;
-padding:25px;
-text-align:center;
+.stat-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 4px; height: 100%;
+}
+.stat-card.blue::after { background: var(--info); }
+.stat-card.gold::after { background: var(--gold); }
+.stat-card.green::after { background: var(--success); }
+.stat-card.danger::after { background: var(--danger); }
+
+.stat-title { font-size: 13px; color: var(--text-muted); margin-bottom: 5px; }
+.stat-value { font-size: 28px; font-weight: bold; color: #fff; }
+
+/* الصفحات والمحتوى */
+.page {
+    display: none;
+    animation: fadeInUp 0.4s ease forwards;
 }
 
-.applicant-card {
-background:#1b232d;
-border:1px solid #3d4b59;
-border-radius:10px;
-padding:20px;
-margin-top:20px;
-transition: border-color 0.3s;
-text-align: right;
+.page.active { display: block; }
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.badge {
-display: inline-block;
-padding: 5px 12px;
-border-radius: 20px;
-font-weight: bold;
-font-size: 14px;
-margin-top: 5px;
+.dashboard-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
 }
-.badge-success { background: #1b5e20; color: #fff; border: 1px solid #4caf50; }
-.badge-fail { background: #b71c1c; color: #fff; border: 1px solid #f44336; }
-.badge-pending { background: #e65100; color: #fff; border: 1px solid #ff9800; }
 
-.btn-group {
-display: flex;
-gap: 10px;
-margin-top: 15px;
+@media(max-width: 900px) { .dashboard-layout { grid-template-columns: 1fr; } }
+
+.card-panel {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
-.btn-accept { background: #1b5e20; color: white; border: 1px solid #4caf50; padding: 10px; }
-.btn-accept:hover { background: #2e7d32; }
-.btn-review { background: #e65100; color: white; border: 1px solid #ff9800; padding: 10px; }
-.btn-review:hover { background: #ef6c00; }
-.btn-reject { background: #b71c1c; color: white; border: 1px solid #f44336; padding: 10px; }
-.btn-reject:hover { background: #c62828; }
+
+.panel-title {
+    font-size: 18px;
+    color: var(--gold);
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+/* الحقول والقوائم المحدثة */
+input, select, textarea {
+    width: 100%;
+    padding: 12px 16px;
+    margin-bottom: 15px;
+    background: #121822;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: white;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 10px rgba(216, 194, 122, 0.15);
+}
+
+.action-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #1b2532 0%, #111822 100%);
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    color: var(--gold);
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.action-btn:hover {
+    background: var(--gold);
+    color: #000;
+    box-shadow: 0 0 15px rgba(216, 194, 122, 0.3);
+}
+
+/* الكروت والقوائم المعروضة */
+.data-list-container {
+    max-height: 500px;
+    overflow-y: auto;
+    padding-left: 5px;
+}
+
+.item-card {
+    background: #131922;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.item-card h4 { color: var(--gold); margin-bottom: 8px; }
+.item-card p { font-size: 13px; color: #cbd5e1; margin: 4px 0; }
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.status-btn-group {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.status-btn-group button {
+    flex: 1;
+    padding: 8px;
+    font-size: 12px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+}
+
+/* نظام القفل الجذاب */
+.lock-screen {
+    max-width: 450px;
+    margin: 60px auto;
+    text-align: center;
+}
+
+.swat-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+.swat-table th { background: #17202c; color: var(--gold); padding: 12px; text-align: right; }
+.swat-table td { padding: 12px; border-bottom: 1px solid var(--border-color); font-size: 14px; }
 </style>
 </head>
-
 <body>
 
-<div class="container">
+    <!-- 📋 الشريط الجانبي الذكي -->
+    <div class="sidebar">
+        <div class="logo-area">
+            <div class="logo-icon">🦅</div>
+            <div class="logo-text">SWAT UNIT</div>
+        </div>
+        <button class="nav-btn active" onclick="switchPage('dashboardPanel')">🖥️ لوحة القيادة</button>
+        <button class="nav-btn" onclick="switchPage('rulesPanel')">📜 اللائحة والقوانين</button>
+        <button class="nav-btn" onclick="switchPage('schedulePanel')">📅 شجرة الجدولة</button>
+        <button class="nav-btn" onclick="switchPage('wantedGate')">🚨 خلية المطلوبين</button>
+        <button class="nav-btn" onclick="switchPage('missionsPanel')">🎯 إدارة العمليات</button>
+        <button class="nav-btn" onclick="switchPage('nominationsPanel')">🎖️ شؤون الترشيحات</button>
+        <button class="nav-btn" onclick="switchPage('reportsPanel')">📄 مركز التقارير</button>
+    </div>
 
-    <!-- الشاشة الرئيسية للنظام -->
-    <div id="home">
-        <div class="swat-logo-css">
-            <div class="swat-logo-text">SWAT</div>
-            <div class="swat-logo-subtext">JOIN</div>
+    <!-- 🖥️ مساحة العرض الرئيسية -->
+    <div class="main-content">
+        <div class="top-bar">
+            <h2 id="pageTitle">مركز القيادة والتحكم الموحد</h2>
+            <div class="system-status">
+                <div class="pulse"></div> الاتصال بالسيرفر السحابي آمن ومستقر
+            </div>
         </div>
 
-        <h1>بوابة التقديم على فرقة SWAT</h1>
-        <p class="subtitle">استمارة الانضمام الرسمية لوحدة العمليات الخاصة</p>
-        
-        <button onclick="show('submitApplication')" style="color: #4caf50; border-color: #4caf50; font-size: 19px;">📝 تقديم طلب انضمام جديد</button>
-        <button onclick="show('applicantsLogin')" style="color: #ff9800; border-color: #ff9800;">📋 لوحة طلبات المتقدمين (🔒)</button>
-    </div>
-
-    <!-- شاشة تقديم الطلب -->
-    <div id="submitApplication" class="page">
-        <h1>📝 استمارة تقديم جديدة</h1>
-        <p style="text-align:center; margin-bottom:20px; color:#aaa;">الرجاء تعبئة بياناتك الشخصية بدقة كاملة.</p>
-        
-        <input id="appName" placeholder="👤 الاسم الكامل">
-        <input id="appAge" placeholder="📅 العمر">
-        <input id="appRank" placeholder="🎖️ الرتبة الحالية في السلك العسكري">
-        <textarea id="appReason" placeholder="📝 لماذا تريد الانضمام لفرقة SWAT؟ وما هي المهارات التي تميزك؟" style="height:140px;"></textarea>
-        
-        <button onclick="saveApplication()">📤 إرسال طلب التقديم</button>
-        <button class="back" onclick="home()">إلغاء والعودة</button>
-    </div>
-
-    <!-- شاشة قفل لوحة القادة -->
-    <div id="applicantsLogin" class="page">
-        <div class="login-box">
-            <h1>🔒 تصريح دخول الإدارة</h1>
-            <p style="color:#aaa; margin-bottom:15px;">هذه اللوحة مخصصة لقادة الفرقة فقط</p>
-            <input id="applicantsPassword" type="password" placeholder="أدخل رمز الدخول الخاص بالقادة">
-            <button onclick="checkApplicantsPassword()">دخول اللوحة</button>
-            <button class="back" onclick="home()">رجوع</button>
-        </div>
-    </div>
-
-    <!-- شاشة عرض وإدارة المتقدمين (خاصة بالقادة) -->
-    <div id="applicantsList" class="page">
-        <h1>📋 ملفات المتقدمين الواردة</h1>
-        <p style="text-align:center; color:#ccc; margin-bottom:15px;">يمكنك هنا قبول، رفض، أو وضع طلبات المتقدمين تحت المراجعة.</p>
-        
-        <div id="applicantsContainer"><p style="text-align:center;color:#aaa;">لا توجد طلبات تقديم حالياً في النظام.</p></div>
-        <button class="back" onclick="home()">تسجيل خروج والعودة</button>
-    </div>
-
-</div>
-
-<script>
-// قاعدة البيانات المحلية الخاصة بطلبات التقديم
-let applicantsData = JSON.parse(localStorage.getItem("swat_recruitment_applicants")) || [];
-
-function show(id){
-    document.getElementById("home").style.display="none";
-    let pages=document.querySelectorAll(".page");
-    pages.forEach(page=>{ page.style.display="none"; });
-    document.getElementById(id).style.display="block";
-}
-
-function home(){
-    document.getElementById("home").style.display="block";
-    let pages=document.querySelectorAll(".page");
-    pages.forEach(page=>{ page.style.display="none"; });
-}
-
-// التحقق من الرمز (1029)
-function checkApplicantsPassword(){
-    let pass=document.getElementById("applicantsPassword").value;
-    if(pass==="1029"){
-        document.getElementById("applicantsPassword").value="";
-        displayApplicants();
-        show("applicantsList");
-    }else{ 
-        alert("❌ رمز الدخول غير صحيح!"); 
-    }
-}
-
-// حفظ طلب التقديم
-function saveApplication(){
-    let name = document.getElementById("appName").value.trim();
-    let age = document.getElementById("appAge").value.trim();
-    let rank = document.getElementById("appRank").value.trim();
-    let reason = document.getElementById("appReason").value.trim();
-
-    if(!name || !age || !rank || !reason){
-        alert("❌ الرجاء ملء جميع خانات الاستمارة!");
-        return;
-    }
-
-    applicantsData.push({
-        name: name, 
-        age: age, 
-        rank: rank, 
-        reason: reason, 
-        status: "pending" // قيد الانتظار تلقائياً
-    });
-
-    localStorage.setItem("swat_recruitment_applicants", JSON.stringify(applicantsData));
-    alert("تم إرسال طلب تقديمك بنجاح! بالتوفيق ✅");
-    
-    // تفريغ الحقول
-    document.getElementById("appName").value = "";
-    document.getElementById("appAge").value = "";
-    document.getElementById("appRank").value = "";
-    document.getElementById("appReason").value = "";
-    home();
-}
-
-// عرض طلبات المتقدمين للقادة
-function displayApplicants(){
-    let container = document.getElementById("applicantsContainer");
-    container.innerHTML = "";
-
-    if(applicantsData.length === 0){
-        container.innerHTML = '<p style="text-align:center;color:#aaa;padding:20px;">لا توجد طلبات تقديم حالياً في النظام.</p>';
-        return;
-    }
-
-    applicantsData.forEach((app, index) => {
-        let badgeClass = "badge-pending";
-        let badgeText = "🟡 تحت المراجعة";
-        let cardBorderColor = "#3d4b59";
-
-        if(app.status === "accepted") {
-            badgeClass = "badge-success"; badgeText = "🟢 مقبول"; cardBorderColor = "#4caf50";
-        } else if(app.status === "rejected") {
-            badgeClass = "badge-fail"; badgeText = "🔴 مرفوض"; cardBorderColor = "#f44336";
-        }
-
-        container.innerHTML += `
-            <div class="applicant-card" style="border-color: ${cardBorderColor};">
-                <h3 style="color:#d8c27a; font-size:20px;">👤 المتقدم: ${app.name} <span class="badge ${badgeClass}">${badgeText}</span></h3>
-                <p style="margin-top:8px;"><b>📅 العمر:</b> ${app.age}</p>
-                <p><b>🎖️ الرتبة الحالية بالسلك:</b> ${app.rank}</p>
-                <p style="margin-top:12px; background:#151c24; padding:12px; border-radius:6px; white-space: pre-wrap; color:#e0e0e0;"><b>📝 رسالة وسبب الانضمام:</b>\n${app.reason}</p>
-                
-                <div class="btn-group">
-                    <button class="btn-accept" onclick="updateApplicantStatus(${index}, 'accepted')">✔ قبول</button>
-                    <button class="btn-review" onclick="updateApplicantStatus(${index}, 'pending')">⏳ مراجعة</button>
-                    <button class="btn-reject" onclick="updateApplicantStatus(${index}, 'rejected')">✖ رفض</button>
-                    <button onclick="deleteApplicant(${index})" style="background:#444; color:white; width:auto; padding:10px; margin:0; border-color:#555;">🗑️ مسح الطلب</button>
+        <!-- ================= 1. لوحة القيادة الرئيسية ================= -->
+        <div id="dashboardPanel" class="page active">
+            <div class="stats-grid">
+                <div class="stat-card blue"><span class="stat-title">جاهزية العناصر</span><span class="stat-value">100%</span></div>
+                <div class="stat-card gold"><span class="stat-title">العمليات النشطة</span><span class="stat-value">مؤمنة</span></div>
+                <div class="stat-card green"><span class="stat-title">نسبة النجاح</span><span class="stat-value">94.8%</span></div>
+                <div class="stat-card danger"><span class="stat-title">مستوى التهديد</span><span class="stat-value">منخفض</span></div>
+            </div>
+            
+            <div class="dashboard-layout">
+                <div class="card-panel">
+                    <h3 class="panel-title">📡 البث والتعميم الإداري الجديد</h3>
+                    <p style="color: var(--text-muted); line-height: 1.8;">مرحباً بك في نظام إدارة فرقة SWAT المطور بالكامل. من هنا يمكنك جدولة الأعضاء، تفويض قيادات المهمات، مراجعة طلبات الانضمام والترقيات، ورفع التقارير السرية المشفرة للسيرفر مباشرة بالوقت الفعلي.</p>
+                </div>
+                <div class="card-panel">
+                    <h3 class="panel-title">⚡ روابط سريعة للتحكم الإداري</h3>
+                    <button class="action-btn" style="margin-bottom: 10px;" onclick="switchPage('missionsPanel')">⚙️ إطلاق مهمة فورية</button>
+                    <button class="action-btn" onclick="switchPage('nominationsPanel')">⚖️ مراجعة مرشحين جدد</button>
                 </div>
             </div>
-        `;
-    });
-}
+        </div>
 
-// تحديث حالة طلب المتقدم
-function updateApplicantStatus(index, newStatus){
-    applicantsData[index].status = newStatus;
-    localStorage.setItem("swat_recruitment_applicants", JSON.stringify(applicantsData));
-    displayApplicants();
-}
+        <!-- ================= 2. شاشة القوانين ================= -->
+        <div id="rulesPanel" class="page">
+            <div class="card-panel">
+                <h3 class="panel-title">قوانين الفرقة الصارمة</h3>
+                <ol style="padding-right: 20px; line-height: 2.2; color: #cbd5e1;">
+                    <li>الالتزام التام بأوامر قائد الفريق أو المسؤول الأعلى رتبة بشكل مطلق.</li>
+                    <li>يمنع خروج أي دورية أو تنفيذ أي عملية تكتيكية إلا بعد إذن المسؤول.</li>
+                    <li>يمنع الحديث أو المزاح العشوائي أثناء الاصطفاف أو تنفيذ المهام خط النار.</li>
+                    <li>الالتزام بالزي الرسمي الكامل والمعدات والأسلحة المعتمدة رسمياً لكل رتبة.</li>
+                    <li>جميع المعلومات والخطط والتقارير داخل هذا النظام تعتبر سرية للغاية ويمنع تسريبها.</li>
+                </ol>
+            </div>
+        </div>
 
-// مسح الطلب
-function deleteApplicant(index){
-    if(confirm("هل أنت متأكد من مسح ملف المتقدم هذا نهائياً؟")){
-        applicantsData.splice(index, 1);
-        localStorage.setItem("swat_recruitment_applicants", JSON.stringify(applicantsData));
-        displayApplicants();
+        <!-- ================= 3. شجرة الجدولة ================= -->
+        <div id="schedulePanel" class="page">
+            <div class="card-panel">
+                <h3 class="panel-title">شجرة هيكلة القيادة والأعضاء</h3>
+                <table class="swat-table">
+                    <thead>
+                        <tr><th>الرقم التكتيكي</th><th>الاسم</th><th>الرتبة</th><th>الوحدة</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>01</td><td>FAHAD ALMUTAIRI</td><td style="color: var(--gold);">SWAT Chief</td><td>Command</td></tr>
+                        <tr><td>02</td><td>KARLOS ALMUTAIRI</td><td>Deputy Chief</td><td>Command</td></tr>
+                        <tr><td>03</td><td>Turki Al-Mutairi</td><td>Assistant Chief</td><td>Leader Alpha</td></tr>
+                        <tr><td>04</td><td>James Morgan</td><td>Supervisor</td><td>Leader Bravo</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ================= 4. بوابات القفل والأمان ================= -->
+        <div id="wantedGate" class="page"><div class="card-panel lock-screen"><h3>🔒 تصريح أمني - قائمة المطلوبين</h3><input id="wantedPass" type="password" placeholder="أدخل رمز الدخول المشفر"><button class="action-btn" onclick="unlockSection('wantedPass', 'wantedRealPanel')">فك التشفير ودخول</button></div></div>
+        <div id="missionsGate" class="page"><div class="card-panel lock-screen"><h3>🔒 تصريح أمني - الأرشيف التكتيكي للمهمات</h3><input id="missPass" type="password" placeholder="أدخل رمز الدخول المشفر"><button class="action-btn" onclick="unlockSection('missPass', 'missionsRealView')">فك التشفير وعرض المهمات</button></div></div>
+        <div id="nominateGate" class="page"><div class="card-panel lock-screen"><h3>🔒 تصريح أمني - قرارات الإدارة العليا</h3><input id="nomPass" type="password" placeholder="أدخل رمز الدخول المشفر"><button class="action-btn" onclick="unlockSection('nomPass', 'nominationsRealView')">فك التشفير واستعراض المرشحين</button></div></div>
+        <div id="reportsGate" class="page"><div class="card-panel lock-screen"><h3>🔒 تصريح أمني - السجلات العامة</h3><input id="repPass" type="password" placeholder="أدخل رمز الدخول المشفر"><button class="action-btn" onclick="unlockSection('repPass', 'reportsNormalView')">دخول الأرشيف العام</button></div></div>
+        <div id="secretReportsGate" class="page"><div class="card-panel lock-screen"><h3>🚨 ملفات سرية للغاية (المستوى الأحمر)</h3><input id="secRepPass" type="password" placeholder="رمز الوصول الرئاسي الخاص"><button class="action-btn" onclick="unlockSection('secRepPass', 'reportsSecretView')" style="background: var(--danger); border-color: var(--danger); color: white;">تأكيد الهوية الرقمية</button></div></div>
+
+        <!-- ================= 5. شاشة المطلوبين الحقيقية ================= -->
+        <div id="wantedRealPanel" class="page">
+            <div class="dashboard-layout">
+                <div class="card-panel">
+                    <h3 class="panel-title">➕ تسجيل مطلوب جديد للعدالة</h3>
+                    <input id="wantedName" placeholder="الاسم الكامل المستهدف">
+                    <input id="wantedCrime" placeholder="نوع الجرم / التهديد المصنف">
+                    <button class="action-btn" id="addWanted">تعميم وإرسال للميدان</button>
+                </div>
+                <div class="card-panel">
+                    <h3 class="panel-title">🚨 العناصر المطلوبة حالياً</h3>
+                    <div id="wantedList" class="data-list-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= 6. قسم المهمات ================= -->
+        <div id="missionsPanel" class="page">
+            <div class="dashboard-layout">
+                <div class="card-panel">
+                    <h3 class="panel-title">🎯 تخطيط وتوزيع مهمة عسكرية جديدة</h3>
+                    <input id="missionTitle" placeholder="عنوان العمليات (مثال: اقتحام وكر الفا)">
+                    <input id="missionLeader" placeholder="👮 القائد الميداني المسؤول">
+                    <input id="missionMembers" placeholder="👥 أطقم الإسناد والمشاركين">
+                    <select id="missionStatus">
+                        <option value="مستمرة">⏳ مهمة مستمرة / قيد التنفيذ</option>
+                        <option value="ناجحة">✅ تم التنفيذ بنجاح</option>
+                        <option value="فاشلة">❌ عملية مجهضة / فاشلة</option>
+                    </select>
+                    <textarea id="missionDesc" placeholder="📝 الأوامر العسكرية وتفاصيل ووش المهمة المطلوبة بالضبط..." style="height:110px;"></textarea>
+                    <button class="action-btn" id="addMission">حفظ وتعميم البيانات الميدانية</button>
+                    <button class="action-btn" style="margin-top:10px; background:#18222f; border-color:#3a4b61;" onclick="switchPage('missionsGate')">🔒 استعراض لوحة أرشيف المهمات</button>
+                </div>
+                <div id="missionsRealView" class="card-panel" style="display:none; grid-column: span 1;">
+                    <h3 class="panel-title">📋 السجلات والعمليات الموثقة بنظام الفايربيس</h3>
+                    <div id="missionsList" class="data-list-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= 7. قسم الترشيحات والترقيات ================= -->
+        <div id="nominationsPanel" class="page">
+            <div class="dashboard-layout">
+                <div class="card-panel">
+                    <h3 class="panel-title">🎖️ نموذج ترشيح وتزكية كادر</h3>
+                    <input id="nomineeCharName" placeholder="👤 اسم شخصية العضو المرشح">
+                    <input id="nomineeCurrentRank" placeholder="🎖️ الرتبة العسكرية الحالية">
+                    <input id="nomineeSector" placeholder="🏢 القطاع الحالي المعين به">
+                    <textarea id="nominationReason" placeholder="📝 مسببات الترقية أو سبب الترشيح الفعلي بالكامل..." style="height:110px;"></textarea>
+                    <button class="action-btn" id="addNomination">إرسال التزكية إلى الإدارة العليا</button>
+                    <button class="action-btn" style="margin-top:10px; background:#18222f; border-color:#3a4b61;" onclick="switchPage('nominateGate')">🔒 استعراض منصة قرارات المرشحين</button>
+                </div>
+                <div id="nominationsRealView" class="card-panel" style="display:none;">
+                    <h3 class="panel-title">📋 كشوفات المتقدمين وأزرار التحكم بالقرارات الإدارية</h3>
+                    <div id="nominationsList" class="data-list-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= 8. قسم التقارير ================= -->
+        <div id="reportsPanel" class="page">
+            <div class="dashboard-layout">
+                <div class="card-panel">
+                    <h3 class="panel-title">📤 صياغة تقرير عمليات نهائي</h3>
+                    <input id="repId" placeholder="🆔 المعرف الرقمي للتقرير">
+                    <div style="display:flex; gap:10px;"><input id="repDate" type="date"><input id="repTime" type="time"></div>
+                    <input id="repLeader" placeholder="👮 القائد المسؤول عن صياغة التقرير">
+                    <input id="repMembers" placeholder="👥 أسماء القوة المشاركة">
+                    <select id="repType">
+                        <option>مداهمة خاطفة</option><option>اقتحام تكتيكي</option><option>إنقاذ رهائن وتأمين</option><option>عملية سرية خاصة</option>
+                    </select>
+                    <input id="repLocation" placeholder="📍 إحداثيات وموقع العملية">
+                    <textarea id="repDetails" placeholder="📝 كتابة تفاصيل وسيناريو العملية بالكامل هنا..." style="height:120px;"></textarea>
+                    <label style="display:flex; align-items:center; gap:8px; margin-bottom:15px; cursor:pointer;"><input id="secretReport" type="checkbox" style="width:auto; margin:0;"> 🔒 تصنيف الملف كتقرير سري مشفر للغاية</label>
+                    <button class="action-btn" onclick="saveReport()">حفظ التقرير نهائياً بالسيرفر</button>
+                </div>
+                
+                <div class="card-panel" style="display:flex; flex-direction:column; gap:15px;">
+                    <h3 class="panel-title">📂 أرشيف الملفات المحمية بالرقم السري</h3>
+                    <button class="action-btn" onclick="switchPage('reportsGate')" style="background:#1e293b; border-color:#475569;">📄 فتح الأرشيف العام للتقارير</button>
+                    <button class="action-btn" onclick="switchPage('secretReportsGate')" style="background:#451a1a; border-color:#991b1b; color:#f87171;">🚨 فتح الخزنة السرية (المستوى الأعلى)</button>
+                    
+                    <div id="reportsNormalView" style="display:none; margin-top:15px;">
+                        <h4 style="color:var(--gold); margin-bottom:10px;">📋 التقارير العادية المعروضة</h4>
+                        <div id="normalReportsContainer" class="data-list-container"></div>
+                    </div>
+                    
+                    <div id="reportsSecretView" style="display:none; margin-top:15px;">
+                        <h4 style="color:var(--danger); margin-bottom:10px;">🔒 المستندات المصنفة سرية</h4>
+                        <div id="secretReportsContainer" class="data-list-container"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+<!-- ================= سكريبتات الأنظمة وقاعدة البيانات ================= -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBTTj1ww1VPYIHu1SyMg_KSYHZRcF8dRHI",
+  authDomain: "swat-system-384b0.firebaseapp.com",
+  projectId: "swat-system-384b0",
+  storageBucket: "swat-system-384b0.firebasestorage.app",
+  messagingSenderId: "874029124115",
+  appId: "1:874029124115:web:27657c0137fe73ec50cde6",
+  measurementId: "G-MVNRHGCGZE"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// ربط دوال الحركة والتحقق
+window.switchPage = function(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    
+    let target = document.getElementById(pageId);
+    if(target) target.classList.add('active');
+    
+    // ربط إضاءة زر القائمة الجانبية
+    let activeBtn = Array.from(document.querySelectorAll('.nav-btn')).find(b => b.getAttribute('onclick').includes(pageId) || (pageId.includes('Real') && b.getAttribute('onclick').includes(pageId.replace('RealPanel','').replace('View','').toLowerCase())));
+    if(activeBtn) activeBtn.classList.add('active');
+};
+
+window.unlockSection = function(inputId, targetPanelId) {
+    let passValue = document.getElementById(inputId).value;
+    if(passValue === "1029") {
+        document.getElementById(inputId).value = "";
+        if(targetPanelId.includes('View') && !targetPanelId.includes('reports')) {
+            document.getElementById(targetPanelId).style.display = "block";
+        } else if (targetPanelId.includes('reports')) {
+            document.getElementById(targetPanelId).style.display = "block";
+        } else {
+            switchPage(targetPanelId);
+        }
+        alert("🔓 تم التحقق بنجاح وتخطي جدار الحماية الرقمي");
+    } else {
+        alert("❌ الرمز الأمني خاطئ! تم تسجيل المحاولة الفاشلة");
     }
-}
+};
+
+window.deleteWanted = async (id) => { if(confirm("حذف المطلوب؟")) await deleteDoc(doc(db, "wanted", id)); };
+window.deleteMission = async (id) => { if(confirm("إزالة ملف العملية؟")) await deleteDoc(doc(db, "missions", id)); };
+window.deleteNomination = async (id) => { if(confirm("تدمير ملف المرشح نهائياً؟")) await deleteDoc(doc(db, "nominations", id)); };
+window.updateNominationStatus = async (id, status) => { await updateDoc(doc(db, "nominations", id), { status: status }); };
+window.deleteReport = async (id) => { if(confirm("حذف التقرير نهائياً؟")) await deleteDoc(doc(db, "reports", id)); };
+
+// 🚨 إدارة بيانات المطلوبين
+onSnapshot(collection(db, "wanted"), (snap) => {
+    let container = document.getElementById("wantedList"); container.innerHTML = "";
+    snap.forEach(d => {
+        let item = d.data();
+        container.innerHTML += `
+            <div class="item-card">
+                <h4>🎯 الاسم: ${item.name}</h4>
+                <p>⚠️ التهمة: ${item.crime}</p>
+                <button onclick="deleteWanted('${d.id}')" style="background:var(--danger); border:none; color:white; padding:6px 12px; border-radius:4px; font-size:12px; margin-top:8px; cursor:pointer;">إسقاط وتصفية القيد</button>
+            </div>`;
+    });
+});
+document.getElementById("addWanted").onclick = async () => {
+    let n = document.getElementById("wantedName").value.trim();
+    let c = document.getElementById("wantedCrime").value.trim();
+    if(n && c) { await addDoc(collection(db, "wanted"), {name:n, crime:c}); document.getElementById("wantedName").value=""; document.getElementById("wantedCrime").value=""; }
+};
+
+// 🎯 إدارة بيانات العمليات والمهمات المحدثة بالكامل لطلبك
+onSnapshot(collection(db, "missions"), (snap) => {
+    let container = document.getElementById("missionsList"); container.innerHTML = "";
+    snap.forEach(d => {
+        let item = d.data();
+        let col = item.status === "ناجحة" ? var(--success) : (item.status === "فاشلة" ? var(--danger) : var(--warning));
+        container.innerHTML += `
+            <div class="item-card">
+                <h4>🎯 العنوان: ${item.title}</h4>
+                <p><b>👮 قائد المهمة:</b> ${item.leader}</p>
+                <p><b>👥 المشاركون:</b> ${item.members || 'لا يوجد أطقم حالياً'}</p>
+                <p><b>📊 النتيجة الحالية:</b> <span style="color:${col}; font-weight:bold;">${item.status}</span></p>
+                <p style="background:#0a0e14; padding:8px; border-radius:4px; margin-top:8px; font-size:12.5px; border-right:2px solid var(--gold);"><b>📝 ووش المهمة بالضبط:</b>\n${item.desc}</p>
+                <button onclick="deleteMission('${d.id}')" style="background:var(--danger); border:none; color:white; padding:5px 10px; border-radius:4px; font-size:11px; margin-top:8px; cursor:pointer;">🗑️ إتلاف السجل</button>
+            </div>`;
+    });
+});
+document.getElementById("addMission").onclick = async () => {
+    let t = document.getElementById("missionTitle").value.trim();
+    let l = document.getElementById("missionLeader").value.trim();
+    let m = document.getElementById("missionMembers").value.trim();
+    let s = document.getElementById("missionStatus").value;
+    let d = document.getElementById("missionDesc").value.trim();
+    if(t && l && d) {
+        await addDoc(collection(db, "missions"), {title:t, leader:l, members:m, status:s, desc:d});
+        alert("تم إيداع بيانات العملية بنجاح بالشبكة الفيدرالية السحابية ✅");
+        document.getElementById("missionTitle").value=""; document.getElementById("missionLeader").value=""; document.getElementById("missionMembers").value=""; document.getElementById("missionDesc").value="";
+    }
+};
+
+// 🎖️ إدارة شؤون الترشيحات والتزكيات
+onSnapshot(collection(db, "nominations"), (snap) => {
+    let container = document.getElementById("nominationsList"); container.innerHTML = "";
+    snap.forEach(d => {
+        let item = d.data();
+        let st = item.status || "قيد المراجعة";
+        let c = st === "مقبول" ? var(--success) : (st === "مرفوض" ? var(--danger) : var(--warning));
+        container.innerHTML += `
+            <div class="item-card">
+                <h4>🎖️ الكادر: ${item.charName}</h4>
+                <p><b>🎖️ الرتبة الحالية:</b> ${item.currentRank} | <b>🏢 القطاع الحالي:</b> ${item.sector}</p>
+                <p><b>📊 حالة الطلب:</b> <span style="color:${c}; font-weight:bold;">${st}</span></p>
+                <p style="background:#0a0e14; padding:8px; border-radius:4px; margin-top:6px; font-size:12.5px;"><b>📝 مسببات الترشيح المرفوعة:</b>\n${item.reason}</p>
+                <div class="status-btn-group">
+                    <button onclick="updateNominationStatus('${d.id}', 'مقبول')" style="background:#1e5335;">قبول ✅</button>
+                    <button onclick="updateNominationStatus('${d.id}', 'قيد المراجعة')" style="background:#684a18;">مراجعة ⏳</button>
+                    <button onclick="updateNominationStatus('${d.id}', 'مرفوض')" style="background:#5e2222;">رفض ❌</button>
+                </div>
+                <button onclick="deleteNomination('${d.id}')" style="background:#334155; border:none; color:white; padding:4px 8px; border-radius:4px; font-size:11px; margin-top:10px; cursor:pointer; width:100%;">🗑️ مسح ملف المرشح من الكشوفات</button>
+            </div>`;
+    });
+});
+document.getElementById("addNomination").onclick = async () => {
+    let cn = document.getElementById("nomineeCharName").value.trim();
+    let cr = document.getElementById("nomineeCurrentRank").value.trim();
+    let se = document.getElementById("nomineeSector").value.trim();
+    let re = document.getElementById("nominationReason").value.trim();
+    if(cn && cr && se && re) {
+        await addDoc(collection(db, "nominations"), {charName:cn, currentRank:cr, sector:se, reason:re, status:"قيد المراجعة"});
+        alert("تم إرسال الملف وبانتظار رد القيادة العليا ⚖️");
+        document.getElementById("nomineeCharName").value=""; document.getElementById("nomineeCurrentRank").value=""; document.getElementById("nomineeSector").value=""; document.getElementById("nominationReason").value="";
+    }
+};
+
+// 📄 مركز التقارير المتقدم
+onSnapshot(collection(db, "reports"), (snap) => {
+    let normal = document.getElementById("normalReportsContainer"); normal.innerHTML = "";
+    let secret = document.getElementById("secretReportsContainer"); secret.innerHTML = "";
+    snap.forEach(d => {
+        let rep = d.data();
+        let html = `
+            <div class="item-card" style="border-right: 3px solid ${rep.isSecret ? 'var(--danger)' : 'var(--info)'}">
+                <h4>سجل رقم: ${rep.id} [${rep.type}]</h4>
+                <p><b>📅 التوقيت:</b> ${rep.date} | ${rep.time}</p>
+                <p><b>👮 الصائغ المسؤول:</b> ${rep.leader} | <b>📍 الموقع:</b> ${rep.location}</p>
+                <p style="background:#0a0e14; padding:8px; border-radius:4px; margin-top:8px; white-space:pre-wrap;">${rep.details}</p>
+                <button onclick="deleteReport('${d.id}')" style="background:var(--danger); border:none; color:white; padding:5px 10px; border-radius:4px; font-size:11px; margin-top:8px; cursor:pointer;">🗑️ تدمير المستند نهائياً</button>
+            </div>`;
+        if(rep.isSecret) secret.innerHTML += html; else normal.innerHTML += html;
+    });
+});
+window.saveReport = async () => {
+    let id = document.getElementById("repId").value.trim();
+    let dt = document.getElementById("repDate").value;
+    let tm = document.getElementById("repTime").value;
+    let ld = document.getElementById("repLeader").value.trim();
+    let mb = document.getElementById("repMembers").value.trim();
+    let tp = document.getElementById("repType").value;
+    let lc = document.getElementById("repLocation").value.trim();
+    let dl = document.getElementById("repDetails").value.trim();
+    let sec = document.getElementById("secretReport").checked;
+    if(id && dt && tm && ld && dl) {
+        await addDoc(collection(db, "reports"), {id:id, date:dt, time:tm, leader:ld, members:mb, type:tp, location:lc, details:dl, isSecret:sec});
+        alert("تم إيداع التقرير المركزي بالأرشيف بنجاح 📂");
+        document.getElementById("repId").value=""; document.getElementById("repLeader").value=""; document.getElementById("repDetails").value=""; document.getElementById("secretReport").checked = false;
+    } else { alert("❌ يرجى تعبئة خلايا الحقول الأساسية للتقرير"); }
+};
 </script>
 </body>
 </html>
