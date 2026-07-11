@@ -269,14 +269,6 @@ input:focus, select:focus, textarea:focus {
 .item-card h4 { color: var(--gold); margin-bottom: 8px; }
 .item-card p { font-size: 13px; color: #cbd5e1; margin: 4px 0; }
 
-.status-badge {
-    display: inline-block;
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: bold;
-}
-
 .status-btn-group {
     display: flex;
     gap: 8px;
@@ -294,7 +286,7 @@ input:focus, select:focus, textarea:focus {
     font-weight: bold;
 }
 
-/* نظام القفل الجذاب */
+/* نظام القفل */
 .lock-screen {
     max-width: 450px;
     margin: 60px auto;
@@ -318,13 +310,13 @@ input:focus, select:focus, textarea:focus {
             <div class="logo-icon">🦅</div>
             <div class="logo-text">SWAT UNIT</div>
         </div>
-        <button class="nav-btn active" onclick="switchPage('dashboardPanel')">🖥️ لوحة القيادة</button>
-        <button class="nav-btn" onclick="switchPage('rulesPanel')">📜 اللائحة والقوانين</button>
-        <button class="nav-btn" onclick="switchPage('schedulePanel')">📅 شجرة الجدولة</button>
-        <button class="nav-btn" onclick="switchPage('wantedGate')">🚨 خلية المطلوبين</button>
-        <button class="nav-btn" onclick="switchPage('missionsPanel')">🎯 إدارة العمليات</button>
-        <button class="nav-btn" onclick="switchPage('nominationsPanel')">🎖️ شؤون الترشيحات</button>
-        <button class="nav-btn" onclick="switchPage('reportsPanel')">📄 مركز التقارير</button>
+        <button id="btn-dashboardPanel" class="nav-btn active" onclick="switchPage('dashboardPanel')">🖥️ لوحة القيادة</button>
+        <button id="btn-rulesPanel" class="nav-btn" onclick="switchPage('rulesPanel')">📜 اللائحة والقوانين</button>
+        <button id="btn-schedulePanel" class="nav-btn" onclick="switchPage('schedulePanel')">📅 شجرة الجدولة</button>
+        <button id="btn-wantedGate" class="nav-btn" onclick="switchPage('wantedGate')">🚨 خلية المطلوبين</button>
+        <button id="btn-missionsPanel" class="nav-btn" onclick="switchPage('missionsPanel')">🎯 إدارة العمليات</button>
+        <button id="btn-nominationsPanel" class="nav-btn" onclick="switchPage('nominationsPanel')">🎖️ شؤون الترشيحات</button>
+        <button id="btn-reportsPanel" class="nav-btn" onclick="switchPage('reportsPanel')">📄 مركز التقارير</button>
     </div>
 
     <!-- 🖥️ مساحة العرض الرئيسية -->
@@ -428,7 +420,7 @@ input:focus, select:focus, textarea:focus {
                     </select>
                     <textarea id="missionDesc" placeholder="📝 الأوامر العسكرية وتفاصيل ووش المهمة المطلوبة بالضبط..." style="height:110px;"></textarea>
                     <button class="action-btn" id="addMission">حفظ وتعميم البيانات الميدانية</button>
-                    <button class="action-btn" style="margin-top:10px; background:#18222f; border-color:#3a4b61;" onclick="switchPage('missionsGate')">🔒 استعراض لوحة أرشيف المهمات</button>
+                    <button class="action-btn" style="margin-top:10px; background:#18222f; border-color:#3a4b61;" onclick="unlockShortcut('missionsRealView')">🔓 تجاوز القفل وعرض الأرشيف مباشرة</button>
                 </div>
                 <div id="missionsRealView" class="card-panel" style="display:none; grid-column: span 1;">
                     <h3 class="panel-title">📋 السجلات والعمليات الموثقة بنظام الفايربيس</h3>
@@ -447,7 +439,7 @@ input:focus, select:focus, textarea:focus {
                     <input id="nomineeSector" placeholder="🏢 القطاع الحالي المعين به">
                     <textarea id="nominationReason" placeholder="📝 مسببات الترقية أو سبب الترشيح الفعلي بالكامل..." style="height:110px;"></textarea>
                     <button class="action-btn" id="addNomination">إرسال التزكية إلى الإدارة العليا</button>
-                    <button class="action-btn" style="margin-top:10px; background:#18222f; border-color:#3a4b61;" onclick="switchPage('nominateGate')">🔒 استعراض منصة قرارات المرشحين</button>
+                    <button class="action-btn" style="margin-top:10px; background:#18222f; border-color:#3a4b61;" onclick="unlockShortcut('nominationsRealView')">🔓 تجاوز القفل واستعراض المرشحين مباشرة</button>
                 </div>
                 <div id="nominationsRealView" class="card-panel" style="display:none;">
                     <h3 class="panel-title">📋 كشوفات المتقدمين وأزرار التحكم بالقرارات الإدارية</h3>
@@ -476,8 +468,8 @@ input:focus, select:focus, textarea:focus {
                 
                 <div class="card-panel" style="display:flex; flex-direction:column; gap:15px;">
                     <h3 class="panel-title">📂 أرشيف الملفات المحمية بالرقم السري</h3>
-                    <button class="action-btn" onclick="switchPage('reportsGate')" style="background:#1e293b; border-color:#475569;">📄 فتح الأرشيف العام للتقارير</button>
-                    <button class="action-btn" onclick="switchPage('secretReportsGate')" style="background:#451a1a; border-color:#991b1b; color:#f87171;">🚨 فتح الخزنة السرية (المستوى الأعلى)</button>
+                    <button class="action-btn" onclick="unlockShortcut('reportsNormalView')" style="background:#1e293b; border-color:#475569;">📄 فتح الأرشيف العام للتقارير مباشرة</button>
+                    <button class="action-btn" onclick="unlockShortcut('reportsSecretView')" style="background:#451a1a; border-color:#991b1b; color:#f87171;">🚨 فتح الخزنة السرية مباشرة</button>
                     
                     <div id="reportsNormalView" style="display:none; margin-top:15px;">
                         <h4 style="color:var(--gold); margin-bottom:10px;">📋 التقارير العادية المعروضة</h4>
@@ -512,7 +504,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// ربط دوال الحركة والتحقق
+// نظام الانتقال المحسن بين الصفحات
 window.switchPage = function(pageId) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -520,11 +512,11 @@ window.switchPage = function(pageId) {
     let target = document.getElementById(pageId);
     if(target) target.classList.add('active');
     
-    // ربط إضاءة زر القائمة الجانبية
-    let activeBtn = Array.from(document.querySelectorAll('.nav-btn')).find(b => b.getAttribute('onclick').includes(pageId) || (pageId.includes('Real') && b.getAttribute('onclick').includes(pageId.replace('RealPanel','').replace('View','').toLowerCase())));
-    if(activeBtn) activeBtn.classList.add('active');
+    let sidebarBtn = document.getElementById('btn-' + pageId);
+    if(sidebarBtn) sidebarBtn.classList.add('active');
 };
 
+// فك التشفير بالرمز الأمني القديم (1029) إذا أردت استخدامه
 window.unlockSection = function(inputId, targetPanelId) {
     let passValue = document.getElementById(inputId).value;
     if(passValue === "1029") {
@@ -536,9 +528,16 @@ window.unlockSection = function(inputId, targetPanelId) {
         } else {
             switchPage(targetPanelId);
         }
-        alert("🔓 تم التحقق بنجاح وتخطي جدار الحماية الرقمي");
     } else {
-        alert("❌ الرمز الأمني خاطئ! تم تسجيل المحاولة الفاشلة");
+        alert("❌ الرمز الأمني خاطئ!");
+    }
+};
+
+// دالة تخطي القفل الفورية لفتح القوائم دون إدخال الرمز
+window.unlockShortcut = function(targetViewId) {
+    let view = document.getElementById(targetViewId);
+    if(view) {
+        view.style.display = "block";
     }
 };
 
@@ -572,14 +571,14 @@ onSnapshot(collection(db, "missions"), (snap) => {
     let container = document.getElementById("missionsList"); container.innerHTML = "";
     snap.forEach(d => {
         let item = d.data();
-        let col = item.status === "ناجحة" ? var(--success) : (item.status === "فاشلة" ? var(--danger) : var(--warning));
+        let col = item.status === "ناجحة" ? '#38a169' : (item.status === "فاشلة" ? '#e53e3e' : '#dd6b20');
         container.innerHTML += `
             <div class="item-card">
                 <h4>🎯 العنوان: ${item.title}</h4>
                 <p><b>👮 قائد المهمة:</b> ${item.leader}</p>
                 <p><b>👥 المشاركون:</b> ${item.members || 'لا يوجد أطقم حالياً'}</p>
                 <p><b>📊 النتيجة الحالية:</b> <span style="color:${col}; font-weight:bold;">${item.status}</span></p>
-                <p style="background:#0a0e14; padding:8px; border-radius:4px; margin-top:8px; font-size:12.5px; border-right:2px solid var(--gold);"><b>📝 ووش المهمة بالضبط:</b>\n${item.desc}</p>
+                <p style="background:#0a0e14; padding:8px; border-radius:4px; margin-top:8px; font-size:12.5px; border-right:2px solid var(--gold); white-space: pre-wrap;"><b>📝 ووش المهمة بالضبط:</b>\n${item.desc}</p>
                 <button onclick="deleteMission('${d.id}')" style="background:var(--danger); border:none; color:white; padding:5px 10px; border-radius:4px; font-size:11px; margin-top:8px; cursor:pointer;">🗑️ إتلاف السجل</button>
             </div>`;
     });
@@ -603,17 +602,17 @@ onSnapshot(collection(db, "nominations"), (snap) => {
     snap.forEach(d => {
         let item = d.data();
         let st = item.status || "قيد المراجعة";
-        let c = st === "مقبول" ? var(--success) : (st === "مرفوض" ? var(--danger) : var(--warning));
+        let c = st === "مقبول" ? '#38a169' : (st === "مرفوض" ? '#e53e3e' : '#dd6b20');
         container.innerHTML += `
             <div class="item-card">
                 <h4>🎖️ الكادر: ${item.charName}</h4>
                 <p><b>🎖️ الرتبة الحالية:</b> ${item.currentRank} | <b>🏢 القطاع الحالي:</b> ${item.sector}</p>
                 <p><b>📊 حالة الطلب:</b> <span style="color:${c}; font-weight:bold;">${st}</span></p>
-                <p style="background:#0a0e14; padding:8px; border-radius:4px; margin-top:6px; font-size:12.5px;"><b>📝 مسببات الترشيح المرفوعة:</b>\n${item.reason}</p>
+                <p style="background:#0a0e14; padding:8px; border-radius:4px; margin-top:6px; font-size:12.5px; white-space: pre-wrap;"><b>📝 مسببات الترشيح المرفوعة:</b>\n${item.reason}</p>
                 <div class="status-btn-group">
-                    <button onclick="updateNominationStatus('${d.id}', 'مقبول')" style="background:#1e5335;">قبول ✅</button>
-                    <button onclick="updateNominationStatus('${d.id}', 'قيد المراجعة')" style="background:#684a18;">مراجعة ⏳</button>
-                    <button onclick="updateNominationStatus('${d.id}', 'مرفوض')" style="background:#5e2222;">رفض ❌</button>
+                    <button onclick="updateNominationStatus('${d.id}', 'مقبول')" style="background:#1e5335; cursor:pointer;">قبول ✅</button>
+                    <button onclick="updateNominationStatus('${d.id}', 'قيد المراجعة')" style="background:#684a18; cursor:pointer;">مراجعة ⏳</button>
+                    <button onclick="updateNominationStatus('${d.id}', 'مرفوض')" style="background:#5e2222; cursor:pointer;">رفض ❌</button>
                 </div>
                 <button onclick="deleteNomination('${d.id}')" style="background:#334155; border:none; color:white; padding:4px 8px; border-radius:4px; font-size:11px; margin-top:10px; cursor:pointer; width:100%;">🗑️ مسح ملف المرشح من الكشوفات</button>
             </div>`;
@@ -637,8 +636,9 @@ onSnapshot(collection(db, "reports"), (snap) => {
     let secret = document.getElementById("secretReportsContainer"); secret.innerHTML = "";
     snap.forEach(d => {
         let rep = d.data();
+        let borderCol = rep.isSecret ? '#e53e3e' : '#3182ce';
         let html = `
-            <div class="item-card" style="border-right: 3px solid ${rep.isSecret ? 'var(--danger)' : 'var(--info)'}">
+            <div class="item-card" style="border-right: 3px solid ${borderCol}">
                 <h4>سجل رقم: ${rep.id} [${rep.type}]</h4>
                 <p><b>📅 التوقيت:</b> ${rep.date} | ${rep.time}</p>
                 <p><b>👮 الصائغ المسؤول:</b> ${rep.leader} | <b>📍 الموقع:</b> ${rep.location}</p>
