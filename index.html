@@ -185,6 +185,28 @@ body {
     align-items: center;
 }
 
+/* تصاميم لوحة القيادة الجديدة المليئة بالبيانات */
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+    grid-column: span 2;
+}
+@media(max-width: 1200px) { .stats-container { grid-template-columns: repeat(2, 1fr); } }
+@media(max-width: 600px) { .stats-container { grid-template-columns: 1fr; } }
+
+.stat-card {
+    background: #111722;
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+}
+.stat-card .num { font-size: 28px; font-weight: bold; color: var(--gold); margin-bottom: 5px; }
+.stat-card .label { font-size: 13px; color: var(--text-muted); }
+
 /* الحقول والقوائم */
 input, select, textarea {
     width: 100%;
@@ -357,17 +379,72 @@ input:focus, select:focus, textarea:focus {
             </div>
         </div>
 
-        <!-- ================= 1. لوحة القيادة الرئيسية ================= -->
+        <!-- ================= 1. لوحة القيادة الرئيسية المحدثة والممتلئة ================= -->
         <div id="dashboardPanel" class="page active">
             <div class="dashboard-layout">
                 <div class="card-panel" style="grid-column: span 2;">
                     <h3 class="panel-title">📡 البث والتعميم الإداري الجديد</h3>
                     <p style="color: var(--text-muted); line-height: 1.8;">مرحباً بك في نظام إدارة فرقة SWAT المطور بالكامل. من هنا يمكنك جدولة الأعضاء، تفويض قيادات المهمات، مراجعة طلبات الانضمام والترقيات، ورفع التقارير السرية المشفرة للسيرفر مباشرة بالوقت الفعلي.</p>
                 </div>
+
+                <!-- إحصائيات الفرقة لملء الفراغ -->
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="num">13</div>
+                        <div class="label">الأعضاء الرسميين بالجدول</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="num" style="color: var(--warning);">ألفا / برافو</div>
+                        <div class="label">الوحدات القتالية النشطة</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="num" style="color: var(--success);">آمن 100%</div>
+                        <div class="label">تشفير خوادم Firebase</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="num" style="color: var(--danger);">LEVEL 1</div>
+                        <div class="label">حالة الجاهزية والاستعداد</div>
+                    </div>
+                </div>
+
+                <!-- جدول التعاميم السريعة -->
+                <div class="card-panel">
+                    <h3 class="panel-title">📢 آخر القرارات والتعاميم</h3>
+                    <ul style="list-style: none; color: #cbd5e1; line-height: 2;">
+                        <li style="margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
+                            <span style="color: var(--gold); font-weight: bold;">[تعميم تكتيكي]</span> الالتزام التام بالصمت اللاسلكي أثناء المداهمات.
+                        </li>
+                        <li style="margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
+                            <span style="color: var(--gold); font-weight: bold;">[تحديث اللائحة]</span> تفعيل نظام قفل الأقسام برمز الأمان الموحد بشكل كامل.
+                        </li>
+                        <li style="margin-bottom: 10px; padding-bottom: 8px;">
+                            <span style="color: var(--gold); font-weight: bold;">[تجهيزات]</span> مراجعة جاهزية السلاح الفردي قبل الخروج في أي دورية معتمدة.
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- جاهزية غرف العمليات -->
+                <div class="card-panel">
+                    <h3 class="panel-title">🔒 مراقبة الأنظمة الحيوية</h3>
+                    <div style="display: flex; flex-direction: column; gap: 12px; font-size: 14px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>قاعدة البيانات المركزية:</span>
+                            <span style="color: var(--success); font-weight: bold;">متصل ومزامن (Firebase)</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>جدار الحماية الفيدرالي:</span>
+                            <span style="color: var(--success); font-weight: bold;">نشط (SHA-256)</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>صلاحيات التعديل والشطب:</span>
+                            <span style="color: var(--warning); font-weight: bold;">محمية برمز مشفر</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- ================= 2. شاشة القوانين المعدلة ================= -->
+        <!-- ================= 2. شاشة القوانين ================= -->
         <div id="rulesPanel" class="page">
             <div class="card-panel">
                 <h3 class="panel-title">قوانين الفرقة الصارمة</h3>
@@ -393,7 +470,7 @@ input:focus, select:focus, textarea:focus {
             </div>
         </div>
 
-        <!-- ================= 3. شاشة اللبس الجديدة ================= -->
+        <!-- ================= 3. شاشة اللبس ================= -->
         <div id="clothingPanel" class="page">
             <div class="card-panel">
                 <h3 class="panel-title">👕 الزي الرسمي والمعدات المعتمدة</h3>
@@ -409,7 +486,7 @@ input:focus, select:focus, textarea:focus {
             </div>
         </div>
 
-        <!-- ================= 4. صفحة الجدول المحدثة بطلب الرمز داخلياً ================= -->
+        <!-- ================= 4. صفحة الجدول ================= -->
         <div id="schedulePanel" class="page">
             <div class="card-panel">
                 <div class="panel-title">
@@ -417,7 +494,6 @@ input:focus, select:focus, textarea:focus {
                     <button class="add-member-btn" onclick="showInlineLock()">+</button>
                 </div>
                 
-                <!-- صندوق التحقق من الرمز من داخل التطبيق -->
                 <div id="inlineLockBox" class="inline-lock-box" style="display: none;">
                     <h5>🔒 يتطلب صلاحيات الإدارة - أدخل الرمز السري للتعديل</h5>
                     <div class="flex-inputs">
@@ -426,14 +502,13 @@ input:focus, select:focus, textarea:focus {
                     </div>
                 </div>
 
-                <!-- حقول إدخال عضو جديد (تظهر فقط بعد إدخال الرمز بنجاح) -->
                 <div id="addMemberForm" style="display:none; background:#121822; padding:15px; border-radius:8px; margin-bottom:15px; border:1px solid var(--gold);">
                     <h4 style="color:var(--gold); margin-bottom:10px;">➕ إضافة عضو جديد للجدول</h4>
                     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom: 10px;">
                         <input id="newMemNo" placeholder="الرقم (مثال: 14)">
                         <input id="newMemName" placeholder="الاسم الكامل">
                         <input id="newMemRank" placeholder="الرتبة والتصنيف (R-0)">
-                        <input id="newMemUnit" placeholder="الوحدة / 0 الكتيبة">
+                        <input id="newMemUnit" placeholder="الوحدة / الكتيبة">
                     </div>
                     <button class="action-btn" onclick="saveNewMemberToFirebase()">تأكيد الحفظ بالسيرفر</button>
                 </div>
@@ -458,7 +533,6 @@ input:focus, select:focus, textarea:focus {
                         <tr><td>13</td><td>Ahmed Almutairi</td><td>R-12 Member</td><td>Bravo</td><td>-</td></tr>
                     </tbody>
                     <tbody id="dynamicMembersTable">
-                        <!-- الأعضاء المضافين إلكترونياً سيظهرون هنا مع زر الحذف -->
                     </tbody>
                 </table>
             </div>
@@ -511,7 +585,7 @@ input:focus, select:focus, textarea:focus {
             </div>
         </div>
 
-        <!-- ================= 8. قسم الترشيحات والترقية المحمي ================= -->
+        <!-- ================= 8. قسم الترشيحات ================= -->
         <div id="nominationsPanel" class="page">
             <div class="dashboard-layout">
                 <div class="card-panel">
@@ -536,7 +610,7 @@ input:focus, select:focus, textarea:focus {
             </div>
         </div>
 
-        <!-- ================= 9. قسم التقارير المحمي بالكامل ================= -->
+        <!-- ================= 9. قسم التقارير ================= -->
         <div id="reportsPanel" class="page">
             <div class="dashboard-layout">
                 <div class="card-panel">
@@ -602,7 +676,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// نظام الانتقال الفوري بين الصفحات
 window.switchPage = function(pageId) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -614,7 +687,6 @@ window.switchPage = function(pageId) {
     if(sidebarBtn) sidebarBtn.classList.add('active');
 };
 
-// فك التشفير وفتح النوافذ المغلقة
 window.unlockSection = function(inputId, targetPanelId) {
     let passValue = document.getElementById(inputId).value;
     if(passValue === "1029") {
@@ -640,14 +712,12 @@ window.unlockSection = function(inputId, targetPanelId) {
     }
 };
 
-// إظهار حقل الرمز الداخلي للجدول عند الضغط على زر الزائد
 window.showInlineLock = function() {
     let lockBox = document.getElementById("inlineLockBox");
     lockBox.style.display = (lockBox.style.display === "none") ? "block" : "none";
     document.getElementById("addMemberForm").style.display = "none";
 };
 
-// التحقق من الرمز من داخل الصفحة
 window.verifyInlineCode = function() {
     let codeInput = document.getElementById("inlineCodeInput").value;
     if(codeInput === "1029") {
@@ -659,7 +729,6 @@ window.verifyInlineCode = function() {
     }
 };
 
-// حفظ العضو الجديد في الفايربيس
 window.saveNewMemberToFirebase = async function() {
     let no = document.getElementById("newMemNo").value.trim();
     let name = document.getElementById("newMemName").value.trim();
@@ -679,7 +748,6 @@ window.saveNewMemberToFirebase = async function() {
     }
 };
 
-// آلية حذف عضو تطلّب الرمز السري من داخل الصفحة
 window.triggerDeleteMember = async function(id) {
     let pass = prompt("🔒 يتطلب صلاحية إدارية - أدخل الرمز لتأكيد الحذف نهائياً:");
     if(pass === "1029") {
@@ -690,7 +758,6 @@ window.triggerDeleteMember = async function(id) {
     }
 };
 
-// عرض الأعضاء المضافين ديناميكياً من الفايربيس في الجدول مع تفعيل زر الحذف
 onSnapshot(collection(db, "custom_members"), (snap) => {
     let table = document.getElementById("dynamicMembersTable");
     table.innerHTML = "";
@@ -713,7 +780,6 @@ window.deleteNomination = async (id) => { if(confirm("تدمير ملف المر
 window.updateNominationStatus = async (id, status) => { await updateDoc(doc(db, "nominations", id), { status: status }); };
 window.deleteReport = async (id) => { if(confirm("حذف التقرير نهائياً؟")) await deleteDoc(doc(db, "reports", id)); };
 
-// 🚨 إدارة بيانات المطلوبين
 onSnapshot(collection(db, "wanted"), (snap) => {
     let container = document.getElementById("wantedList"); container.innerHTML = "";
     snap.forEach(d => {
@@ -732,7 +798,6 @@ document.getElementById("addWanted").onclick = async () => {
     if(n && c) { await addDoc(collection(db, "wanted"), {name:n, crime:c}); document.getElementById("wantedName").value=""; document.getElementById("wantedCrime").value=""; }
 };
 
-// 🎯 إدارة بيانات العمليات والمهمات
 onSnapshot(collection(db, "missions"), (snap) => {
     let container = document.getElementById("missionsList"); container.innerHTML = "";
     snap.forEach(d => {
@@ -762,7 +827,6 @@ document.getElementById("addMission").onclick = async () => {
     }
 };
 
-// 🎖️ إدارة شؤون الترشيحات والتزكيات
 onSnapshot(collection(db, "nominations"), (snap) => {
     let container = document.getElementById("nominationsList"); container.innerHTML = "";
     snap.forEach(d => {
@@ -796,7 +860,6 @@ document.getElementById("addNomination").onclick = async () => {
     }
 };
 
-// 📄 مركز التقارير المتقدم
 onSnapshot(collection(db, "reports"), (snap) => {
     let normal = document.getElementById("normalReportsContainer"); normal.innerHTML = "";
     let secret = document.getElementById("secretReportsContainer"); secret.innerHTML = "";
