@@ -144,38 +144,6 @@ body {
 
 @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
 
-/* الكروت التفاعلية للوحة الرئيسية */
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
-}
-
-.stat-card {
-    background: var(--panel-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    overflow: hidden;
-}
-
-.stat-card::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; width: 4px; height: 100%;
-}
-.stat-card.blue::after { background: var(--info); }
-.stat-card.gold::after { background: var(--gold); }
-.stat-card.green::after { background: var(--success); }
-.stat-card.danger::after { background: var(--danger); }
-
-.stat-title { font-size: 13px; color: var(--text-muted); margin-bottom: 5px; }
-.stat-value { font-size: 28px; font-weight: bold; color: #fff; }
-
 /* الصفحات والمحتوى */
 .page {
     display: none;
@@ -203,6 +171,7 @@ body {
     border-radius: 14px;
     padding: 25px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    position: relative;
 }
 
 .panel-title {
@@ -211,9 +180,12 @@ body {
     margin-bottom: 20px;
     border-bottom: 1px solid var(--border-color);
     padding-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-/* الحقول والقوائم المحدثة */
+/* الحقول والقوائم */
 input, select, textarea {
     width: 100%;
     padding: 12px 16px;
@@ -250,7 +222,27 @@ input:focus, select:focus, textarea:focus {
     box-shadow: 0 0 15px rgba(216, 194, 122, 0.3);
 }
 
-/* الكروت والقوائم المعروضة */
+.add-member-btn {
+    background: var(--gold);
+    color: #000;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.2s;
+}
+
+.add-member-btn:hover {
+    background: var(--gold-hover);
+    transform: scale(1.05);
+}
+
 .data-list-container {
     max-height: 500px;
     overflow-y: auto;
@@ -263,7 +255,6 @@ input:focus, select:focus, textarea:focus {
     border-radius: 10px;
     padding: 16px;
     margin-bottom: 15px;
-    position: relative;
 }
 
 .item-card h4 { color: var(--gold); margin-bottom: 8px; }
@@ -286,10 +277,9 @@ input:focus, select:focus, textarea:focus {
     font-weight: bold;
 }
 
-/* نظام القفل */
 .lock-screen {
     max-width: 450px;
-    margin: 60px auto;
+    margin: 40px auto;
     text-align: center;
 }
 
@@ -300,11 +290,21 @@ input:focus, select:focus, textarea:focus {
 }
 .swat-table th { background: #17202c; color: var(--gold); padding: 12px; text-align: right; }
 .swat-table td { padding: 12px; border-bottom: 1px solid var(--border-color); font-size: 14px; }
+
+.shaar-box {
+    text-align: center;
+    margin-top: 25px;
+    padding: 15px;
+    border-top: 1px solid var(--border-color);
+    color: var(--gold);
+    font-weight: bold;
+    letter-spacing: 1px;
+}
 </style>
 </head>
 <body>
 
-    <!-- 📋 الشريط الجانبي الذكي -->
+    <!-- 📋 الشريط الجانبي التكتيكي -->
     <div class="sidebar">
         <div class="logo-area">
             <div class="logo-icon">🦅</div>
@@ -312,7 +312,8 @@ input:focus, select:focus, textarea:focus {
         </div>
         <button id="btn-dashboardPanel" class="nav-btn active" onclick="switchPage('dashboardPanel')">🖥️ لوحة القيادة</button>
         <button id="btn-rulesPanel" class="nav-btn" onclick="switchPage('rulesPanel')">📜 اللائحة والقوانين</button>
-        <button id="btn-schedulePanel" class="nav-btn" onclick="switchPage('schedulePanel')">📅 شجرة الجدولة</button>
+        <button id="btn-clothingPanel" class="nav-btn" onclick="switchPage('clothingPanel')">👕 قائمة اللبس</button>
+        <button id="btn-schedulePanel" class="nav-btn" onclick="switchPage('schedulePanel')">📅 الجدول</button>
         <button id="btn-wantedGate" class="nav-btn" onclick="switchPage('wantedGate')">🚨 خلية المطلوبين</button>
         <button id="btn-missionsPanel" class="nav-btn" onclick="switchPage('missionsPanel')">🎯 إدارة العمليات</button>
         <button id="btn-nominationsPanel" class="nav-btn" onclick="switchPage('nominationsPanel')">🎖️ شؤون الترشيحات</button>
@@ -330,66 +331,106 @@ input:focus, select:focus, textarea:focus {
 
         <!-- ================= 1. لوحة القيادة الرئيسية ================= -->
         <div id="dashboardPanel" class="page active">
-            <div class="stats-grid">
-                <div class="stat-card blue"><span class="stat-title">جاهزية العناصر</span><span class="stat-value">100%</span></div>
-                <div class="stat-card gold"><span class="stat-title">العمليات النشطة</span><span class="stat-value">مؤمنة</span></div>
-                <div class="stat-card green"><span class="stat-title">نسبة النجاح</span><span class="stat-value">94.8%</span></div>
-                <div class="stat-card danger"><span class="stat-title">مستوى التهديد</span><span class="stat-value">منخفض</span></div>
-            </div>
-            
             <div class="dashboard-layout">
-                <div class="card-panel">
+                <div class="card-panel" style="grid-column: span 2;">
                     <h3 class="panel-title">📡 البث والتعميم الإداري الجديد</h3>
                     <p style="color: var(--text-muted); line-height: 1.8;">مرحباً بك في نظام إدارة فرقة SWAT المطور بالكامل. من هنا يمكنك جدولة الأعضاء، تفويض قيادات المهمات، مراجعة طلبات الانضمام والترقيات، ورفع التقارير السرية المشفرة للسيرفر مباشرة بالوقت الفعلي.</p>
                 </div>
-                <div class="card-panel">
-                    <h3 class="panel-title">⚡ روابط سريعة للتحكم الإداري</h3>
-                    <button class="action-btn" style="margin-bottom: 10px;" onclick="switchPage('missionsPanel')">⚙️ إطلاق مهمة فورية</button>
-                    <button class="action-btn" onclick="switchPage('nominationsPanel')">⚖️ مراجعة مرشحين جدد</button>
+            </div>
+        </div>
+
+        <!-- ================= 2. شاشة القوانين المعدلة ================= -->
+        <div id="rulesPanel" class="page">
+            <div class="card-panel">
+                <h3 class="panel-title">قوانين الفرقة الصارمة</h3>
+                <ol style="padding-right: 20px; line-height: 2.2; color: #cbd5e1; font-size: 15px;">
+                    <li>الالتزام التام بأوامر قائد الفريق أو المسؤول الأعلى رتبة.</li>
+                    <li>يمنع خروج أي دورية أو تنفيذ أي عملية إلا بعد إذن المسؤول.</li>
+                    <li>يمنع الحديث أو المزاح أثناء الاصطفاف أو تنفيذ المهام.</li>
+                    <li>يمنع دخول أو مغادرة الاصطفاف إلا بإذن مباشر من المسؤول.</li>
+                    <li>الالتزام بالزي الرسمي الكامل والمعدات المعتمدة.</li>
+                    <li>جميع المعلومات والخطط الخاصة بالفرقة تعتبر سرية.</li>
+                    <li>يمنع التحرك بشكل فردي أثناء العمليات.</li>
+                    <li>الالتزام بالصمت اللاسلكي وعدم الإرسال إلا عند الحاجة.</li>
+                    <li>يمنع مغادرة المهمة إلا بعد موافقة قائد العملية.</li>
+                    <li>المحافظة على جاهزية السلاح والمعدات قبل وبعد كل مهمة.</li>
+                    <li>الالتزام بالحضور في الوقت المحدد لجميع الاصطفافات.</li>
+                    <li>يمنع استخدام مركبات أو معدات SWAT لأغراض شخصية.</li>
+                    <li>أي مخالفة تعرض العضو للمساءلة والعقوبات الإدارية.</li>
+                    <li>احترام جميع أفراد الفرقة والالتزام بالانضباط العسكري.</li>
+                </ol>
+                <div class="shaar-box">
+                    💥 شعار الفرقة: الانضباط - السرية - التنفيذ 💥
                 </div>
             </div>
         </div>
 
-        <!-- ================= 2. شاشة القوانين ================= -->
-        <div id="rulesPanel" class="page">
+        <!-- ================= 3. شاشة اللبس الجديدة ================= -->
+        <div id="clothingPanel" class="page">
             <div class="card-panel">
-                <h3 class="panel-title">قوانين الفرقة الصارمة</h3>
-                <ol style="padding-right: 20px; line-height: 2.2; color: #cbd5e1;">
-                    <li>الالتزام التام بأوامر قائد الفريق أو المسؤول الأعلى رتبة بشكل مطلق.</li>
-                    <li>يمنع خروج أي دورية أو تنفيذ أي عملية تكتيكية إلا بعد إذن المسؤول.</li>
-                    <li>يمنع الحديث أو المزاح العشوائي أثناء الاصطفاف أو تنفيذ المهام خط النار.</li>
-                    <li>الالتزام بالزي الرسمي الكامل والمعدات والأسلحة المعتمدة رسمياً لكل رتبة.</li>
-                    <li>جميع المعلومات والخطط والتقارير داخل هذا النظام تعتبر سرية للغاية ويمنع تسريبها.</li>
-                </ol>
+                <h3 class="panel-title">👕 الزي الرسمي والمعدات المعتمدة</h3>
+                <div style="line-height: 2; color: #cbd5e1;">
+                    <p style="margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; color: var(--gold);">⚠️ تعميم صارم بشأن التجهيزات القتالية الرسمية لوحدات SWAT:</p>
+                    <ul>
+                        <li><b>الزي المعتمد:</b> البدلة التكتيكية السوداء المقاومة للرصاص بكامل ملحقاتها وحامي الرأس المخصص.</li>
+                        <li><b>تجهيز الصدرية:</b> يجب ارتداء سترة الدرع الثقيل المزودة بشعار SWAT بوضوح من الجهتين.</li>
+                        <li><b>الأسلحة المعتمدة:</b> السلاح الأساسي الرشاش الهجومي، السلاح الثانوي المسدس التكتيكي المصرح، والقنابل الصوتية/الغازية المخصصة للاقتحام.</li>
+                        <li><b>المخالفات:</b> أي تعديل على ألوان اللبس أو استخدام خوذ أو ملحقات غير معتمدة يعرض صاحبه للمساءلة الفورية.</li>
+                    </ul>
+                </div>
             </div>
         </div>
 
-        <!-- ================= 3. شجرة الجدولة ================= -->
+        <!-- ================= 4. صفحة الجدول المحدثة ================= -->
         <div id="schedulePanel" class="page">
             <div class="card-panel">
-                <h3 class="panel-title">شجرة هيكلة القيادة والأعضاء</h3>
+                <div class="panel-title">
+                    <span>📅 كشف وجدول أعضاء الفرقة</span>
+                    <button class="add-member-btn" onclick="triggerAddMember()">+</button>
+                </div>
+                
+                <!-- حقول إدخال عضو جديد (تظهر فقط بعد إدخال الرمز بنجاح) -->
+                <div id="addMemberForm" style="display:none; background:#121822; padding:15px; border-radius:8px; margin-bottom:15px; border:1px solid var(--gold);">
+                    <h4 style="color:var(--gold); margin-bottom:10px;">➕ إضافة عضو جديد للجدول</h4>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                        <input id="newMemNo" placeholder="الرقم (مثال: 14)">
+                        <input id="newMemName" placeholder="الاسم الكامل">
+                        <input id="newMemRank" placeholder="الرتبة والتصنيف (R-0)">
+                        <input id="newMemUnit" placeholder="الوحدة / الكتيبة">
+                    </div>
+                    <button class="action-btn" onclick="saveNewMemberToFirebase()">تأكيد الحفظ بالسيرفر</button>
+                </div>
+
                 <table class="swat-table">
                     <thead>
-                        <tr><th>الرقم التكتيكي</th><th>الاسم</th><th>الرتبة</th><th>الوحدة</th></tr>
+                        <tr><th>الرقم</th><th>الاسم</th><th>الرتبة</th><th>الوحدة</th></tr>
                     </thead>
-                    <tbody>
-                        <tr><td>01</td><td>FAHAD ALMUTAIRI</td><td style="color: var(--gold);">SWAT Chief</td><td>Command</td></tr>
-                        <tr><td>02</td><td>KARLOS ALMUTAIRI</td><td>Deputy Chief</td><td>Command</td></tr>
-                        <tr><td>03</td><td>Turki Al-Mutairi</td><td>Assistant Chief</td><td>Leader Alpha</td></tr>
-                        <tr><td>04</td><td>James Morgan</td><td>Supervisor</td><td>Leader Bravo</td></tr>
+                    <tbody id="staticMembersTable">
+                        <tr><td>01</td><td>FAHAD ALMUTAIRI</td><td style="color: var(--gold);">R-0 SWAT Chief</td><td>Command</td></tr>
+                        <tr><td>02</td><td>KARLOS ALMUTAIRI</td><td>R-1 Deputy Chief</td><td>Command</td></tr>
+                        <tr><td>03</td><td>Turki Al-Mutairi</td><td>R-2 Assistant Chief</td><td>Leader Alpha</td></tr>
+                        <tr><td>04</td><td>James Morgan</td><td>R-3 Supervisor</td><td>Leader Bravo</td></tr>
+                        <tr><td>05</td><td>Mov Marley</td><td>R-4 Member</td><td>Alpha</td></tr>
+                        <tr><td>06</td><td>Sicr Exxon</td><td>R-5 Member</td><td>Alpha</td></tr>
+                        <tr><td>07</td><td>Marcus Leno</td><td>R-6 Member</td><td>Alpha</td></tr>
+                        <tr><td>08</td><td>James Kruise</td><td>R-7 Member</td><td>Alpha</td></tr>
+                        <tr><td>09</td><td>Older Mohammed</td><td>R-8 Member</td><td>Alpha</td></tr>
+                        <tr><td>10</td><td>Badr Al-Mutairi</td><td>R-9 Member</td><td>Bravo</td></tr>
+                        <tr><td>11</td><td>ريان خالد</td><td>R-10 Member</td><td>Bravo</td></tr>
+                        <tr><td>12</td><td>JOHN Marly</td><td>R-11 Member</td><td>Bravo</td></tr>
+                        <tr><td>13</td><td>Ahmed Almutairi</td><td>R-12 Member</td><td>Bravo</td></tr>
+                    </tbody>
+                    <tbody id="dynamicMembersTable">
+                        <!-- الأعضاء المضافين إلكترونياً سيظهرون هنا -->
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- ================= 4. بوابات القفل والأمان ================= -->
+        <!-- ================= 5. بوابات القفل والأمان ================= -->
         <div id="wantedGate" class="page"><div class="card-panel lock-screen"><h3>🔒 تصريح أمني - قائمة المطلوبين</h3><input id="wantedPass" type="password" placeholder="أدخل رمز الدخول المشفر"><button class="action-btn" onclick="unlockSection('wantedPass', 'wantedRealPanel')">فك التشفير ودخول</button></div></div>
-        <div id="missionsGate" class="page"><div class="card-panel lock-screen"><h3>🔒 تصريح أمني - الأرشيف التكتيكي للمهمات</h3><input id="missPass" type="password" placeholder="أدخل رمز الدخول المشفر"><button class="action-btn" onclick="unlockSection('missPass', 'missionsRealView')">فك التشفير وعرض المهمات</button></div></div>
-        <div id="nominateGate" class="page"><div class="card-panel lock-screen"><h3>🔒 تصريح أمني - قرارات الإدارة العليا</h3><input id="nomPass" type="password" placeholder="أدخل رمز الدخول المشفر"><button class="action-btn" onclick="unlockSection('nomPass', 'nominationsRealView')">فك التشفير واستعراض المرشحين</button></div></div>
-        <div id="reportsGate" class="page"><div class="card-panel lock-screen"><h3>🔒 تصريح أمني - السجلات العامة</h3><input id="repPass" type="password" placeholder="أدخل رمز الدخول المشفر"><button class="action-btn" onclick="unlockSection('repPass', 'reportsNormalView')">دخول الأرشيف العام</button></div></div>
-        <div id="secretReportsGate" class="page"><div class="card-panel lock-screen"><h3>🚨 ملفات سرية للغاية (المستوى الأحمر)</h3><input id="secRepPass" type="password" placeholder="رمز الوصول الرئاسي الخاص"><button class="action-btn" onclick="unlockSection('secRepPass', 'reportsSecretView')" style="background: var(--danger); border-color: var(--danger); color: white;">تأكيد الهوية الرقمية</button></div></div>
-
-        <!-- ================= 5. شاشة المطلوبين الحقيقية ================= -->
+        
+        <!-- ================= 6. شاشة المطلوبين الحقيقية ================= -->
         <div id="wantedRealPanel" class="page">
             <div class="dashboard-layout">
                 <div class="card-panel">
@@ -405,7 +446,7 @@ input:focus, select:focus, textarea:focus {
             </div>
         </div>
 
-        <!-- ================= 6. قسم المهمات ================= -->
+        <!-- ================= 7. قسم المهمات ================= -->
         <div id="missionsPanel" class="page">
             <div class="dashboard-layout">
                 <div class="card-panel">
@@ -420,7 +461,11 @@ input:focus, select:focus, textarea:focus {
                     </select>
                     <textarea id="missionDesc" placeholder="📝 الأوامر العسكرية وتفاصيل ووش المهمة المطلوبة بالضبط..." style="height:110px;"></textarea>
                     <button class="action-btn" id="addMission">حفظ وتعميم البيانات الميدانية</button>
-                    <button class="action-btn" style="margin-top:10px; background:#18222f; border-color:#3a4b61;" onclick="unlockShortcut('missionsRealView')">🔓 تجاوز القفل وعرض الأرشيف مباشرة</button>
+                </div>
+                <div class="card-panel lock-screen" id="missionsLockArea">
+                    <h3>🔒 تصريح أمني - الأرشيف التكتيكي</h3>
+                    <input id="missPass" type="password" placeholder="أدخل رمز الدخول لعرض العمليات">
+                    <button class="action-btn" onclick="unlockSection('missPass', 'missionsRealView')">عرض أرشيف العمليات</button>
                 </div>
                 <div id="missionsRealView" class="card-panel" style="display:none; grid-column: span 1;">
                     <h3 class="panel-title">📋 السجلات والعمليات الموثقة بنظام الفايربيس</h3>
@@ -429,26 +474,32 @@ input:focus, select:focus, textarea:focus {
             </div>
         </div>
 
-        <!-- ================= 7. قسم الترشيحات والترقيات ================= -->
+        <!-- ================= 8. قسم الترشيحات والترقية المحمي ================= -->
         <div id="nominationsPanel" class="page">
             <div class="dashboard-layout">
                 <div class="card-panel">
                     <h3 class="panel-title">🎖️ نموذج ترشيح وتزكية كادر</h3>
-                    <input id="nomineeCharName" placeholder="👤 اسم شخصية العضو المرشح">
+                    <input id="nomineeCharName" placeholder="👤 اسم العضو المرشح">
                     <input id="nomineeCurrentRank" placeholder="🎖️ الرتبة العسكرية الحالية">
                     <input id="nomineeSector" placeholder="🏢 القطاع الحالي المعين به">
-                    <textarea id="nominationReason" placeholder="📝 مسببات الترقية أو سبب الترشيح الفعلي بالكامل..." style="height:110px;"></textarea>
+                    <textarea id="nominationReason" placeholder="📝 مسببات الترشيح الفعلي بالكامل..." style="height:110px;"></textarea>
                     <button class="action-btn" id="addNomination">إرسال التزكية إلى الإدارة العليا</button>
-                    <button class="action-btn" style="margin-top:10px; background:#18222f; border-color:#3a4b61;" onclick="unlockShortcut('nominationsRealView')">🔓 تجاوز القفل واستعراض المرشحين مباشرة</button>
+                </div>
+                <div class="card-panel" style="display:block;" id="nomLockArea">
+                    <div class="lock-screen" style="margin:0;">
+                        <h3>🔒 تصريح أمني - قرارات الإدارة العليا</h3>
+                        <input id="nomPass" type="password" placeholder="أدخل رمز الدخول لعرض المرشحين">
+                        <button class="action-btn" onclick="unlockSection('nomPass', 'nominationsRealView')">استعراض المرشحين</button>
+                    </div>
                 </div>
                 <div id="nominationsRealView" class="card-panel" style="display:none;">
-                    <h3 class="panel-title">📋 كشوفات المتقدمين وأزرار التحكم بالقرارات الإدارية</h3>
+                    <h3 class="panel-title">📋 كشوفات المتقدمين وأزرار التحكم بالقرارات</h3>
                     <div id="nominationsList" class="data-list-container"></div>
                 </div>
             </div>
         </div>
 
-        <!-- ================= 8. قسم التقارير ================= -->
+        <!-- ================= 9. قسم التقارير المحمي بالكامل ================= -->
         <div id="reportsPanel" class="page">
             <div class="dashboard-layout">
                 <div class="card-panel">
@@ -468,8 +519,18 @@ input:focus, select:focus, textarea:focus {
                 
                 <div class="card-panel" style="display:flex; flex-direction:column; gap:15px;">
                     <h3 class="panel-title">📂 أرشيف الملفات المحمية بالرقم السري</h3>
-                    <button class="action-btn" onclick="unlockShortcut('reportsNormalView')" style="background:#1e293b; border-color:#475569;">📄 فتح الأرشيف العام للتقارير مباشرة</button>
-                    <button class="action-btn" onclick="unlockShortcut('reportsSecretView')" style="background:#451a1a; border-color:#991b1b; color:#f87171;">🚨 فتح الخزنة السرية مباشرة</button>
+                    
+                    <div id="repGeneralLock" class="lock-screen" style="margin: 0 0 15px 0; border-bottom: 1px dashed var(--border-color); padding-bottom: 15px;">
+                        <h4>📄 فتح الأرشيف العام للتقارير</h4>
+                        <input id="repPass" type="password" placeholder="أدخل رمز الأرشيف العام" style="margin-top: 8px;">
+                        <button class="action-btn" onclick="unlockSection('repPass', 'reportsNormalView')">دخول الأرشيف العام</button>
+                    </div>
+
+                    <div id="repSecretLock" class="lock-screen" style="margin: 0;">
+                        <h4 style="color: var(--danger);">🚨 فتح الخزنة السرية للمستوى الأحمر</h4>
+                        <input id="secRepPass" type="password" placeholder="رمز الوصول الرئاسي الخاص" style="margin-top: 8px;">
+                        <button class="action-btn" onclick="unlockSection('secRepPass', 'reportsSecretView')" style="background: var(--danger); border-color: var(--danger); color: white;">تأكيد الهوية الرقمية</button>
+                    </div>
                     
                     <div id="reportsNormalView" style="display:none; margin-top:15px;">
                         <h4 style="color:var(--gold); margin-bottom:10px;">📋 التقارير العادية المعروضة</h4>
@@ -504,7 +565,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// نظام الانتقال المحسن بين الصفحات
+// نظام الانتقال الفوري بين الصفحات
 window.switchPage = function(pageId) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -516,30 +577,78 @@ window.switchPage = function(pageId) {
     if(sidebarBtn) sidebarBtn.classList.add('active');
 };
 
-// فك التشفير بالرمز الأمني القديم (1029) إذا أردت استخدامه
+// فك التشفير وفتح النوافذ المغلقة
 window.unlockSection = function(inputId, targetPanelId) {
     let passValue = document.getElementById(inputId).value;
     if(passValue === "1029") {
         document.getElementById(inputId).value = "";
-        if(targetPanelId.includes('View') && !targetPanelId.includes('reports')) {
-            document.getElementById(targetPanelId).style.display = "block";
-        } else if (targetPanelId.includes('reports')) {
-            document.getElementById(targetPanelId).style.display = "block";
-        } else {
-            switchPage(targetPanelId);
+        
+        // إخفاء قفل الواجهة المناسبة وعرض المحتوى الحقيقي
+        if(targetPanelId === 'missionsRealView') {
+            document.getElementById('missionsLockArea').style.display = 'none';
+            document.getElementById('missionsRealView').style.display = 'block';
+        } else if (targetPanelId === 'nominationsRealView') {
+            document.getElementById('nomLockArea').style.display = 'none';
+            document.getElementById('nominationsRealView').style.display = 'block';
+        } else if (targetPanelId === 'reportsNormalView') {
+            document.getElementById('repGeneralLock').style.display = 'none';
+            document.getElementById('reportsNormalView').style.display = 'block';
+        } else if (targetPanelId === 'reportsSecretView') {
+            document.getElementById('repSecretLock').style.display = 'none';
+            document.getElementById('reportsSecretView').style.display = 'block';
+        } else if (targetPanelId === 'wantedRealPanel') {
+            switchPage('wantedRealPanel');
         }
     } else {
         alert("❌ الرمز الأمني خاطئ!");
     }
 };
 
-// دالة تخطي القفل الفورية لفتح القوائم دون إدخال الرمز
-window.unlockShortcut = function(targetViewId) {
-    let view = document.getElementById(targetViewId);
-    if(view) {
-        view.style.display = "block";
+// طلب رمز الدخول قبل فتح خيار إضافة عضو جديد في الجدول
+window.triggerAddMember = function() {
+    let code = prompt("🔑 الرجاء إدخال الرمز الأمني المعتمد لتهيئة نظام التسجيل:");
+    if(code === "1029") {
+        document.getElementById("addMemberForm").style.display = "block";
+    } else {
+        alert("❌ رمز خاطئ! لا تملك صلاحية تعديل الهيكل الإداري.");
     }
 };
+
+// حفظ العضو الجديد في الفايربيس
+window.saveNewMemberToFirebase = async function() {
+    let no = document.getElementById("newMemNo").value.trim();
+    let name = document.getElementById("newMemName").value.trim();
+    let rank = document.getElementById("newMemRank").value.trim();
+    let unit = document.getElementById("newMemUnit").value.trim();
+    
+    if(no && name && rank && unit) {
+        await addDoc(collection(db, "custom_members"), { no: no, name: name, rank: rank, unit: unit });
+        alert("تمت إضافة العضو بنجاح وتحديث الكشف الإلكتروني الفيدرالي ✅");
+        document.getElementById("newMemNo").value="";
+        document.getElementById("newMemName").value="";
+        document.getElementById("newMemRank").value="";
+        document.getElementById("newMemUnit").value="";
+        document.getElementById("addMemberForm").style.display = "none";
+    } else {
+        alert("❌ يرجى ملء كافة الخانات لإتمام التسجيل.");
+    }
+};
+
+// عرض الأعضاء المضافين ديناميكياً من الفايربيس في الجدول
+onSnapshot(collection(db, "custom_members"), (snap) => {
+    let table = document.getElementById("dynamicMembersTable");
+    table.innerHTML = "";
+    snap.forEach(d => {
+        let m = d.data();
+        table.innerHTML += `
+            <tr>
+                <td>${m.no}</td>
+                <td>${m.name}</td>
+                <td style="color:var(--gold);">${m.rank}</td>
+                <td>${m.unit}</td>
+            </tr>`;
+    });
+});
 
 window.deleteWanted = async (id) => { if(confirm("حذف المطلوب؟")) await deleteDoc(doc(db, "wanted", id)); };
 window.deleteMission = async (id) => { if(confirm("إزالة ملف العملية؟")) await deleteDoc(doc(db, "missions", id)); };
@@ -566,7 +675,7 @@ document.getElementById("addWanted").onclick = async () => {
     if(n && c) { await addDoc(collection(db, "wanted"), {name:n, crime:c}); document.getElementById("wantedName").value=""; document.getElementById("wantedCrime").value=""; }
 };
 
-// 🎯 إدارة بيانات العمليات والمهمات المحدثة بالكامل لطلبك
+// 🎯 إدارة بيانات العمليات والمهمات
 onSnapshot(collection(db, "missions"), (snap) => {
     let container = document.getElementById("missionsList"); container.innerHTML = "";
     snap.forEach(d => {
