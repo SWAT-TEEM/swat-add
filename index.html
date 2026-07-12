@@ -464,7 +464,7 @@ input:focus, select:focus, textarea:focus {
                     <li>يمنع استخدام مركبات أو معدات SWAT لأغراض شخصية.</li>
                     <li>أي مخالفة تعرض العضو للمساءلة والعقوبات الإدارية.</li>
                     <li>احترم جميع أفراد الفرقة والالتزام بالانضباط العسكري.</li>
-                    <li style="color: #ff9800; font-weight: bold; background: rgba(216, 194, 122, 0.05); padding: 5px 10px; border-radius: 6px; border-right: 3px solid var(--gold);">[بند السيادة] قانون الولاء المطلق: يظل الولاء كاملاً وثابتاً لقائد الفرقة الحالي (Chief) دون غيره. وإذا حدث أي تفكك، نزاع إداري، أو محاولة انقلاب داخل الصفوف، تُلغى صلاحيات الأطراف المنقلبة فوراً، ويعتبر أي أمر صادر من غير القائد باطلاً وعصياناً عسكرياً يُوجب الشطب النهائي.</li>
+                    <li style="color: #ff9800; font-weight: bold; background: rgba(216, 194, 122, 0.05); padding: 5px 10px; border-radius: 6px; border-right: 3px solid var(--gold);">[بند السيادة] قانون الولاء المطلق: يظل الولاء كاملاً وثابتاً لقائد الفرقة الحالي (Chief) دون غيره. وإذا حدث أي تفكك، نزاع إداري، أو محاولة انقلاب داخل الصفوف، تُلغى صلاحيات الأطراف المنقلبة فوراً, ويعتبر أي أمر صادر من غير القائد باطلاً وعصياناً عسكرياً يُوجب الشطب النهائي.</li>
                 </ol>
                 <div class="shaar-box">
                     💥 شعار الفرقة: الانضباط - السرية - التنفيذ 💥
@@ -499,7 +499,7 @@ input:focus, select:focus, textarea:focus {
                 <div id="inlineLockBox" class="inline-lock-box" style="display: none;">
                     <h5>🔒 يتطلب صلاحيات الإدارة - أدخل الرمز السري للتعديل</h5>
                     <div class="flex-inputs">
-                        <input id="inlineCodeInput" type="password" placeholder="أدخل الرمز السري هنا">
+                        <input id="inlineCodeInput" type="password" placeholder="أدخل الرمز السري هنا" autocomplete="off">
                         <button class="action-btn" onclick="verifyInlineCode()">تحقق ودخول</button>
                     </div>
                 </div>
@@ -507,10 +507,10 @@ input:focus, select:focus, textarea:focus {
                 <div id="addMemberForm" style="display:none; background:#121822; padding:15px; border-radius:8px; margin-bottom:15px; border:1px solid var(--gold);">
                     <h4 style="color:var(--gold); margin-bottom:10px;">➕ إضافة عضو جديد للجدول</h4>
                     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom: 10px;">
-                        <input id="newMemNo" placeholder="الرقم (مثال: 14)">
-                        <input id="newMemName" placeholder="الاسم الكامل">
-                        <input id="newMemRank" placeholder="الرتبة والتصنيف (R-0)">
-                        <input id="newMemUnit" placeholder="الوحدة / كتيبة">
+                        <input id="newMemNo" placeholder="الرقم (مثال: 14)" autocomplete="off">
+                        <input id="newMemName" placeholder="الاسم الكامل" autocomplete="off">
+                        <input id="newMemRank" placeholder="الرتبة والتصنيف (R-0)" autocomplete="off">
+                        <input id="newMemUnit" placeholder="الوحدة / كتيبة" autocomplete="off">
                     </div>
                     <button class="action-btn" onclick="saveNewMemberToFirebase()">تأكيد الحفظ بالسيرفر</button>
                 </div>
@@ -541,15 +541,15 @@ input:focus, select:focus, textarea:focus {
         </div>
 
         <!-- ================= 5. بوابات القفل والأمان ================= -->
-        <div id="wantedGate" class="page"><div class="card-panel lock-screen"><h3>🔒 تصريح أمني - قائمة المطلوبين</h3><input id="wantedPass" type="password" placeholder="أدخل رمز الدخول المشفر"><button class="action-btn" onclick="unlockSection('wantedPass', 'wantedRealPanel')">فك التشفير ودخول</button></div></div>
+        <div id="wantedGate" class="page"><div class="card-panel lock-screen"><h3>🔒 تصريح أمني - قائمة المطلوبين</h3><input id="wantedPass" type="password" placeholder="أدخل رمز الدخول المشفر" autocomplete="off"><button class="action-btn" onclick="unlockSection('wantedPass', 'wantedRealPanel')">فك التشفير ودخول</button></div></div>
         
         <!-- ================= 6. شاشة المطلوبين الحقيقية ================= -->
         <div id="wantedRealPanel" class="page">
             <div class="dashboard-layout">
                 <div class="card-panel">
                     <h3 class="panel-title">➕ تسجيل مطلوب جديد للعدالة</h3>
-                    <input id="wantedName" placeholder="الاسم الكامل المستهدف">
-                    <input id="wantedCrime" placeholder="نوع الجرم / التهديد المصنف">
+                    <input id="wantedName" placeholder="الاسم الكامل المستهدف" autocomplete="off">
+                    <input id="wantedCrime" placeholder="نوع الجرم / التهديد المصنف" autocomplete="off">
                     <button class="action-btn" id="addWanted">تعميم وإرسال للميدان</button>
                 </div>
                 <div class="card-panel">
@@ -564,20 +564,20 @@ input:focus, select:focus, textarea:focus {
             <div class="dashboard-layout">
                 <div class="card-panel">
                     <h3 class="panel-title">🎯 تخطيط وتوزيع مهمة عسكرية جديدة</h3>
-                    <input id="missionTitle" placeholder="عنوان العمليات (مثال: اقتحام وكر الفا)">
-                    <input id="missionLeader" placeholder="👮 القائد الميداني المسؤول">
-                    <input id="missionMembers" placeholder="👥 أطقم الإسناد والمشاركين">
+                    <input id="missionTitle" placeholder="عنوان العمليات (مثال: اقتحام وكر الفا)" autocomplete="off">
+                    <input id="missionLeader" placeholder="👮 القائد الميداني المسؤول" autocomplete="off">
+                    <input id="missionMembers" placeholder="👥 أطقم الإسناد والمشاركين" autocomplete="off">
                     <select id="missionStatus">
                         <option value="مستمرة">⏳ مهمة مستمرة / قيد التنفيذ</option>
                         <option value="ناجحة">✅ تم التنفيذ بنجاح</option>
                         <option value="فاشلة">❌ عملية مجهضة / فاشلة</option>
                     </select>
-                    <textarea id="missionDesc" placeholder="📝 الأوامر العسكرية وتفاصيل ووش المهمة المطلوبة بالضبط..." style="height:110px;"></textarea>
+                    <textarea id="missionDesc" placeholder="📝 الأوامر العسكرية وتفاصيل ووش المهمة المطلوبة بالضبط..." style="height:110px;" autocomplete="off"></textarea>
                     <button class="action-btn" id="addMission">حفظ وتعميم البيانات الميدانية</button>
                 </div>
                 <div class="card-panel lock-screen" id="missionsLockArea">
                     <h3>🔒 تصريح أمني - الأرشيف التكتيكي</h3>
-                    <input id="missPass" type="password" placeholder="أدخل رمز الدخول لعرض العمليات">
+                    <input id="missPass" type="password" placeholder="أدخل رمز الدخول لعرض العمليات" autocomplete="off">
                     <button class="action-btn" onclick="unlockSection('missPass', 'missionsRealView')">عرض أرشيف العمليات</button>
                 </div>
                 <div id="missionsRealView" class="card-panel" style="display:none; grid-column: span 1;">
@@ -592,16 +592,16 @@ input:focus, select:focus, textarea:focus {
             <div class="dashboard-layout">
                 <div class="card-panel">
                     <h3 class="panel-title">🎖️ نموذج ترشيح وتزكية كادر</h3>
-                    <input id="nomineeCharName" placeholder="👤 اسم العضو المرشح">
-                    <input id="nomineeCurrentRank" placeholder="🎖️ الرتبة العسكرية الحالية">
-                    <input id="nomineeSector" placeholder="🏢 القطاع الحالي المعين به">
-                    <textarea id="nominationReason" placeholder="📝 مسببات الترشيح الفعلي بالكامل..." style="height:110px;"></textarea>
+                    <input id="nomineeCharName" placeholder="👤 اسم العضو المرشح" autocomplete="off">
+                    <input id="nomineeCurrentRank" placeholder="🎖️ الرتبة العسكرية الحالية" autocomplete="off">
+                    <input id="nomineeSector" placeholder="🏢 القطاع الحالي المعين به" autocomplete="off">
+                    <textarea id="nominationReason" placeholder="📝 مسببات الترشيح الفعلي بالكامل..." style="height:110px;" autocomplete="off"></textarea>
                     <button class="action-btn" id="addNomination">إرسال التزكية إلى الإدارة العليا</button>
                 </div>
                 <div class="card-panel" style="display:block;" id="nomLockArea">
                     <div class="lock-screen" style="margin:0;">
                         <h3>🔒 تصريح أمني - قرارات الإدارة العليا</h3>
-                        <input id="nomPass" type="password" placeholder="أدخل رمز الدخول لعرض المرشحين">
+                        <input id="nomPass" type="password" placeholder="أدخل رمز الدخول لعرض المرشحين" autocomplete="off">
                         <button class="action-btn" onclick="unlockSection('nomPass', 'nominationsRealView')">استعراض المرشحين</button>
                     </div>
                 </div>
@@ -617,15 +617,15 @@ input:focus, select:focus, textarea:focus {
             <div class="dashboard-layout">
                 <div class="card-panel">
                     <h3 class="panel-title">📤 صياغة تقرير عمليات نهائي</h3>
-                    <input id="repId" placeholder="🆔 المعرف الرقمي للتقرير">
+                    <input id="repId" placeholder="🆔 المعرف الرقمي للتقرير" autocomplete="off">
                     <div style="display:flex; gap:10px;"><input id="repDate" type="date"><input id="repTime" type="time"></div>
-                    <input id="repLeader" placeholder="👮 القائد المسؤول عن صياغة التقرير">
-                    <input id="repMembers" placeholder="👥 أسماء القوة المشاركة">
+                    <input id="repLeader" placeholder="👮 القائد المسؤول عن صياغة التقرير" autocomplete="off">
+                    <input id="repMembers" placeholder="👥 أسماء القوة المشاركة" autocomplete="off">
                     <select id="repType">
                         <option>مداهمة خاطفة</option><option>اقتحام تكتيكي</option><option>إنقاذ رهائن وتأمين</option><option>عملية سرية خاصة</option>
                     </select>
-                    <input id="repLocation" placeholder="📍 إحداثيات وموقع العملية">
-                    <textarea id="repDetails" placeholder="📝 كتابة تفاصيل وسيناريو العملية بالكامل هنا..." style="height:120px;"></textarea>
+                    <input id="repLocation" placeholder="📍 إحداثيات وموقع العملية" autocomplete="off">
+                    <textarea id="repDetails" placeholder="📝 كتابة تفاصيل وسيناريو العملية بالكامل هنا..." style="height:120px;" autocomplete="off"></textarea>
                     <label style="display:flex; align-items:center; gap:8px; margin-bottom:15px; cursor:pointer;"><input id="secretReport" type="checkbox" style="width:auto; margin:0;"> 🔒 تصنيف الملف كتقرير سري مشفر للغاية</label>
                     <button class="action-btn" id="saveReportBtn">حفظ التقرير نهائياً بالسيرفر</button>
                 </div>
@@ -635,13 +635,13 @@ input:focus, select:focus, textarea:focus {
                     
                     <div id="repGeneralLock" class="lock-screen" style="margin: 0 0 15px 0; border-bottom: 1px solid var(--border-color); padding-bottom: 15px;">
                         <h4>📄 فتح الأرشيف العام للتقارير</h4>
-                        <input id="repPass" type="password" placeholder="أدخل رمز الأرشيف العام" style="margin-top: 8px;">
+                        <input id="repPass" type="password" placeholder="أدخل رمز الأرشيف العام" style="margin-top: 8px;" autocomplete="off">
                         <button class="action-btn" onclick="unlockSection('repPass', 'reportsNormalView')">دخول الأرشيف العام</button>
                     </div>
 
                     <div id="repSecretLock" class="lock-screen" style="margin: 0;">
                         <h4 style="color: var(--danger);">🚨 فتح الخزنة السرية للمستوى الأحمر</h4>
-                        <input id="secRepPass" type="password" placeholder="رمز الوصول الرئاسي الخاص" style="margin-top: 8px;">
+                        <input id="secRepPass" type="password" placeholder="رمز الوصول الرئاسي الخاص" style="margin-top: 8px;" autocomplete="off">
                         <button class="action-btn" onclick="unlockSection('secRepPass', 'reportsSecretView')" style="background: var(--danger); border-color: var(--danger); color: white;">تأكيد الهوية الرقمية</button>
                     </div>
                     
@@ -678,8 +678,28 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// دالة لتفريغ ومسح جميع المدخلات في الصفحة تكتيكياً لمنع تسريب البيانات
+function clearAllInputs() {
+    document.querySelectorAll("input").forEach(input => {
+        if(input.type !== "checkbox" && input.type !== "radio") {
+            input.value = "";
+        } else {
+            input.checked = false;
+        }
+    });
+    document.querySelectorAll("textarea").forEach(textarea => textarea.value = "");
+    document.querySelectorAll("select").forEach(select => select.selectedIndex = 0);
+}
+
+// تفريغ البيانات فوراً عند مغادرة الصفحة أو إغلاق التبويب
+window.addEventListener('beforeunload', clearAllInputs);
+window.addEventListener('pagehide', clearAllInputs);
+
 // دالة التبديل بين الصفحات الإدارية
 window.switchPage = function(pageId) {
+    // مسح الحقول تلقائياً عند الانتقال من قسم لآخر لزيادة الأمان
+    clearAllInputs();
+
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
     
@@ -735,200 +755,7 @@ window.verifyInlineCode = function() {
         document.getElementById('inlineLockBox').style.display = 'none';
         document.getElementById('addMemberForm').style.display = 'block';
     } else {
-        alert("🔒 رمز الإدارة غير صحيح!");
-    }
-};
-
-// --- نظام إدارة الأعضاء الديناميكي ---
-window.saveNewMemberToFirebase = async function() {
-    const num = document.getElementById('newMemNo').value.trim();
-    const name = document.getElementById('newMemName').value.trim();
-    const rank = document.getElementById('newMemRank').value.trim();
-    const unit = document.getElementById('newMemUnit').value.trim();
-    
-    if(!num || !name || !rank || !unit) return alert("الرجاء ملء كافة حقول العضو!");
-    
-    try {
-        await addDoc(collection(db, "members"), { num, name, rank, unit });
-        document.getElementById('newMemNo').value = '';
-        document.getElementById('newMemName').value = '';
-        document.getElementById('newMemRank').value = '';
-        document.getElementById('newMemUnit').value = '';
-        document.getElementById('addMemberForm').style.display = 'none';
-    } catch(e) { alert("خطأ أثناء الحفظ بالسيرفر"); }
-};
-
-onSnapshot(collection(db, "members"), (snapshot) => {
-    const tbody = document.getElementById('dynamicMembersTable');
-    tbody.innerHTML = '';
-    snapshot.forEach(docSnap => {
-        const data = docSnap.data();
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${data.num}</td>
-            <td>${data.name}</td>
-            <td>${data.rank}</td>
-            <td>${data.unit}</td>
-            <td><button class="delete-table-btn" onclick="deleteDocFromDb('members', '${docSnap.id}')">شطب</button></td>
-        `;
-        tbody.appendChild(tr);
-    });
-});
-
-// --- نظام إدارة المطلوبين ---
-document.getElementById('addWanted').addEventListener('click', async () => {
-    const name = document.getElementById('wantedName').value.trim();
-    const crime = document.getElementById('wantedCrime').value.trim();
-    if(!name || !crime) return alert("أدخل بيانات المطلوب كاملة!");
-    
-    await addDoc(collection(db, "wanted"), { name, crime });
-    document.getElementById('wantedName').value = '';
-    document.getElementById('wantedCrime').value = '';
-});
-
-onSnapshot(collection(db, "wanted"), (snapshot) => {
-    const list = document.getElementById('wantedList');
-    list.innerHTML = '';
-    snapshot.forEach(docSnap => {
-        const data = docSnap.data();
-        const div = document.createElement('div');
-        div.className = 'item-card';
-        div.innerHTML = `
-            <h4>🎯 المستهدف: ${data.name}</h4>
-            <p>🚨 التهديد: ${data.crime}</p>
-            <button class="delete-table-btn" style="margin-top:8px;" onclick="deleteDocFromDb('wanted', '${docSnap.id}')">إلغاء التعميم</button>
-        `;
-        list.appendChild(div);
-    });
-});
-
-// --- نظام إدارة العمليات ---
-document.getElementById('addMission').addEventListener('click', async () => {
-    const title = document.getElementById('missionTitle').value.trim();
-    const leader = document.getElementById('missionLeader').value.trim();
-    const members = document.getElementById('missionMembers').value.trim();
-    const status = document.getElementById('missionStatus').value;
-    const desc = document.getElementById('missionDesc').value.trim();
-    
-    if(!title || !leader) return alert("أدخل البيانات الأساسية للمهمة!");
-    await addDoc(collection(db, "missions"), { title, leader, members, status, desc });
-    
-    document.getElementById('missionTitle').value = '';
-    document.getElementById('missionLeader').value = '';
-    document.getElementById('missionMembers').value = '';
-    document.getElementById('missionDesc').value = '';
-});
-
-onSnapshot(collection(db, "missions"), (snapshot) => {
-    const list = document.getElementById('missionsList');
-    list.innerHTML = '';
-    snapshot.forEach(docSnap => {
-        const data = docSnap.data();
-        const div = document.createElement('div');
-        div.className = 'item-card';
-        div.innerHTML = `
-            <h4>⚡ ${data.title}</h4>
-            <p>👮 القائد: ${data.leader} | 👥 القوة: ${data.members}</p>
-            <p>📊 الحالة: <b>${data.status}</b></p>
-            <p style="background:#090d14; padding:8px; border-radius:4px; margin-top:5px;">${data.desc}</p>
-            <button class="delete-table-btn" style="margin-top:8px;" onclick="deleteDocFromDb('missions', '${docSnap.id}')">أرشفة وحذف</button>
-        `;
-        list.appendChild(div);
-    });
-});
-
-// --- نظام إدارة الترشيحات ---
-document.getElementById('addNomination').addEventListener('click', async () => {
-    const name = document.getElementById('nomineeCharName').value.trim();
-    const rank = document.getElementById('nomineeCurrentRank').value.trim();
-    const sector = document.getElementById('nomineeSector').value.trim();
-    const reason = document.getElementById('nominationReason').value.trim();
-    
-    if(!name || !rank) return alert("يرجى إكمال بيانات المرشح!");
-    await addDoc(collection(db, "nominations"), { name, rank, sector, reason });
-    
-    document.getElementById('nomineeCharName').value = '';
-    document.getElementById('nomineeCurrentRank').value = '';
-    document.getElementById('nomineeSector').value = '';
-    document.getElementById('nominationReason').value = '';
-    alert("تم إرسال طلب التزكية بنجاح!");
-});
-
-onSnapshot(collection(db, "nominations"), (snapshot) => {
-    const list = document.getElementById('nominationsList');
-    list.innerHTML = '';
-    snapshot.forEach(docSnap => {
-        const data = docSnap.data();
-        const div = document.createElement('div');
-        div.className = 'item-card';
-        div.innerHTML = `
-            <h4>🎖️ المرشح: ${data.name}</h4>
-            <p>الرتبة الحالية: ${data.rank} | القطاع: ${data.sector}</p>
-            <p style="color:#a0aec0;">الأسباب: ${data.reason}</p>
-            <button class="delete-table-btn" style="margin-top:8px;" onclick="deleteDocFromDb('nominations', '${docSnap.id}')">رفض أو إنهاء المعاملة</button>
-        `;
-        list.appendChild(div);
-    });
-});
-
-// --- نظام إدارة مركز التقارير ---
-window.saveReport = async function() {
-    const repId = document.getElementById('repId').value.trim();
-    const date = document.getElementById('repDate').value;
-    const time = document.getElementById('repTime').value;
-    const leader = document.getElementById('repLeader').value.trim();
-    const members = document.getElementById('repMembers').value.trim();
-    const type = document.getElementById('repType').value;
-    const location = document.getElementById('repLocation').value.trim();
-    const details = document.getElementById('repDetails').value.trim();
-    const isSecret = document.getElementById('secretReport').checked;
-    
-    if(!repId || !leader || !details) return alert("أدخل بيانات التقرير الأساسية!");
-    
-    await addDoc(collection(db, "reports"), { repId, date, time, leader, members, type, location, details, isSecret });
-    
-    document.getElementById('repId').value = '';
-    document.getElementById('repLeader').value = '';
-    document.getElementById('repMembers').value = '';
-    document.getElementById('repLocation').value = '';
-    document.getElementById('repDetails').value = '';
-    document.getElementById('secretReport').checked = false;
-    alert("تم تدوين التقرير بالسيرفر المركزي!");
-};
-document.getElementById('saveReportBtn').addEventListener('click', window.saveReport);
-
-onSnapshot(collection(db, "reports"), (snapshot) => {
-    const normalCont = document.getElementById('normalReportsContainer');
-    const secretCont = document.getElementById('secretReportsContainer');
-    normalCont.innerHTML = '';
-    secretCont.innerHTML = '';
-    
-    snapshot.forEach(docSnap => {
-        const data = docSnap.data();
-        const div = document.createElement('div');
-        div.className = 'item-card';
-        div.innerHTML = `
-            <h4>📄 تقرير رقم: ${data.repId} (${data.type})</h4>
-            <p>📅 التاريخ: ${data.date} ${data.time} | 📍 الموقع: ${data.location}</p>
-            <p>👮 صياغة: ${data.leader} | القوة: ${data.members}</p>
-            <p style="background:#090d14; padding:8px; border-radius:4px; margin-top:5px; white-space:pre-wrap;">${data.details}</p>
-            <button class="delete-table-btn" style="margin-top:8px;" onclick="deleteDocFromDb('reports', '${docSnap.id}')">إتلاف المستند</button>
-        `;
-        
-        if(data.isSecret) {
-            secretCont.appendChild(div);
-        } else {
-            normalCont.appendChild(div);
-        }
-    });
-});
-
-// دالة الشطب العامة المرتبطة بقواعد البيانات
-window.deleteDocFromDb = async function(collectionName, docId) {
-    if(confirm("🚨 هل أنت متأكد من رغبتك في شطب هذا الملف نهائياً من سيرفر Firebase؟")) {
-        try {
-            await deleteDoc(doc(db, collectionName, docId));
-        } catch(e) { alert("حدث خطأ أثناء محاولة الحذف."); }
+        alert("⚠️ رمز التحقق غير صحيح!");
     }
 };
 </script>
