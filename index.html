@@ -541,7 +541,7 @@ input:focus, select:focus, textarea:focus {
                         <tr><td>09</td><td>Older Mohammed</td><td>R-8 Member</td><td>Alpha</td><td>-</td></tr>
                         <tr><td>10</td><td>Badr Al-Mutairi</td><td>R-9 Member</td><td>Bravo</td><td>-</td></tr>
                         <tr><td>11</td><td>ريان خالد</td><td>R-10 Member</td><td>Bravo</td><td>-</td></tr>
-                        <tr><td>12</td><td> فاضي   </td><td>R-11 Member</td><td>Bravo</td><td>-</td></tr>
+                        <tr><td>12</td><td>JOHN Marly</td><td>R-11 Member</td><td>Bravo</td><td>-</td></tr>
                         <tr><td>13</td><td>Ahmed Almutairi</td><td>R-12 Member</td><td>Bravo</td><td>-</td></tr>
                     </tbody>
                     <tbody id="dynamicMembersTable">
@@ -717,7 +717,7 @@ window.switchPage = function(pageId) {
 
 window.unlockSection = function(inputId, targetId) {
     const pass = document.getElementById(inputId).value;
-    if(pass === "1234") { 
+    if(pass === "1029") { 
         if(inputId === 'wantedPass') {
             switchPage('wantedRealPanel');
         } else {
@@ -740,7 +740,7 @@ window.showInlineLock = function() {
 
 window.verifyInlineCode = function() {
     const code = document.getElementById('inlineCodeInput').value;
-    if(code === "1234") {
+    if(code === "1029") {
         document.getElementById('inlineLockBox').style.display = 'none';
         document.getElementById('addMemberForm').style.display = 'block';
     } else {
