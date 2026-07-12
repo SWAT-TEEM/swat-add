@@ -627,7 +627,7 @@ input:focus, select:focus, textarea:focus {
                     <input id="repLocation" placeholder="📍 إحداثيات وموقع العملية">
                     <textarea id="repDetails" placeholder="📝 كتابة تفاصيل وسيناريو العملية بالكامل هنا..." style="height:120px;"></textarea>
                     <label style="display:flex; align-items:center; gap:8px; margin-bottom:15px; cursor:pointer;"><input id="secretReport" type="checkbox" style="width:auto; margin:0;"> 🔒 تصنيف الملف كتقرير سري مشفر للغاية</label>
-                    <button class="action-btn" onclick="saveReport()">حفظ التقرير نهائياً بالسيرفر</button>
+                    <button class="action-btn" id="saveReportBtn">حفظ التقرير نهائياً بالسيرفر</button>
                 </div>
                 
                 <div class="card-panel" style="display:flex; flex-direction:column; gap:15px;">
@@ -663,7 +663,7 @@ input:focus, select:focus, textarea:focus {
 <!-- ================= سكريبتات الأنظمة وقاعدة البيانات ================= -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, updateDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBTTj1ww1VPYIHu1SyMg_KSYHZRcF8dRHI",
@@ -678,7 +678,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// دالة التبديل بين الصفحات الإدارية المتبقية
+// دالة التبديل بين الصفحات الإدارية
 window.switchPage = function(pageId) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -689,7 +689,6 @@ window.switchPage = function(pageId) {
     const targetBtn = document.getElementById('btn-' + pageId);
     if(targetBtn) targetBtn.classList.add('active');
     
-    // تغيير عنوان الـ Header العلوي بناءً على القسم النشط
     const titles = {
         dashboardPanel: "مركز القيادة والتحكم الموحد",
         rulesPanel: "📜 اللائحة التنظيمية والقوانين العسكرية",
@@ -706,10 +705,10 @@ window.switchPage = function(pageId) {
     }
 };
 
-// الدوال التابعة للأقسام الأخرى كـ التشفير وغيرها تظل تعمل بشكل طبيعي هنا
+// فك تشفير الأقسام باستخدام الرمز الموحد 1029
 window.unlockSection = function(inputId, targetId) {
     const pass = document.getElementById(inputId).value;
-    if(pass === "1234") { // يمكنك تعديل الرمز السري الافتراضي هنا
+    if(pass === "1029") { 
         if(inputId === 'wantedPass') {
             switchPage('wantedRealPanel');
         } else {
@@ -732,11 +731,204 @@ window.showInlineLock = function() {
 
 window.verifyInlineCode = function() {
     const code = document.getElementById('inlineCodeInput').value;
-    if(code === "1234") {
+    if(code === "1029") {
         document.getElementById('inlineLockBox').style.display = 'none';
         document.getElementById('addMemberForm').style.display = 'block';
     } else {
         alert("🔒 رمز الإدارة غير صحيح!");
+    }
+};
+
+// --- نظام إدارة الأعضاء الديناميكي ---
+window.saveNewMemberToFirebase = async function() {
+    const num = document.getElementById('newMemNo').value.trim();
+    const name = document.getElementById('newMemName').value.trim();
+    const rank = document.getElementById('newMemRank').value.trim();
+    const unit = document.getElementById('newMemUnit').value.trim();
+    
+    if(!num || !name || !rank || !unit) return alert("الرجاء ملء كافة حقول العضو!");
+    
+    try {
+        await addDoc(collection(db, "members"), { num, name, rank, unit });
+        document.getElementById('newMemNo').value = '';
+        document.getElementById('newMemName').value = '';
+        document.getElementById('newMemRank').value = '';
+        document.getElementById('newMemUnit').value = '';
+        document.getElementById('addMemberForm').style.display = 'none';
+    } catch(e) { alert("خطأ أثناء الحفظ بالسيرفر"); }
+};
+
+onSnapshot(collection(db, "members"), (snapshot) => {
+    const tbody = document.getElementById('dynamicMembersTable');
+    tbody.innerHTML = '';
+    snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${data.num}</td>
+            <td>${data.name}</td>
+            <td>${data.rank}</td>
+            <td>${data.unit}</td>
+            <td><button class="delete-table-btn" onclick="deleteDocFromDb('members', '${docSnap.id}')">شطب</button></td>
+        `;
+        tbody.appendChild(tr);
+    });
+});
+
+// --- نظام إدارة المطلوبين ---
+document.getElementById('addWanted').addEventListener('click', async () => {
+    const name = document.getElementById('wantedName').value.trim();
+    const crime = document.getElementById('wantedCrime').value.trim();
+    if(!name || !crime) return alert("أدخل بيانات المطلوب كاملة!");
+    
+    await addDoc(collection(db, "wanted"), { name, crime });
+    document.getElementById('wantedName').value = '';
+    document.getElementById('wantedCrime').value = '';
+});
+
+onSnapshot(collection(db, "wanted"), (snapshot) => {
+    const list = document.getElementById('wantedList');
+    list.innerHTML = '';
+    snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        const div = document.createElement('div');
+        div.className = 'item-card';
+        div.innerHTML = `
+            <h4>🎯 المستهدف: ${data.name}</h4>
+            <p>🚨 التهديد: ${data.crime}</p>
+            <button class="delete-table-btn" style="margin-top:8px;" onclick="deleteDocFromDb('wanted', '${docSnap.id}')">إلغاء التعميم</button>
+        `;
+        list.appendChild(div);
+    });
+});
+
+// --- نظام إدارة العمليات ---
+document.getElementById('addMission').addEventListener('click', async () => {
+    const title = document.getElementById('missionTitle').value.trim();
+    const leader = document.getElementById('missionLeader').value.trim();
+    const members = document.getElementById('missionMembers').value.trim();
+    const status = document.getElementById('missionStatus').value;
+    const desc = document.getElementById('missionDesc').value.trim();
+    
+    if(!title || !leader) return alert("أدخل البيانات الأساسية للمهمة!");
+    await addDoc(collection(db, "missions"), { title, leader, members, status, desc });
+    
+    document.getElementById('missionTitle').value = '';
+    document.getElementById('missionLeader').value = '';
+    document.getElementById('missionMembers').value = '';
+    document.getElementById('missionDesc').value = '';
+});
+
+onSnapshot(collection(db, "missions"), (snapshot) => {
+    const list = document.getElementById('missionsList');
+    list.innerHTML = '';
+    snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        const div = document.createElement('div');
+        div.className = 'item-card';
+        div.innerHTML = `
+            <h4>⚡ ${data.title}</h4>
+            <p>👮 القائد: ${data.leader} | 👥 القوة: ${data.members}</p>
+            <p>📊 الحالة: <b>${data.status}</b></p>
+            <p style="background:#090d14; padding:8px; border-radius:4px; margin-top:5px;">${data.desc}</p>
+            <button class="delete-table-btn" style="margin-top:8px;" onclick="deleteDocFromDb('missions', '${docSnap.id}')">أرشفة وحذف</button>
+        `;
+        list.appendChild(div);
+    });
+});
+
+// --- نظام إدارة الترشيحات ---
+document.getElementById('addNomination').addEventListener('click', async () => {
+    const name = document.getElementById('nomineeCharName').value.trim();
+    const rank = document.getElementById('nomineeCurrentRank').value.trim();
+    const sector = document.getElementById('nomineeSector').value.trim();
+    const reason = document.getElementById('nominationReason').value.trim();
+    
+    if(!name || !rank) return alert("يرجى إكمال بيانات المرشح!");
+    await addDoc(collection(db, "nominations"), { name, rank, sector, reason });
+    
+    document.getElementById('nomineeCharName').value = '';
+    document.getElementById('nomineeCurrentRank').value = '';
+    document.getElementById('nomineeSector').value = '';
+    document.getElementById('nominationReason').value = '';
+    alert("تم إرسال طلب التزكية بنجاح!");
+});
+
+onSnapshot(collection(db, "nominations"), (snapshot) => {
+    const list = document.getElementById('nominationsList');
+    list.innerHTML = '';
+    snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        const div = document.createElement('div');
+        div.className = 'item-card';
+        div.innerHTML = `
+            <h4>🎖️ المرشح: ${data.name}</h4>
+            <p>الرتبة الحالية: ${data.rank} | القطاع: ${data.sector}</p>
+            <p style="color:#a0aec0;">الأسباب: ${data.reason}</p>
+            <button class="delete-table-btn" style="margin-top:8px;" onclick="deleteDocFromDb('nominations', '${docSnap.id}')">رفض أو إنهاء المعاملة</button>
+        `;
+        list.appendChild(div);
+    });
+});
+
+// --- نظام إدارة مركز التقارير ---
+window.saveReport = async function() {
+    const repId = document.getElementById('repId').value.trim();
+    const date = document.getElementById('repDate').value;
+    const time = document.getElementById('repTime').value;
+    const leader = document.getElementById('repLeader').value.trim();
+    const members = document.getElementById('repMembers').value.trim();
+    const type = document.getElementById('repType').value;
+    const location = document.getElementById('repLocation').value.trim();
+    const details = document.getElementById('repDetails').value.trim();
+    const isSecret = document.getElementById('secretReport').checked;
+    
+    if(!repId || !leader || !details) return alert("أدخل بيانات التقرير الأساسية!");
+    
+    await addDoc(collection(db, "reports"), { repId, date, time, leader, members, type, location, details, isSecret });
+    
+    document.getElementById('repId').value = '';
+    document.getElementById('repLeader').value = '';
+    document.getElementById('repMembers').value = '';
+    document.getElementById('repLocation').value = '';
+    document.getElementById('repDetails').value = '';
+    document.getElementById('secretReport').checked = false;
+    alert("تم تدوين التقرير بالسيرفر المركزي!");
+};
+document.getElementById('saveReportBtn').addEventListener('click', window.saveReport);
+
+onSnapshot(collection(db, "reports"), (snapshot) => {
+    const normalCont = document.getElementById('normalReportsContainer');
+    const secretCont = document.getElementById('secretReportsContainer');
+    normalCont.innerHTML = '';
+    secretCont.innerHTML = '';
+    
+    snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        const div = document.createElement('div');
+        div.className = 'item-card';
+        div.innerHTML = `
+            <h4>📄 تقرير رقم: ${data.repId} (${data.type})</h4>
+            <p>📅 التاريخ: ${data.date} ${data.time} | 📍 الموقع: ${data.location}</p>
+            <p>👮 صياغة: ${data.leader} | القوة: ${data.members}</p>
+            <p style="background:#090d14; padding:8px; border-radius:4px; margin-top:5px; white-space:pre-wrap;">${data.details}</p>
+            <button class="delete-table-btn" style="margin-top:8px;" onclick="deleteDocFromDb('reports', '${docSnap.id}')">إتلاف المستند</button>
+        `;
+        
+        if(data.isSecret) {
+            secretCont.appendChild(div);
+        } else {
+            normalCont.appendChild(div);
+        }
+    });
+});
+
+// دالة الشطب العامة المرتبطة بقواعد البيانات
+window.deleteDocFromDb = async function(collectionName, docId) {
+    if(confirm("🚨 هل أنت متأكد من رغبتك في شطب هذا الملف نهائياً من سيرفر Firebase؟")) {
+        try {
+            await deleteDoc(doc(db, collectionName, docId));
+        } catch(e) { alert("حدث خطأ أثناء محاولة الحذف."); }
     }
 };
 </script>
