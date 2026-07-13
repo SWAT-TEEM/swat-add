@@ -147,12 +147,15 @@ body {
 
 @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
 
+/* تعديل برمي حاسم لمنع التداخل نهائياً */
 .page {
-    display: none;
-    animation: fadeInUp 0.4s ease forwards;
+    display: none !important; 
 }
 
-.page.active { display: block; }
+.page.active { 
+    display: block !important; 
+    animation: fadeInUp 0.4s ease forwards;
+}
 
 @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(15px); }
@@ -174,6 +177,7 @@ body {
     padding: 25px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     position: relative;
+    margin-bottom: 20px;
 }
 
 .panel-title {
@@ -458,7 +462,7 @@ input:focus, select:focus, textarea:focus {
                 <div id="inlineLockBox" class="inline-lock-box" style="display: none;">
                     <h5>🔒 يتطلب صلاحيات الإدارة - أدخل الرمز السري للتعديل</h5>
                     <div class="flex-inputs">
-                        <input id="inlineCodeInput" type="password" placeholder="أدخل الرمز السري (الافتراضي: 1010)" autocomplete="off">
+                        <input id="inlineCodeInput" type="password" placeholder="أدخل الرمز السري" autocomplete="off">
                         <button class="action-btn" onclick="verifyInlineCode()">تحقق ودخول</button>
                     </div>
                 </div>
@@ -493,7 +497,7 @@ input:focus, select:focus, textarea:focus {
         <div id="wantedGate" class="page">
             <div class="card-panel lock-screen">
                 <h3>🔒 تصريح أمني - بوابة كشف المطلوبين والتحري الميداني</h3>
-                <input id="wantedPass" type="password" placeholder="رمز الدخول المشفر (الافتراضي: 1010)" autocomplete="off">
+                <input id="wantedPass" type="password" placeholder="رمز الدخول المشفر" autocomplete="off">
                 <button class="action-btn" onclick="unlockSection('wantedPass', 'wantedRealPanel')">فك التشفير ودخول</button>
             </div>
         </div>
@@ -628,7 +632,6 @@ input:focus, select:focus, textarea:focus {
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// إعدادات الفايربيس من الكود الخاص بك
 const firebaseConfig = {
   apiKey: "AIzaSyBTTj1ww1VPYIHu1SyMg_KSYHZRcF8dRHI",
   authDomain: "swat-system-384b0.firebaseapp.com",
@@ -642,10 +645,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// كود المرور الافتراضي لفك تشفير الصفحات والأزرار
-const GLOBAL_SECURITY_CODE = "1010";
+// 🔒 تم تعديل الرمز السري إلى 1029 بناءً على طلبك
+const GLOBAL_SECURITY_CODE = "1029";
 
-// دالة تفريغ الحقول لحماية البيانات
 function clearAllInputs() {
     document.querySelectorAll("input").forEach(input => {
         if(input.type !== "checkbox" && input.type !== "radio" && input.id !== "chatInput") {
@@ -654,14 +656,24 @@ function clearAllInputs() {
     });
 }
 
-// التبديل بين الصفحات وإصلاح قفل العناوين الناقص في الكود القديم
+// 🛠️ دالة التنقل المحدثة والمعدلة جذرياً لمنع تداخل الصفحات نهائياً
 window.switchPage = function(pageId) {
     clearAllInputs();
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    
+    // إخفاء كافة الصفحات بشكل تام وإجباري أولاً لمنع التداخل
+    document.querySelectorAll('.page').forEach(p => {
+        p.classList.remove('active');
+        p.style.setProperty('display', 'none', 'important');
+    });
+    
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
     
+    // إظهار الصفحة المستهدفة فقط
     const targetPage = document.getElementById(pageId);
-    if(targetPage) targetPage.classList.add('active');
+    if(targetPage) {
+        targetPage.classList.add('active');
+        targetPage.style.setProperty('display', 'block', 'important');
+    }
     
     const targetBtn = document.getElementById('btn-' + pageId);
     if(targetBtn) targetBtn.classList.add('active');
@@ -682,20 +694,24 @@ window.switchPage = function(pageId) {
     }
 };
 
-// أنظمة الحماية والأمان وفك التشفير للأقسام والـ Gateways
 window.unlockSection = function(inputId, targetPanelId) {
     const passValue = document.getElementById(inputId).value;
     if(passValue === GLOBAL_SECURITY_CODE) {
         if(targetPanelId.includes('View') || targetPanelId.includes('Panel')) {
-            document.getElementById(targetPanelId).style.display = "block";
-            // إخفاء صندوق القفل إذا وجد لجمالية الواجهة
+            // إخفاء واجهة القفل قبل فتح اللوحة
             const lockArea = document.getElementById(inputId).parentElement;
             if(lockArea) lockArea.style.display = "none";
+            
+            if(targetPanelId === 'wantedRealPanel') {
+                switchPage('wantedRealPanel');
+            } else {
+                document.getElementById(targetPanelId).style.display = "block";
+            }
         } else {
             switchPage(targetPanelId);
         }
     } else {
-        alert("❌ رمز التصريح الأمني غير صحيح! تم تسجيل محاولة الدخول غير المصرح بها.");
+        alert("❌ رمز التصريح الأمني غير صحيح!");
     }
 };
 
@@ -713,7 +729,7 @@ window.verifyInlineCode = function() {
     }
 };
 
-/* ================= 🧠 محرك ذكاء اصطناعي محلي ومتقدم (اسألني AI Engine) ================= */
+/* ================= 🧠 محرك الـ AI (اسألني) ================= */
 window.sendChatMessage = function() {
     const input = document.getElementById('chatInput');
     const msgText = input.value.trim();
@@ -730,12 +746,10 @@ window.sendChatMessage = function() {
             response = "أهلاً بك يا سيادة القائد في مركز التحكم الذكي. كيف يمكنني مساعدتك اليوم في إدارة العمليات التكتيكية؟";
         } else if(text.includes('القوانين') || text.includes('شعار')) {
             response = "الأنظمة العسكرية الصارمة تنص على: الانضباط والسرية والتنفيذ. البند الأهم هو قانون الولاء المطلق للـ Chief وعدم عصيان الأوامر تلافياً للشطب النهائي.";
-        } else if(text.includes('الاعضاء') || text.includes('اعضاء') || text.includes('مين في الفرقة')) {
-            response = "تضم الفرقة قيادات عليا على رأسهم القائد الفعلي SWAT Chief فهد المطيري، يليه النائب كارلوس المطيري، ومساعد Chief تركي المطيري والمشرف جيمس مورغان، بالإضافة إلى 9 أعضاء قتاليين بالوحدات.";
-        } else if(text.includes('خطة') || text.includes('اقتحام') || text.includes('مداهمة')) {
-            response = "توصية تكتيكية من اسألني AI: يتم تقسيم القوات إلى فرقتين (ألفا للاقتحام الأمامي، وبرافو للتطويق الخلفي)، مع تفعيل الصمت اللاسلكي التام واستخدام القنابل الصوتية عند الدخول الثنائي المتزامن.";
-        } else if(text.includes('اللبس') || text.includes('زي')) {
-            response = "الزي الرسمي المعتمد هو البدلة التكتيكية السوداء الكاملة، مع درع ثقيل يحمل شعار SWAT واضحاً، والخوذة التكتيكية الواقية ويمنع التعديل على الألوان.";
+        } else if(text.includes('الاعضاء') || text.includes('اعضاء')) {
+            response = "تضم الفرقة قيادات عليا على رأسهم القائد الفعلي SWAT Chief فهد المطيري، يليه النائب كارلوس المطيري، ومساعد Chief تركي المطيري والمشرف جيمس مورغان، بالإضافة إلى الأعضاء بالوحدات.";
+        } else if(text.includes('خطة') || text.includes('اقتحام')) {
+            response = "توصية تكتيكية: يتم تقسيم القوات إلى فرقتين (ألفا للاقتحام الأمامي، وبرافو للتطويق الخلفي)، مع تفعيل الصمت اللاسلكي التام واستخدام القنابل الصوتية.";
         }
         appendMessage(response, 'ai');
     }, 600);
@@ -750,29 +764,26 @@ function appendMessage(text, sender) {
     box.scrollTop = box.scrollHeight;
 }
 
-// ميزات الـ AI الذكية المدمجة بالأقسام الميدانية
 window.generateAIMissionPlan = function() {
     const title = document.getElementById('missionTitle').value;
-    if(!title) { alert("يرجى كتابة عنوان المهمة أولاً ليقوم الذكاء الاصطناعي بتحليلها!"); return; }
-    document.getElementById('missionDesc').value = `[خطة تكتيكية من اسألني AI للعملية: ${title}]:\n1. تتحرك فرقة ألفا كموجة اقتحام أولى.\n2. تؤمن فرقة برافو محيط الموقع بالكامل لمنع الهروب.\n3. يتم رمي قنابل الغاز المجهدة تليها المداهمة الفورية تحت غطاء الصمت اللاسلكي التام.`;
+    if(!title) { alert("يرجى كتابة عنوان المهمة أولاً!"); return; }
+    document.getElementById('missionDesc').value = `[خطة تكتيكية من اسألني AI للعملية: ${title}]:\n1. تتحرك فرقة ألفا كموجة اقتحام أولى.\n2. تؤمن فرقة برافو محيط الموقع بالكامل.\n3. يتم رمي قنابل الغاز المجهدة تليها المداهمة الفورية.`;
 };
 
 window.evaluateNomineeAI = function() {
     const name = document.getElementById('nomineeCharName').value;
     if(!name) { alert("أدخل اسم المرشح للتقييم!"); return; }
-    document.getElementById('nominationReason').value = `بناءً على السجلات السحابية، يظهر العضو ${name} انضباطاً عالياً وتوافقاً مع بند السيادة والولاء المطلق. نوصي بالموافقة على الترقية نظراً لكفاءته التكتيكية العالية في الميدان.`;
+    document.getElementById('nominationReason').value = `بناءً على السجلات، يظهر العضو ${name} انضباطاً عالياً وتوافقاً مع بند السيادة والولاء المطلق. نوصي بالموافقة على الترقية.`;
 };
 
 window.generateAIReportSummary = function() {
     const type = document.getElementById('repType').value;
     const loc = document.getElementById('repLocation').value || "الموقع المحدد";
-    document.getElementById('repDetails').value = `نحيطكم علماً أنه تم تنفيذ المأمورية بنجاح وهي عبارة عن (${type}) في منطقة (${loc}). تم السيطرة على الموقف بالكامل وتطهير العناصر الخطرة وإحالة المطلوبين إلى وحدة التحقيق دون وقوع إصابات في صفوف قوتنا الباسلة.`;
+    document.getElementById('repDetails').value = `نحيطكم علماً أنه تم تنفيذ المأمورية بنجاح وهي عبارة عن (${type}) في منطقة (${loc}). تم السيطرة على الموقف بالكامل وتطهير العناصر الخطرة وإحالة المطلوبين إلى وحدة التحقيق.`;
 };
 
+/* ================= 🔥 ربط وقراءة قاعدة البيانات السحابية ================= */
 
-/* ================= 🔥 ربط وإصلاح عمليات قاعدة بيانات الفايربيس (Firebase Firestore) ================= */
-
-// 1. إدارة كشف القوة والبشرية (جدول الأعضاء)
 window.saveNewMemberToFirebase = async function() {
     const no = document.getElementById('newMemNo').value;
     const name = document.getElementById('newMemName').value;
@@ -784,13 +795,13 @@ window.saveNewMemberToFirebase = async function() {
         await addDoc(collection(db, "members"), { no, name, rank, unit, timestamp: Date.now() });
         clearAllInputs();
         document.getElementById('addMemberForm').style.display = "none";
-    } catch(e) { console.error("Error added member: ", e); }
+    } catch(e) { console.error(e); }
 };
 
 onSnapshot(collection(db, "members"), (snapshot) => {
     const tbody = document.getElementById('dynamicMembersTable');
     tbody.innerHTML = "";
-    let count = 4; // الأعضاء الأساسيين الثابتين في الجدول القديم
+    let count = 4;
     snapshot.forEach((docSnap) => {
         const data = docSnap.data();
         count++;
@@ -807,7 +818,6 @@ onSnapshot(collection(db, "members"), (snapshot) => {
     document.getElementById('statMembersCount').innerText = count;
 });
 
-// 2. إدارة خلية المطلوبين
 document.getElementById('addWanted').addEventListener('click', async () => {
     const name = document.getElementById('wantedName').value;
     const crime = document.getElementById('wantedCrime').value;
@@ -826,13 +836,12 @@ onSnapshot(collection(db, "wanted"), (snapshot) => {
         div.innerHTML = `
             <h4>🎯 المستهدف: ${data.name}</h4>
             <p>🚨 تصنيف الجرم: ${data.crime}</p>
-            <button class="delete-table-btn" style="margin-top:8px;" onclick="deleteRecord('wanted', '${docSnap.id}')">تم القبض والتطهير</button>
+            <button class="delete-table-btn" style="margin-top:8px;" onclick="deleteRecord('wanted', '${docSnap.id}')">تم القبض</button>
         `;
         list.appendChild(div);
     });
 });
 
-// 3. إدارة العمليات والمهمات
 document.getElementById('addMission').addEventListener('click', async () => {
     const title = document.getElementById('missionTitle').value;
     const leader = document.getElementById('missionLeader').value;
@@ -854,17 +863,14 @@ onSnapshot(collection(db, "missions"), (snapshot) => {
         div.className = "item-card";
         div.innerHTML = `
             <h4>🎬 المهمة: ${data.title}</h4>
-            <p>👮 القائد الميداني: ${data.leader}</p>
-            <p>👥 القوة المشاركة: ${data.members}</p>
-            <p>📊 الحالة: <b>${data.status}</b></p>
+            <p>👮 القائد: ${data.leader} | الحالة: <b>${data.status}</b></p>
             <p>📝 تفاصيل: ${data.desc}</p>
-            <button class="delete-table-btn" style="margin-top:8px;" onclick="deleteRecord('missions', '${docSnap.id}')">أرشفة الملف</button>
+            <button class="delete-table-btn" style="margin-top:8px;" onclick="deleteRecord('missions', '${docSnap.id}')">أرشفة</button>
         `;
         list.appendChild(div);
     });
 });
 
-// 4. قسم شؤون الترشيحات
 document.getElementById('addNomination').addEventListener('click', async () => {
     const name = document.getElementById('nomineeCharName').value;
     const rank = document.getElementById('nomineeCurrentRank').value;
@@ -885,18 +891,13 @@ onSnapshot(collection(db, "nominations"), (snapshot) => {
         div.className = "item-card";
         div.innerHTML = `
             <h4>🎖️ المرشح: ${data.name}</h4>
-            <p>رتبته الحالية: ${data.rank} | القطاع: ${data.sector}</p>
-            <p>📝 المسببات: ${data.reason}</p>
-            <div class="status-btn-group">
-                <button style="background:var(--success);" onclick="deleteRecord('nominations', '${docSnap.id}')">✅ قبول الترقية</button>
-                <button style="background:var(--danger);" onclick="deleteRecord('nominations', '${docSnap.id}')">❌ رفض الطلب</button>
-            </div>
+            <p>الطلب: ${data.rank} | المسببات: ${data.reason}</p>
+            <button class="delete-table-btn" onclick="deleteRecord('nominations', '${docSnap.id}')">إغلاق الملف</button>
         `;
         list.appendChild(div);
     });
 });
 
-// 5. مركز صياغة وحفظ التقارير
 document.getElementById('saveReportBtn').addEventListener('click', async () => {
     const repId = document.getElementById('repId').value;
     const date = document.getElementById('repDate').value;
@@ -908,11 +909,10 @@ document.getElementById('saveReportBtn').addEventListener('click', async () => {
     const details = document.getElementById('repDetails').value;
     const isSecret = document.getElementById('secretReport').checked;
 
-    if(!repId || !leader) { alert("أدخل المعرف الرقمي واسم صائغ التقرير!"); return; }
-
+    if(!repId || !leader) { alert("أكمل البيانات الحسابية!"); return; }
     await addDoc(collection(db, "reports"), { repId, date, time, leader, members, type, location, details, isSecret });
     clearAllInputs();
-    alert("🚀 تم رفع وحفظ التقرير بنجاح على السيرفر المركزي.");
+    alert("🚀 تم الحفظ.");
 });
 
 onSnapshot(collection(db, "reports"), (snapshot) => {
@@ -926,11 +926,9 @@ onSnapshot(collection(db, "reports"), (snapshot) => {
         const div = document.createElement('div');
         div.className = "item-card";
         div.innerHTML = `
-            <h4>📄 تقرير رقم: ${data.repId} (${data.type})</h4>
-            <p>📅 التوقيت: ${data.date} - ${data.time} | 📍 الموقع: ${data.location}</p>
-            <p>👮 المسؤول: ${data.leader} | القوة: ${data.members}</p>
+            <h4>📄 تقرير: ${data.repId} (${data.type})</h4>
             <p>📝 المضمون: ${data.details}</p>
-            <button class="delete-table-btn" style="margin-top:8px;" onclick="deleteRecord('reports', '${docSnap.id}')">إتلاف المستند</button>
+            <button class="delete-table-btn" onclick="deleteRecord('reports', '${docSnap.id}')">إتلاف</button>
         `;
         if(data.isSecret) {
             div.style.borderRight = "3px solid var(--danger)";
@@ -941,18 +939,12 @@ onSnapshot(collection(db, "reports"), (snapshot) => {
     });
 });
 
-// دالة الحذف والشطب الموحدة لقاعدة البيانات السحابية
 window.deleteRecord = async function(collectionName, id) {
-    const code = prompt("🔒 يتطلب شطب البيانات إدخال رمز الأمان الإداري الموحد:");
+    const code = prompt("🔒 أدخل رمز الأمان الموحد للحذف:");
     if(code === GLOBAL_SECURITY_CODE) {
-        try {
-            await deleteDoc(doc(db, collectionName, id));
-        } catch(e) { console.error("Error deleting document: ", e); }
-    } else {
-        alert("❌ الرمز خاطئ! لا تملك صلاحية المسح.");
-    }
+        try { await deleteDoc(doc(db, collectionName, id)); } catch(e) { console.error(e); }
+    } else { alert("❌ الرمز خاطئ!"); }
 };
-
 </script>
 </body>
 </html>
