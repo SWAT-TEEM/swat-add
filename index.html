@@ -147,7 +147,7 @@ body {
 
 @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
 
-/* منع التداخل نهائياً */
+/* منع التداخل */
 .page {
     display: none !important; 
 }
@@ -413,15 +413,15 @@ input:focus, select:focus, textarea:focus {
 
                 <!-- إحصائيات الفرقة -->
                 <div class="stats-container">
-                    <div class="stat-card"><div class="num" id="statMembersCount">15</div><div class="label">الأعضاء الرسميين بالجدول</div></div>
-                    <div class="stat-card"><div class="num" style="color: var(--warning);" id="statActiveUnits">ألفا / برافو</div><div class="label">الوحدات القتالية النشطة</div></div>
+                    <div class="stat-card"><div class="num" id="statMembersCount">13</div><div class="label">الأعضاء الرسميين بالجدول</div></div>
+                    <div class="stat-card"><div class="num" style="color: var(--warning);" id="statActiveUnits">Alpha / Bravo</div><div class="label">الوحدات القتالية النشطة</div></div>
                     <div class="stat-card"><div class="num" style="color: var(--ai-blue);">مفعل</div><div class="label">تحليل الذكاء الاصطناعي البنيوي</div></div>
                     <div class="stat-card"><div class="num" style="color: var(--danger);">LEVEL 1</div><div class="label">حالة الجاهزية والاستعداد</div></div>
                 </div>
             </div>
         </div>
 
-        <!-- ================= 2. شاشة اللائحة والقوانين المكتملة المسترجعة ================= -->
+        <!-- ================= 2. شاشة اللائحة والقوانين ================= -->
         <div id="rulesPanel" class="page">
             <div class="card-panel">
                 <h3 class="panel-title">قوانين الفرقة الصارمة واللائحة الكاملة</h3>
@@ -454,7 +454,7 @@ input:focus, select:focus, textarea:focus {
             </div>
         </div>
 
-        <!-- ================= 4. صفحة الجدول مع العساكر المسترجعين بالكامل ================= -->
+        <!-- ================= 4. صفحة الجدول (المطابقة للصورة تماماً) ================= -->
         <div id="schedulePanel" class="page">
             <div class="card-panel">
                 <div class="panel-title">
@@ -475,8 +475,8 @@ input:focus, select:focus, textarea:focus {
                     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom: 10px;">
                         <input id="newMemNo" placeholder="الرقم الإداري">
                         <input id="newMemName" placeholder="الاسم الكامل">
-                        <input id="newMemRank" placeholder="الرتبة (مثال: R-4)">
-                        <input id="newMemUnit" placeholder="الوحدة (Alpha / Bravo)">
+                        <input id="newMemRank" placeholder="الرتبة">
+                        <input id="newMemUnit" placeholder="الوحدة">
                     </div>
                     <button class="action-btn" onclick="saveNewMemberToFirebase()">تأكيد الحفظ بالسيرفر</button>
                 </div>
@@ -486,21 +486,20 @@ input:focus, select:focus, textarea:focus {
                         <tr><th>الرقم</th><th>الاسم</th><th>الرتبة</th><th>الوحدة</th><th>الإجراءات</th></tr>
                     </thead>
                     <tbody id="staticMembersTable">
-                        <!-- القيادة العليا المسترجعة -->
+                        <!-- القيادة والأعضاء المحدثين بالكامل بناءً على الصورة المرفقة -->
                         <tr style="background: rgba(216, 194, 122, 0.03);"><td style="font-weight: bold; color: var(--gold);">01</td><td style="font-weight: bold;">FAHAD ALMUTAIRI</td><td style="color: var(--gold); font-weight: bold;">R-0 SWAT Chief</td><td style="font-weight: bold;">Command</td><td>-</td></tr>
                         <tr><td>02</td><td>KARLOS ALMUTAIRI</td><td style="color: #cbd5e1;">R-1 Deputy Chief</td><td>Command</td><td>-</td></tr>
                         <tr><td>03</td><td>Turki Al-Mutairi</td><td>R-2 Assistant Chief</td><td>Leader Alpha</td><td>-</td></tr>
                         <tr><td>04</td><td>James Morgan</td><td>R-3 Supervisor</td><td>Leader Bravo</td><td>-</td></tr>
-                        <!-- أعضاء قوة ألفا وبرافو المسترجعين بالكامل -->
-                        <tr><td>05</td><td>ALMUTAIRI_99</td><td>R-4 Corporal</td><td>Alpha Unit</td><td>-</td></tr>
-                        <tr><td>06</td><td>GHOST_TACTICAL</td><td>R-4 Officer</td><td>Alpha Unit</td><td>-</td></tr>
-                        <tr><td>07</td><td>BANDAR_SHELD</td><td>R-4 Officer</td><td>Alpha Unit</td><td>-</td></tr>
-                        <tr><td>08</td><td>SULTAN_O1</td><td>R-5 Trooper</td><td>Alpha Unit</td><td>-</td></tr>
-                        <tr><td>09</td><td>KHALID_WAR</td><td>R-5 Trooper</td><td>Alpha Unit</td><td>-</td></tr>
-                        <tr><td>10</td><td>RILEY_OS</td><td>R-4 Corporal</td><td>Bravo Unit</td><td>-</td></tr>
-                        <tr><td>11</td><td>F16_OMAN</td><td>R-4 Officer</td><td>Bravo Unit</td><td>-</td></tr>
-                        <tr><td>12</td><td>M_ALSHAMMARI</td><td>R-5 Trooper</td><td>Bravo Unit</td><td>-</td></tr>
-                        <tr><td>13</td><td>SAUD_HERO</td><td>R-5 Trooper</td><td>Bravo Unit</td><td>-</td></tr>
+                        <tr><td>05</td><td>Mov Marley</td><td>R-4 Member</td><td>Alpha</td><td>-</td></tr>
+                        <tr><td>06</td><td>Sicr Exxon</td><td>R-5 Member</td><td>Alpha</td><td>-</td></tr>
+                        <tr><td>07</td><td>Marcus Leno</td><td>R-6 Member</td><td>Alpha</td><td>-</td></tr>
+                        <tr><td>08</td><td>James Kruise</td><td>R-7 Member</td><td>Alpha</td><td>-</td></tr>
+                        <tr><td>09</td><td>Older Mohammed</td><td>R-8 Member</td><td>Alpha</td><td>-</td></tr>
+                        <tr><td>10</td><td>Badr Al-Mutairi</td><td>R-9 Member</td><td>Bravo</td><td>-</td></tr>
+                        <tr><td>11</td><td>ريان خالد</td><td>R-10 Member</td><td>Bravo</td><td>-</td></tr>
+                        <tr><td>12</td><td>JOHN Marly</td><td>R-11 Member</td><td>Bravo</td><td>-</td></tr>
+                        <tr><td>13</td><td>Ahmed Almutairi</td><td>R-12 Member</td><td>Bravo</td><td>-</td></tr>
                     </tbody>
                     <tbody id="dynamicMembersTable"></tbody>
                 </table>
@@ -537,7 +536,7 @@ input:focus, select:focus, textarea:focus {
             <div class="dashboard-layout">
                 <div class="card-panel">
                     <h3 class="panel-title">🎯 تخطيط وتوزيع مهمة عسكرية جديدة</h3>
-                    <input id="missionTitle" placeholder="عنوان العمليات (مثال: اقتحام وكر الفا)" autocomplete="off">
+                    <input id="missionTitle" placeholder="عنوان العمليات" autocomplete="off">
                     <input id="missionLeader" placeholder="👮 القائد الميداني المسؤول" autocomplete="off">
                     <input id="missionMembers" placeholder="👥 أطقم الإسناد والمشاركين" autocomplete="off">
                     <select id="missionStatus">
@@ -659,7 +658,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// 🔒 الرمز السري الموحد المعتمد لنظام الأمان والتشغيل
 const GLOBAL_SECURITY_CODE = "1029";
 
 function clearAllInputs() {
@@ -670,11 +668,9 @@ function clearAllInputs() {
     });
 }
 
-// 🛠️ دالة التنقل لمنع تداخل الصفحات والحفاظ على النماذج في أماكنها الصحيحة
 window.switchPage = function(pageId) {
     clearAllInputs();
     
-    // إخفاء كافة الصفحات بشكل كلي
     document.querySelectorAll('.page').forEach(p => {
         p.classList.remove('active');
         p.style.setProperty('display', 'none', 'important');
@@ -682,7 +678,6 @@ window.switchPage = function(pageId) {
     
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
     
-    // تفعيل الصفحة المقصودة فقط وإظهارها بشكل آمن دون تداخل
     const targetPage = document.getElementById(pageId);
     if(targetPage) {
         targetPage.classList.add('active');
@@ -814,7 +809,7 @@ window.saveNewMemberToFirebase = async function() {
 onSnapshot(collection(db, "members"), (snapshot) => {
     const tbody = document.getElementById('dynamicMembersTable');
     tbody.innerHTML = "";
-    let count = 13; // الحساب الأساسي يبدأ من القوة الثابتة المعاد إدراجها (13 عسكرياً)
+    let count = 13; // القوة الأساسية الثابتة المتطابقة مع الصورة
     snapshot.forEach((docSnap) => {
         const data = docSnap.data();
         count++;
