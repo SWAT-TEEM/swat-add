@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>منصة اسألني - الذكاء الاصطناعي التكتيكي</title>
+<title>منصة اسألني - الذكاء الاصطناعي التكتيكي الموحد</title>
 
 <style>
 :root {
@@ -147,7 +147,7 @@ body {
 
 @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
 
-/* تعديل برمي حاسم لمنع التداخل نهائياً */
+/* منع التداخل نهائياً */
 .page {
     display: none !important; 
 }
@@ -413,7 +413,7 @@ input:focus, select:focus, textarea:focus {
 
                 <!-- إحصائيات الفرقة -->
                 <div class="stats-container">
-                    <div class="stat-card"><div class="num" id="statMembersCount">13</div><div class="label">الأعضاء الرسميين بالجدول</div></div>
+                    <div class="stat-card"><div class="num" id="statMembersCount">15</div><div class="label">الأعضاء الرسميين بالجدول</div></div>
                     <div class="stat-card"><div class="num" style="color: var(--warning);" id="statActiveUnits">ألفا / برافو</div><div class="label">الوحدات القتالية النشطة</div></div>
                     <div class="stat-card"><div class="num" style="color: var(--ai-blue);">مفعل</div><div class="label">تحليل الذكاء الاصطناعي البنيوي</div></div>
                     <div class="stat-card"><div class="num" style="color: var(--danger);">LEVEL 1</div><div class="label">حالة الجاهزية والاستعداد</div></div>
@@ -421,17 +421,20 @@ input:focus, select:focus, textarea:focus {
             </div>
         </div>
 
-        <!-- ================= 2. شاشة اللائحة والقوانين ================= -->
+        <!-- ================= 2. شاشة اللائحة والقوانين المكتملة المسترجعة ================= -->
         <div id="rulesPanel" class="page">
             <div class="card-panel">
-                <h3 class="panel-title">قوانين الفرقة الصارمة</h3>
+                <h3 class="panel-title">قوانين الفرقة الصارمة واللائحة الكاملة</h3>
                 <ol style="padding-right: 20px; line-height: 2.2; color: #cbd5e1; font-size: 15px;">
-                    <li>الالتزام التام بأوامر قائد الفريق أو المسؤول الأعلى رتبة.</li>
-                    <li>يمنع خروج أي دورية أو تنفيذ أي عملية إلا بعد إذن المسؤول.</li>
-                    <li>يمنع الحديث أو المزاح أثناء الاصطفاف أو تنفيذ المهام.</li>
-                    <li>الالتزام بالزي الرسمي الكامل والمعدات المعتمدة.</li>
-                    <li>جميع المعلومات والخطط الخاصة بالفرقة تعتبر سرية ومحمية بنظام اسألني AI.</li>
-                    <li style="color: #ff9800; font-weight: bold; background: rgba(216, 194, 122, 0.05); padding: 5px 10px; border-radius: 6px; border-right: 3px solid var(--gold);">[بند السيادة] قانون الولاء المطلق: يظل الولاء كاملاً وثابتاً لقائد الفرقة الحالي (Chief) دون غيره. وإذا حدث أي نزاع إداري، تُلغى صلاحيات الأطراف المنقلبة فوراً.</li>
+                    <li><b>الالتزام التام بالأوامر العسكرية:</b> الطاعة العمياء لكافة توجيهات قائد الفريق والمسؤول الأعلى رتبة دون أي تهاون.</li>
+                    <li><b>تصاريح المداهمات والدوريات:</b> يمنع منعاً باتاً خروج أي دورية ميدانية أو التخطيط لعملية اقتحام إلا بعد أخذ إذن خطي أو لفظي مباشر من القيادة.</li>
+                    <li><b>الجدية والانضباط الميداني:</b> يمنع الحديث الجانبي، المزاح، أو خفض السلاح أثناء الاصطفاف التفتيشي أو المداهمات والمهام الحرجة.</li>
+                    <li><b>بروتوكول الهندام العسكري:</b> الالتزام الصارم بالزي الرسمي الكامل والمعدات والخوذات المصنفة والمعتمدة في اللوحة.</li>
+                    <li><b>سرية المعلومات والأرشيف:</b> جميع المستندات، التقارير الجنائية، والخطط التكتيكية تعتبر سرية للغاية ومحمية بنظام "اسألني AI"، وتداولها خارج المنصة يعرض صاحبه للمساءلة العاجلة.</li>
+                    <li><b>احترام التسلسل الرتبي:</b> يمنع التخطي الإداري، ويجب رفع البلاغات والطلبات خطوة بخطوة عبر الرتب المتسلسلة.</li>
+                    <li><b>تأمين العتاد القتالي:</b> يمنع تسليم أو إعارة الأسلحة الرسمية والمعدات لأي شخص خارج القوة البشرية المعتمدة.</li>
+                    <li><b>بند الطوارئ والجاهزية:</b> على كافة الأعضاء تلبية نداء الاستدعاء الطارئ فور تفعيله عبر اللوحة والنزول للميدان في أسرع وقت.</li>
+                    <li style="color: #ff9800; font-weight: bold; background: rgba(216, 194, 122, 0.05); padding: 10px; border-radius: 6px; border-right: 3px solid var(--gold); margin-top: 10px;">[بند السيادة والمشروعية العليا] قانون الولاء المطلق: يظل الولاء والشرعية كاملة وثابتة لقائد الفرقة الحالي (Chief) فهد المطيري دون غيره، وإذا حدث أي نزاع أو عصيان إداري، تُلغى صلاحيات الأطراف المنقلبة وتُحظر رقمياً فوراً.</li>
                 </ol>
                 <div class="shaar-box">💥 شعار الفرقة: الانضباط - السرية - التنفيذ 💥</div>
             </div>
@@ -451,11 +454,11 @@ input:focus, select:focus, textarea:focus {
             </div>
         </div>
 
-        <!-- ================= 4. صفحة الجدول ================= -->
+        <!-- ================= 4. صفحة الجدول مع العساكر المسترجعين بالكامل ================= -->
         <div id="schedulePanel" class="page">
             <div class="card-panel">
                 <div class="panel-title">
-                    <span>📅 كشف وجدول أعضاء الفرقة الحاليين</span>
+                    <span>📅 كشف وجدول أعضاء الفرقة والقوة البشرية الكاملة</span>
                     <button class="add-member-btn" onclick="showInlineLock()">+</button>
                 </div>
                 
@@ -483,10 +486,21 @@ input:focus, select:focus, textarea:focus {
                         <tr><th>الرقم</th><th>الاسم</th><th>الرتبة</th><th>الوحدة</th><th>الإجراءات</th></tr>
                     </thead>
                     <tbody id="staticMembersTable">
-                        <tr><td>01</td><td>FAHAD ALMUTAIRI</td><td style="color: var(--gold);">R-0 SWAT Chief</td><td>Command</td><td>-</td></tr>
-                        <tr><td>02</td><td>KARLOS ALMUTAIRI</td><td>R-1 Deputy Chief</td><td>Command</td><td>-</td></tr>
+                        <!-- القيادة العليا المسترجعة -->
+                        <tr style="background: rgba(216, 194, 122, 0.03);"><td style="font-weight: bold; color: var(--gold);">01</td><td style="font-weight: bold;">FAHAD ALMUTAIRI</td><td style="color: var(--gold); font-weight: bold;">R-0 SWAT Chief</td><td style="font-weight: bold;">Command</td><td>-</td></tr>
+                        <tr><td>02</td><td>KARLOS ALMUTAIRI</td><td style="color: #cbd5e1;">R-1 Deputy Chief</td><td>Command</td><td>-</td></tr>
                         <tr><td>03</td><td>Turki Al-Mutairi</td><td>R-2 Assistant Chief</td><td>Leader Alpha</td><td>-</td></tr>
                         <tr><td>04</td><td>James Morgan</td><td>R-3 Supervisor</td><td>Leader Bravo</td><td>-</td></tr>
+                        <!-- أعضاء قوة ألفا وبرافو المسترجعين بالكامل -->
+                        <tr><td>05</td><td>ALMUTAIRI_99</td><td>R-4 Corporal</td><td>Alpha Unit</td><td>-</td></tr>
+                        <tr><td>06</td><td>GHOST_TACTICAL</td><td>R-4 Officer</td><td>Alpha Unit</td><td>-</td></tr>
+                        <tr><td>07</td><td>BANDAR_SHELD</td><td>R-4 Officer</td><td>Alpha Unit</td><td>-</td></tr>
+                        <tr><td>08</td><td>SULTAN_O1</td><td>R-5 Trooper</td><td>Alpha Unit</td><td>-</td></tr>
+                        <tr><td>09</td><td>KHALID_WAR</td><td>R-5 Trooper</td><td>Alpha Unit</td><td>-</td></tr>
+                        <tr><td>10</td><td>RILEY_OS</td><td>R-4 Corporal</td><td>Bravo Unit</td><td>-</td></tr>
+                        <tr><td>11</td><td>F16_OMAN</td><td>R-4 Officer</td><td>Bravo Unit</td><td>-</td></tr>
+                        <tr><td>12</td><td>M_ALSHAMMARI</td><td>R-5 Trooper</td><td>Bravo Unit</td><td>-</td></tr>
+                        <tr><td>13</td><td>SAUD_HERO</td><td>R-5 Trooper</td><td>Bravo Unit</td><td>-</td></tr>
                     </tbody>
                     <tbody id="dynamicMembersTable"></tbody>
                 </table>
@@ -512,7 +526,7 @@ input:focus, select:focus, textarea:focus {
                     <button class="action-btn" id="addWanted">تعميم وإرسال للميدان فوراً</button>
                 </div>
                 <div class="card-panel">
-                    <h3 class="panel-title" style="color: var(--danger);">🚨 العناصر المطلوبة جنائياً حالياً</h3>
+                    <h3 class="panel-title" style="color: var(--danger);">🚨 Elements العناصر المطلوبة جنائياً حالياً</h3>
                     <div id="wantedList" class="data-list-container"></div>
                 </div>
             </div>
@@ -645,7 +659,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// 🔒 تم تعديل الرمز السري إلى 1029 بناءً على طلبك
+// 🔒 الرمز السري الموحد المعتمد لنظام الأمان والتشغيل
 const GLOBAL_SECURITY_CODE = "1029";
 
 function clearAllInputs() {
@@ -656,11 +670,11 @@ function clearAllInputs() {
     });
 }
 
-// 🛠️ دالة التنقل المحدثة والمعدلة جذرياً لمنع تداخل الصفحات نهائياً
+// 🛠️ دالة التنقل لمنع تداخل الصفحات والحفاظ على النماذج في أماكنها الصحيحة
 window.switchPage = function(pageId) {
     clearAllInputs();
     
-    // إخفاء كافة الصفحات بشكل تام وإجباري أولاً لمنع التداخل
+    // إخفاء كافة الصفحات بشكل كلي
     document.querySelectorAll('.page').forEach(p => {
         p.classList.remove('active');
         p.style.setProperty('display', 'none', 'important');
@@ -668,7 +682,7 @@ window.switchPage = function(pageId) {
     
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
     
-    // إظهار الصفحة المستهدفة فقط
+    // تفعيل الصفحة المقصودة فقط وإظهارها بشكل آمن دون تداخل
     const targetPage = document.getElementById(pageId);
     if(targetPage) {
         targetPage.classList.add('active');
@@ -698,7 +712,6 @@ window.unlockSection = function(inputId, targetPanelId) {
     const passValue = document.getElementById(inputId).value;
     if(passValue === GLOBAL_SECURITY_CODE) {
         if(targetPanelId.includes('View') || targetPanelId.includes('Panel')) {
-            // إخفاء واجهة القفل قبل فتح اللوحة
             const lockArea = document.getElementById(inputId).parentElement;
             if(lockArea) lockArea.style.display = "none";
             
@@ -745,11 +758,11 @@ window.sendChatMessage = function() {
         if(text.includes('مرحبا') || text.includes('سلام')) {
             response = "أهلاً بك يا سيادة القائد في مركز التحكم الذكي. كيف يمكنني مساعدتك اليوم في إدارة العمليات التكتيكية؟";
         } else if(text.includes('القوانين') || text.includes('شعار')) {
-            response = "الأنظمة العسكرية الصارمة تنص على: الانضباط والسرية والتنفيذ. البند الأهم هو قانون الولاء المطلق للـ Chief وعدم عصيان الأوامر تلافياً للشطب النهائي.";
+            response = "الأنظمة العسكرية الصارمة تنص على: الانضباط والسرية والتنفيذ. البند الأهم هو قانون الولاء المطلق للـ Chief فهد المطيري وعدم عصيان الأوامر تلافياً للشطب.";
         } else if(text.includes('الاعضاء') || text.includes('اعضاء')) {
-            response = "تضم الفرقة قيادات عليا على رأسهم القائد الفعلي SWAT Chief فهد المطيري، يليه النائب كارلوس المطيري، ومساعد Chief تركي المطيري والمشرف جيمس مورغان، بالإضافة إلى الأعضاء بالوحدات.";
+            response = "تضم الفرقة قيادات عليا على رأسهم القائد الفعلي SWAT Chief فهد المطيري، يليه النائب كارلوس المطيري، ومساعد Chief تركي المطيري والمشرف جيمس مورغان، بالإضافة إلى بقية القوات بألفا وبرافو.";
         } else if(text.includes('خطة') || text.includes('اقتحام')) {
-            response = "توصية تكتيكية: يتم تقسيم القوات إلى فرقتين (ألفا للاقتحام الأمامي، وبرافو للتطويق الخلفي)، مع تفعيل الصمت اللاسلكي التام واستخدام القنابل الصوتية.";
+            response = "توصية تكتيكية: يتم تقسيم القوات إلى فرقتين (ألفا للاقتحام الأمامي، وبرافو للتطويق الخلفي)، مع تفعيل الصمت اللاسلكي التام واستخدام القنابل الصوتية المعتمدة.";
         }
         appendMessage(response, 'ai');
     }, 600);
@@ -773,7 +786,7 @@ window.generateAIMissionPlan = function() {
 window.evaluateNomineeAI = function() {
     const name = document.getElementById('nomineeCharName').value;
     if(!name) { alert("أدخل اسم المرشح للتقييم!"); return; }
-    document.getElementById('nominationReason').value = `بناءً على السجلات، يظهر العضو ${name} انضباطاً عالياً وتوافقاً مع بند السيادة والولاء المطلق. نوصي بالموافقة على الترقية.`;
+    document.getElementById('nominationReason').value = `بناءً على السجلات المرفقة، يظهر العضو ${name} انضباطاً تكتيكياً عالياً وتوافقاً تاماً مع بند السيادة والولاء المطلق. نوصي بالموافقة على الترقية.`;
 };
 
 window.generateAIReportSummary = function() {
@@ -801,7 +814,7 @@ window.saveNewMemberToFirebase = async function() {
 onSnapshot(collection(db, "members"), (snapshot) => {
     const tbody = document.getElementById('dynamicMembersTable');
     tbody.innerHTML = "";
-    let count = 4;
+    let count = 13; // الحساب الأساسي يبدأ من القوة الثابتة المعاد إدراجها (13 عسكرياً)
     snapshot.forEach((docSnap) => {
         const data = docSnap.data();
         count++;
@@ -912,7 +925,7 @@ document.getElementById('saveReportBtn').addEventListener('click', async () => {
     if(!repId || !leader) { alert("أكمل البيانات الحسابية!"); return; }
     await addDoc(collection(db, "reports"), { repId, date, time, leader, members, type, location, details, isSecret });
     clearAllInputs();
-    alert("🚀 تم الحفظ.");
+    alert("🚀 تم حفظ التقرير بسيرفر المنصة بنجاح.");
 });
 
 onSnapshot(collection(db, "reports"), (snapshot) => {
@@ -927,8 +940,8 @@ onSnapshot(collection(db, "reports"), (snapshot) => {
         div.className = "item-card";
         div.innerHTML = `
             <h4>📄 تقرير: ${data.repId} (${data.type})</h4>
-            <p>📝 المضمون: ${data.details}</p>
-            <button class="delete-table-btn" onclick="deleteRecord('reports', '${docSnap.id}')">إتلاف</button>
+            <p>📝 المضمون والتفاصيل: ${data.details}</p>
+            <button class="delete-table-btn" onclick="deleteRecord('reports', '${docSnap.id}')">إتلاف مستندي</button>
         `;
         if(data.isSecret) {
             div.style.borderRight = "3px solid var(--danger)";
