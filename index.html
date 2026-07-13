@@ -147,7 +147,6 @@ body {
 
 @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
 
-/* منع التداخل */
 .page {
     display: none !important; 
 }
@@ -265,7 +264,7 @@ body {
 .stat-card .num { font-size: 26px; font-weight: bold; color: var(--gold); margin-bottom: 5px; }
 .stat-card .label { font-size: 13px; color: var(--text-muted); }
 
-/* العناصر العامة والمدخلات */
+/* العناصر العامة */
 input, select, textarea {
     width: 100%;
     padding: 12px 16px;
@@ -386,13 +385,13 @@ input:focus, select:focus, textarea:focus {
         <div id="dashboardPanel" class="page active">
             <div class="dashboard-layout">
                 <div class="card-panel">
-                    <h3 class="panel-title" style="color: var(--ai-blue);">🤖 عقل الذكاء الاصطناعي (اسألني عن أي شيء)</h3>
+                    <h3 class="panel-title" style="color: var(--ai-blue);">🤖 عقل الذكاء الاصطناعي الفائق (المحرك المحدث)</h3>
                     <div class="chat-container">
                         <div class="chat-messages" id="chatMessages">
-                            <div class="msg ai">مرحباً بك سيادة القائد في منصة "اسألني". أنا نظام الذكاء الاصطناعي المركزي الخاص بك، ومستعد للإجابة على أي استفسار تكتيكي أو فحص السجلات الفورية. تفضل بسؤالي!</div>
+                            <div class="msg ai">مرحباً بك سيادة القائد. لقد تم تحديث برمجتي لأحفظ تفاصيل الجدول العسكري بالكامل (أكواد ورتب وأسماء ووحدات من 01 إلى 13). يمكنك سؤالي الآن عن الإحصائيات والمصطلحات والفرقة وسأجيبك فوراً!</div>
                         </div>
                         <div class="chat-input-area">
-                            <input id="chatInput" placeholder="اكتب سؤالك هنا للذكاء الاصطناعي..." autocomplete="off">
+                            <input id="chatInput" placeholder="اكتب سؤالك هنا (مثال: كم عدد رتبة member؟ أو من هو كود 01؟)..." autocomplete="off">
                             <button class="action-btn" style="border-color: var(--ai-blue); color: var(--ai-blue);" onclick="sendChatMessage()">إرسال</button>
                         </div>
                     </div>
@@ -454,7 +453,7 @@ input:focus, select:focus, textarea:focus {
             </div>
         </div>
 
-        <!-- ================= 4. صفحة الجدول (المطابقة للصورة تماماً) ================= -->
+        <!-- ================= 4. صفحة الجدول المعتمد ================= -->
         <div id="schedulePanel" class="page">
             <div class="card-panel">
                 <div class="panel-title">
@@ -486,7 +485,6 @@ input:focus, select:focus, textarea:focus {
                         <tr><th>الرقم</th><th>الاسم</th><th>الرتبة</th><th>الوحدة</th><th>الإجراءات</th></tr>
                     </thead>
                     <tbody id="staticMembersTable">
-                        <!-- القيادة والأعضاء المحدثين بالكامل بناءً على الصورة المرفقة -->
                         <tr style="background: rgba(216, 194, 122, 0.03);"><td style="font-weight: bold; color: var(--gold);">01</td><td style="font-weight: bold;">FAHAD ALMUTAIRI</td><td style="color: var(--gold); font-weight: bold;">R-0 SWAT Chief</td><td style="font-weight: bold;">Command</td><td>-</td></tr>
                         <tr><td>02</td><td>KARLOS ALMUTAIRI</td><td style="color: #cbd5e1;">R-1 Deputy Chief</td><td>Command</td><td>-</td></tr>
                         <tr><td>03</td><td>Turki Al-Mutairi</td><td>R-2 Assistant Chief</td><td>Leader Alpha</td><td>-</td></tr>
@@ -660,6 +658,23 @@ const db = getFirestore(app);
 
 const GLOBAL_SECURITY_CODE = "1029";
 
+// 👥 السجل العسكري الكامل المحفوظ في ذاكرة الـ AI
+const armyDatabase = [
+    { code: "01", name: "FAHAD ALMUTAIRI", rank: "R-0 SWAT Chief", rankType: "chief", unit: "Command" },
+    { code: "02", name: "KARLOS ALMUTAIRI", rank: "R-1 Deputy Chief", rankType: "chief", unit: "Command" },
+    { code: "03", name: "Turki Al-Mutairi", rank: "R-2 Assistant Chief", rankType: "chief", unit: "Leader Alpha" },
+    { code: "04", name: "James Morgan", rank: "R-3 Supervisor", rankType: "supervisor", unit: "Leader Bravo" },
+    { code: "05", name: "Mov Marley", rank: "R-4 Member", rankType: "member", unit: "Alpha" },
+    { code: "06", name: "Sicr Exxon", rank: "R-5 Member", rankType: "member", unit: "Alpha" },
+    { code: "07", name: "Marcus Leno", rank: "R-6 Member", rankType: "member", unit: "Alpha" },
+    { code: "08", name: "James Kruise", rank: "R-7 Member", rankType: "member", unit: "Alpha" },
+    { code: "09", name: "Older Mohammed", rank: "R-8 Member", rankType: "member", unit: "Alpha" },
+    { code: "10", name: "Badr Al-Mutairi", rank: "R-9 Member", rankType: "member", unit: "Bravo" },
+    { code: "11", name: "ريان خالد", rank: "R-10 Member", rankType: "member", unit: "Bravo" },
+    { code: "12", name: "JOHN Marly", rank: "R-11 Member", rankType: "member", unit: "Bravo" },
+    { code: "13", name: "Ahmed Almutairi", rank: "R-12 Member", rankType: "member", unit: "Bravo" }
+];
+
 function clearAllInputs() {
     document.querySelectorAll("input").forEach(input => {
         if(input.type !== "checkbox" && input.type !== "radio" && input.id !== "chatInput") {
@@ -670,12 +685,10 @@ function clearAllInputs() {
 
 window.switchPage = function(pageId) {
     clearAllInputs();
-    
     document.querySelectorAll('.page').forEach(p => {
         p.classList.remove('active');
         p.style.setProperty('display', 'none', 'important');
     });
-    
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
     
     const targetPage = document.getElementById(pageId);
@@ -683,24 +696,8 @@ window.switchPage = function(pageId) {
         targetPage.classList.add('active');
         targetPage.style.setProperty('display', 'block', 'important');
     }
-    
     const targetBtn = document.getElementById('btn-' + pageId);
     if(targetBtn) targetBtn.classList.add('active');
-    
-    const titles = {
-        dashboardPanel: "منصة الذكاء الاصطناعي التكتيكي الموحد",
-        rulesPanel: "📜 اللائحة التنظيمية والقوانين العسكرية",
-        clothingPanel: "👕 التجهيزات العسكرية والزي الموحد",
-        schedulePanel: "📅 سجل وجدول القوة البشرية للفريق",
-        wantedGate: "🚨 نظام فحص الهوية والتحري الميداني",
-        wantedRealPanel: "🚨 العناصر والمطلوبين جنائياً للعدالة",
-        missionsPanel: "🎯 إدارة وتوزيع المهام والعمليات التكتيكية",
-        nominationsPanel: "🎖️ شؤون التزكيات والترشيحات القيادية العليا",
-        reportsPanel: "📄 مركز التقارير والأرشيف السري المشفر"
-    };
-    if(titles[pageId]) {
-        document.getElementById('pageTitle').innerText = titles[pageId];
-    }
 };
 
 window.unlockSection = function(inputId, targetPanelId) {
@@ -709,7 +706,6 @@ window.unlockSection = function(inputId, targetPanelId) {
         if(targetPanelId.includes('View') || targetPanelId.includes('Panel')) {
             const lockArea = document.getElementById(inputId).parentElement;
             if(lockArea) lockArea.style.display = "none";
-            
             if(targetPanelId === 'wantedRealPanel') {
                 switchPage('wantedRealPanel');
             } else {
@@ -737,7 +733,7 @@ window.verifyInlineCode = function() {
     }
 };
 
-/* ================= 🧠 محرك الـ AI (اسألني) ================= */
+/* ================= 🧠 محرك الـ AI المطور والذكي بالكامل ================= */
 window.sendChatMessage = function() {
     const input = document.getElementById('chatInput');
     const msgText = input.value.trim();
@@ -747,20 +743,65 @@ window.sendChatMessage = function() {
     input.value = "";
 
     setTimeout(() => {
-        let response = "لم أفهم طلبك بالكامل سيادة القائد، بصفتي ذكاء اصطناعي 'اسألني'، يمكنك سؤالي عن خطط الاقتحام، أسماء الأعضاء، القوانين العسكرية، أو كيفية صياغة التقارير.";
-        const text = msgText.toLowerCase();
+        let response = "";
+        const query = msgText.toLowerCase();
 
-        if(text.includes('مرحبا') || text.includes('سلام')) {
-            response = "أهلاً بك يا سيادة القائد في مركز التحكم الذكي. كيف يمكنني مساعدتك اليوم في إدارة العمليات التكتيكية؟";
-        } else if(text.includes('القوانين') || text.includes('شعار')) {
-            response = "الأنظمة العسكرية الصارمة تنص على: الانضباط والسرية والتنفيذ. البند الأهم هو قانون الولاء المطلق للـ Chief فهد المطيري وعدم عصيان الأوامر تلافياً للشطب.";
-        } else if(text.includes('الاعضاء') || text.includes('اعضاء')) {
-            response = "تضم الفرقة قيادات عليا على رأسهم القائد الفعلي SWAT Chief فهد المطيري، يليه النائب كارلوس المطيري، ومساعد Chief تركي المطيري والمشرف جيمس مورغان، بالإضافة إلى بقية القوات بألفا وبرافو.";
-        } else if(text.includes('خطة') || text.includes('اقتحام')) {
-            response = "توصية تكتيكية: يتم تقسيم القوات إلى فرقتين (ألفا للاقتحام الأمامي، وبرافو للتطويق الخلفي)، مع تفعيل الصمت اللاسلكي التام واستخدام القنابل الصوتية المعتمدة.";
+        // 1. الإحصائيات حسب الرتبة
+        if (query.includes('عدد') && (query.includes('member') || query.includes('ممبر') || query.includes('عضو'))) {
+            const count = armyDatabase.filter(m => m.rankType === 'member').length;
+            response = `📊 إحصائية فورية: عدد الأعضاء الذين يحملون رتبة (Member) في السجل الحالي هو **${count} أعضاء**.`;
+        } 
+        else if (query.includes('عدد') && (query.includes('chief') || query.includes('قائد') || query.includes('تشيف'))) {
+            const count = armyDatabase.filter(m => m.rankType === 'chief').length;
+            response = `📊 إحصائية القيادة: عدد الضباط برتبة (Chief / القيادة العليا) هو **${count} قيادات**.`;
         }
+        else if (query.includes('عدد') && (query.includes('supervisor') || query.includes('مشرف'))) {
+            const count = armyDatabase.filter(m => m.rankType === 'supervisor').length;
+            response = `📊 إحصائية فورية: يوجد في الجدول **مشرف واحد (1 Supervisor)** وهو James Morgan.`;
+        }
+        // 2. طلب أسماء فرقة السوات كاملة
+        else if (query.includes('اسماء') || query.includes('أسماء') || query.includes('فرقة السوات') || query.includes('الفرقة')) {
+            response = "📋 إليك الأسماء الكاملة لفرقة السوات المسجلة في الذاكرة العسكرية:\n\n";
+            armyDatabase.forEach(m => {
+                response += `🔹 كود [${m.code}] - ${m.name} (${m.rank})\n`;
+            });
+        }
+        // 3. البحث باستخدام الأكواد الرقمية (01, 02, إلخ)
+        else if (/\b(0[1-9]|1[0-3])\b/.test(query)) {
+            const matchedCode = query.match(/\b(0[1-9]|1[0-3])\b/)[0];
+            const member = armyDatabase.find(m => m.code === matchedCode);
+            if (member) {
+                response = `🔍 تم العثور على الملف العسكري للكود [${member.code}]:\n• الاسم: ${member.name}\n• الرتبة: ${member.rank}\n• الوحدة القتالية: ${member.unit}`;
+            }
+        }
+        // 4. البحث بواسطة الأسماء المباشرة
+        else if (query.includes('فهد') || query.includes('fahad')) {
+            const m = armyDatabase[0];
+            response = `👑 ملف قائد الفرقة الأعلى:\n• الاسم: ${m.name}\n• الكود: ${m.code}\n• الرتبة: ${m.rank}\n• الوحدة: ${m.unit}`;
+        }
+        else if (query.includes('كارلوس') || query.includes('karlos')) {
+            const m = armyDatabase[1];
+            response = `👤 ملف نائب القيادة:\n• الاسم: ${m.name}\n• الكود: ${m.code}\n• الرتبة: ${m.rank}\n• الوحدة: ${m.unit}`;
+        }
+        else if (query.includes('تركي') || query.includes('turki')) {
+            const m = armyDatabase[2];
+            response = `⚔️ ملف مساعد القيادة:\n• الاسم: ${m.name}\n• الكود: ${m.code}\n• الرتبة: ${m.rank}\n• الوحدة: ${m.unit}`;
+        }
+        // 5. فهم المصطلحات العسكرية العامة والتكتيكية
+        else if (query.includes('مصطلحات') || query.includes('مواصفات') || query.includes('معنى')) {
+            response = "📖 قاموس المصطلحات التكتيكية المعتمد لدى اسألني AI:\n" +
+                       "• **Alpha**: وحدة الهجوم والاقتحام المباشر السريع.\n" +
+                       "• **Bravo**: وحدة الدعم والتطويق والتأمين الخلفي للموقع.\n" +
+                       "• **Command**: مركز القيادة والسيطرة المسؤول عن إصدار الأوامر.\n" +
+                       "• **الصمت اللاسلكي**: منع التحدث في الأجهزة إلا للضرورة القصوى أثناء المداهمة.";
+        }
+        // 6. رد ترحيبي عام في حال عدم مطابقة الشروط
+        else {
+            response = "👋 أهلاً بك يا سيادة القائد في وحدة الذكاء الاصطناعي المحدثة. أنا أحفظ الآن كافة الأكواد (01 حتى 13) والأسماء والرتب. \n\n💡 **أمثلة على ما يمكنك كتابته لي:**\n- 'طلعي أسماء فرقة السوات'\n- 'كم عدد رتبة member؟'\n- 'من هو صاحب كود 03؟'\n- 'اعطني معلومات عن فهد المطيري'";
+        }
+
         appendMessage(response, 'ai');
-    }, 600);
+    }, 400);
 };
 
 function appendMessage(text, sender) {
@@ -791,7 +832,6 @@ window.generateAIReportSummary = function() {
 };
 
 /* ================= 🔥 ربط وقراءة قاعدة البيانات السحابية ================= */
-
 window.saveNewMemberToFirebase = async function() {
     const no = document.getElementById('newMemNo').value;
     const name = document.getElementById('newMemName').value;
@@ -809,7 +849,7 @@ window.saveNewMemberToFirebase = async function() {
 onSnapshot(collection(db, "members"), (snapshot) => {
     const tbody = document.getElementById('dynamicMembersTable');
     tbody.innerHTML = "";
-    let count = 13; // القوة الأساسية الثابتة المتطابقة مع الصورة
+    let count = 13; 
     snapshot.forEach((docSnap) => {
         const data = docSnap.data();
         count++;
