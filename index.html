@@ -1,1015 +1,845 @@
-<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>منصة اسألني - الذكاء الاصطناعي التكتيكي الموحد</title>
+<title>غرفة القيادة | Joint Forces</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 
 <style>
-:root {
-    --bg-dark: #06090e;
-    --panel-bg: #0d121a;
-    --border-color: #222d3a;
-    --gold: #d8c27a;
-    --gold-hover: #f1dc99;
-    --text-main: #e2e8f0;
-    --text-muted: #718096;
-    --success: #38a169;
-    --danger: #e53e3e;
-    --warning: #dd6b20;
-    --info: #3182ce;
-    --ai-blue: #00e5ff;
+:root{
+  --bg:#07090b;
+  --panel:#0e1215;
+  --panel2:#141a1e;
+  --line:#232b30;
+  --steel:#8fa0aa;
+  --crimson:#a83232;
+  --crimson-light:#d9615f;
+  --amber:#c98a2e;
+  --amber-light:#e8b25c;
+  --text:#e6ecef;
+  --muted:#7c8890;
+  --ok:#3c7d6b;
 }
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif;}
+body{ background:var(--bg); color:var(--text); height:100vh; overflow:hidden; display:flex; flex-direction:column; }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* ===== Top bar ===== */
+.topnav{
+  background:var(--panel); border-bottom:1px solid var(--line);
+  display:flex; align-items:center; gap:8px; padding:0 20px; height:64px; flex-shrink:0;
 }
+.brand{ display:flex; align-items:center; gap:10px; padding-left:18px; border-left:1px solid var(--line); margin-left:6px;}
+.brand svg{ width:34px; height:34px; }
+.brand-txt b{ display:block; color:var(--amber-light); font-size:14.5px; }
+.brand-txt span{ display:block; color:var(--muted); font-size:10px; letter-spacing:1px;}
 
-body {
-    background-color: var(--bg-dark);
-    color: var(--text-main);
-    display: flex;
-    height: 100vh;
-    overflow: hidden;
-    background-image: 
-        radial-gradient(circle at 50% 50%, rgba(0, 229, 255, 0.05) 0%, transparent 80%),
-        linear-gradient(rgba(255,255,255,.01) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(255,255,255,.01) 1px,transparent 1px);
-    background-size: 100% 100%, 30px 30px, 30px 30px;
+.tabs{ display:flex; gap:4px; flex:1; overflow-x:auto; }
+.tab-btn{
+  background:transparent; border:1px solid transparent; color:var(--steel); font-weight:700; font-size:13px;
+  padding:9px 14px; border-radius:8px; cursor:pointer; white-space:nowrap; display:flex; gap:6px; align-items:center;
 }
+.tab-btn:hover{ background:var(--panel2); color:var(--text); }
+.tab-btn.active{ background:var(--crimson); color:#fff; }
 
-/* الشريط الجانبي */
-.sidebar {
-    width: 280px;
-    background: var(--panel-bg);
-    border-left: 1px solid var(--border-color);
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    z-index: 10;
-    overflow-y: auto;
+.top-right{ display:flex; align-items:center; gap:8px; }
+.top-right input{ width:150px; margin:0; padding:8px 10px; font-size:12px; }
+.pill{
+  padding:8px 13px; background:var(--panel2); border:1px solid var(--amber); color:var(--amber-light);
+  border-radius:18px; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap;
 }
+.pill:hover{ background:var(--amber); color:#20140a; }
+.session{ font-size:11.5px; color:var(--muted); white-space:nowrap; }
+.session b{ color:var(--amber-light); }
 
-.logo-area {
-    text-align: center;
-    padding: 15px 0;
-    border-bottom: 1px dashed var(--border-color);
-    margin-bottom: 20px;
+/* ===== Body ===== */
+.body-wrap{ flex:1; display:flex; overflow:hidden; }
+.stage{ flex:1; overflow-y:auto; padding:24px 28px; }
+.rail{
+  width:230px; background:var(--panel); border-right:1px solid var(--line); padding:20px; overflow-y:auto; flex-shrink:0;
 }
+.rail h4{ color:var(--amber-light); font-size:12.5px; margin-bottom:10px; }
+.rail .stat-row{ display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--line); font-size:12px; color:var(--steel);}
+.rail .stat-row b{ color:var(--text); }
 
-.logo-icon {
-    width: 80px;
-    height: 80px;
-    background: radial-gradient(circle, #1a232d 40%, #06090e 100%);
-    border: 3px double var(--ai-blue);
-    border-radius: 50%;
-    margin: 0 auto 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
-    font-size: 32px;
-}
+.page{ display:none !important; }
+.page.active{ display:block !important; animation:fade .3s ease; }
+@keyframes fade{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
 
-.logo-text {
-    color: var(--ai-blue);
-    font-size: 24px;
-    font-weight: 900;
-    letter-spacing: 2px;
-    text-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
-}
+.grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+@media(max-width:1000px){ .grid-2{grid-template-columns:1fr;} }
 
-.nav-btn {
-    width: 100%;
-    padding: 12px 15px;
-    margin: 4px 0;
-    background: transparent;
-    border: 1px solid transparent;
-    border-radius: 8px;
-    color: var(--text-main);
-    font-size: 14px;
-    font-weight: 600;
-    text-align: right;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    transition: all 0.25s ease;
-}
+.panel{ background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:20px; margin-bottom:18px; }
+.panel-title{ font-size:15px; color:var(--amber-light); font-weight:700; margin-bottom:14px; border-bottom:1px solid var(--line); padding-bottom:9px;}
 
-.nav-btn:hover, .nav-btn.active {
-    background: #141c26;
-    border-color: var(--border-color);
-    color: var(--ai-blue);
-    box-shadow: inset 3px 0 0 var(--ai-blue);
-}
+input,select,textarea{ width:100%; padding:10px 13px; margin-bottom:11px; background:var(--panel2); border:1px solid var(--line); border-radius:6px; color:var(--text); font-size:13px;}
+input:focus,select:focus,textarea:focus{ outline:none; border-color:var(--amber); }
 
-/* المنطقة الرئيسية */
-.main-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    padding: 30px;
-}
+.btn{ width:100%; padding:10px; background:linear-gradient(135deg,#1a1210,#141a1e); border:1px solid var(--amber); border-radius:6px; color:var(--amber-light); font-weight:700; cursor:pointer;}
+.btn:hover{ background:var(--amber); color:#20140a; }
+.btn.red{ border-color:var(--crimson-light); color:var(--crimson-light); }
+.btn.red:hover{ background:var(--crimson-light); color:#1a0d0d; }
+.btn.small{ width:auto; padding:6px 12px; font-size:11.5px; }
+.btn.ghost{ background:transparent; }
+.btn.link-btn{ display:inline-block; text-decoration:none; text-align:center; }
 
-.top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 15px;
-}
+.card{ background:var(--panel2); border:1px solid var(--line); border-radius:8px; padding:14px; margin-bottom:11px;}
+.card h4{ color:var(--amber-light); font-size:14px; margin-bottom:5px;}
+.card p{ font-size:12px; color:#c8ccd0; margin:3px 0;}
+.tag{ font-size:10px; padding:2px 8px; border-radius:9px; border:1px solid var(--line); color:var(--muted); margin-right:4px;}
+.tag.ok{ border-color:var(--ok); color:#8fd0bd;}
+.tag.warn{ border-color:var(--amber); color:var(--amber-light);}
+.tag.danger{ border-color:var(--crimson-light); color:var(--crimson-light);}
+.del{ background:rgba(168,50,50,.15); border:1px solid var(--crimson-light); color:var(--crimson-light); padding:3px 9px; border-radius:4px; font-size:10.5px; cursor:pointer;}
+.del:hover{ background:var(--crimson-light); color:#fff;}
+.locked{ background:repeating-linear-gradient(45deg,#161113,#161113 8px,#1c1517 8px,#1c1517 16px); border:1px dashed var(--amber); border-radius:6px; padding:12px; text-align:center; color:var(--muted); font-size:12px;}
+.list{ max-height:440px; overflow-y:auto; }
 
-.system-status {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: var(--success);
-    background: rgba(56, 161, 105, 0.1);
-    padding: 6px 12px;
-    border-radius: 20px;
-    border: 1px solid rgba(56, 161, 105, 0.2);
-}
+table{ width:100%; border-collapse:collapse; margin-top:8px;}
+th{ background:var(--panel2); color:var(--amber-light); padding:8px; font-size:12px; text-align:right;}
+td{ padding:8px; border-bottom:1px solid var(--line); font-size:12px;}
 
-.pulse {
-    width: 8px;
-    height: 8px;
-    background: var(--success);
-    border-radius: 50%;
-    animation: blink 1.5s infinite;
-}
+.hero{ background:linear-gradient(120deg,#12191c,#0b0e10 60%); border:1px solid var(--line); border-radius:10px; padding:26px; margin-bottom:20px;}
+.hero b{ color:var(--amber-light); font-size:20px; display:block; margin-bottom:8px;}
+.hero span{ color:var(--muted); font-size:13px; line-height:1.9; display:block; max-width:680px;}
 
-@keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+.uniform-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+@media(max-width:900px){ .uniform-grid{grid-template-columns:1fr 1fr;} }
+.uni{ background:var(--panel2); border:1px solid var(--line); border-radius:8px; padding:14px; text-align:center;}
+.uni .sw{ width:100%; height:54px; border-radius:6px; margin-bottom:8px;}
+.uni h4{ color:var(--amber-light); font-size:13px; margin-bottom:5px;}
+.uni p{ font-size:11px; color:var(--muted); line-height:1.6;}
 
-.page {
-    display: none !important; 
-}
+.map-toolbar{ display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap; align-items:center;}
+.map-toolbar button{ width:auto; padding:8px 14px;}
+#mapViewport{ width:100%; height:480px; overflow:hidden; position:relative; border:1px solid var(--line); border-radius:8px; background:#0a0c0e; cursor:grab;}
+#mapViewport.dragging{ cursor:grabbing;}
+#mapViewport.readonly{ cursor:default; }
+#mapInner{ position:absolute; top:0; left:0; transform-origin:0 0;}
+.pin{ position:absolute; transform:translate(-50%,-100%); font-size:19px; cursor:pointer;}
+.pin-label{ position:absolute; top:100%; left:50%; transform:translateX(-50%); white-space:nowrap; background:#0a0c0e; border:1px solid var(--amber); color:var(--amber-light); font-size:10px; padding:2px 6px; border-radius:4px; margin-top:2px;}
 
-.page.active { 
-    display: block !important; 
-    animation: fadeInUp 0.4s ease forwards;
-}
+.modal-overlay{ display:none; position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:50; align-items:center; justify-content:center;}
+.modal-overlay.open{ display:flex; }
+.modal-box{ background:var(--panel); border:1px solid var(--amber); border-radius:10px; padding:22px; width:340px; max-width:90vw;}
+.modal-box h3{ color:var(--amber-light); margin-bottom:12px; font-size:14.5px;}
+.close-modal{ background:none; border:none; color:var(--muted); cursor:pointer; font-size:12.5px; margin-top:2px;}
 
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+.map-layout{ display:flex; gap:18px; align-items:flex-start; }
+.map-main{ flex:1; min-width:0; }
+.map-side{ width:250px; flex-shrink:0; }
+@media(max-width:1000px){ .map-layout{ flex-direction:column;} .map-side{ width:100%; } }
 
-.dashboard-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 25px;
-}
+.member-row{ display:flex; align-items:center; justify-content:space-between; padding:9px 10px; background:var(--panel2); border:1px solid var(--line); border-radius:6px; margin-bottom:8px; cursor:pointer; }
+.member-row:hover{ border-color:var(--amber); }
+.member-row .mname{ font-size:12.5px; color:var(--text); }
+.member-row .mname small{ display:block; color:var(--muted); font-size:10px; }
+.badge-leader{ font-size:9.5px; padding:2px 7px; border-radius:8px; border:1px solid var(--amber); color:var(--amber-light); margin-right:5px;}
+.badge-ctl{ font-size:9.5px; padding:2px 7px; border-radius:8px; border:1px solid var(--ok); color:#8fd0bd; margin-right:5px;}
 
-@media(max-width: 900px) { .dashboard-layout { grid-template-columns: 1fr; } }
+.group-card{ background:var(--panel2); border:1px solid var(--line); border-radius:8px; padding:14px; margin-bottom:11px; display:flex; align-items:center; justify-content:space-between; gap:10px;}
+.group-card h4{ color:var(--amber-light); font-size:14px; margin-bottom:3px;}
+.group-card p{ font-size:11px; color:var(--muted);}
+.gate-note{ font-size:11.5px; color:var(--muted); line-height:1.8; margin-bottom:12px;}
 
-.card-panel {
-    background: var(--panel-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 14px;
-    padding: 25px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    position: relative;
-    margin-bottom: 20px;
-}
-
-.panel-title {
-    font-size: 18px;
-    color: var(--gold);
-    margin-bottom: 20px;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-/* واجهة المحادثة الذكية */
-.chat-container {
-    display: flex;
-    flex-direction: column;
-    height: 450px;
-    background: #090e15;
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.chat-messages {
-    flex: 1;
-    padding: 15px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.msg {
-    max-width: 85%;
-    padding: 10px 14px;
-    border-radius: 8px;
-    font-size: 14px;
-    line-height: 1.6;
-    white-space: pre-line;
-}
-
-.msg.ai {
-    background: #142132;
-    color: var(--text-main);
-    align-self: flex-start;
-    border-right: 3px solid var(--ai-blue);
-}
-
-.msg.user {
-    background: var(--ai-blue);
-    color: #000;
-    font-weight: 500;
-    align-self: flex-end;
-}
-
-.chat-input-area {
-    display: flex;
-    padding: 10px;
-    background: var(--panel-bg);
-    border-top: 1px solid var(--border-color);
-    gap: 10px;
-}
-
-.chat-input-area input { margin-bottom: 0; flex: 1; }
-.chat-input-area button { width: auto; padding: 0 20px; }
-
-/* الإحصائيات */
-.stats-container {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
-    margin-top: 20px;
-    grid-column: span 2;
-}
-@media(max-width: 1200px) { .stats-container { grid-template-columns: repeat(2, 1fr); } }
-@media(max-width: 600px) { .stats-container { grid-template-columns: 1fr; } }
-
-.stat-card {
-    background: #111722;
-    border: 1px solid var(--border-color);
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-}
-.stat-card .num { font-size: 26px; font-weight: bold; color: var(--gold); margin-bottom: 5px; }
-.stat-card .label { font-size: 13px; color: var(--text-muted); }
-
-/* العناصر العامة */
-input, select, textarea {
-    width: 100%;
-    padding: 12px 16px;
-    margin-bottom: 15px;
-    background: #121822;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    color: white;
-    font-size: 14px;
-    transition: all 0.3s;
-}
-
-input:focus, select:focus, textarea:focus {
-    outline: none;
-    border-color: var(--ai-blue);
-    box-shadow: 0 0 10px rgba(0, 229, 255, 0.15);
-}
-
-.action-btn {
-    width: 100%;
-    padding: 12px;
-    background: linear-gradient(135deg, #1b2532 0%, #111822 100%);
-    border: 1px solid var(--gold);
-    border-radius: 8px;
-    color: var(--gold);
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.action-btn:hover {
-    background: var(--gold);
-    color: #000;
-    box-shadow: 0 0 15px rgba(216, 194, 122, 0.3);
-}
-
-.ai-btn {
-    background: rgba(0, 229, 255, 0.1);
-    border: 1px solid var(--ai-blue);
-    color: var(--ai-blue);
-    margin-bottom: 12px;
-}
-.ai-btn:hover {
-    background: var(--ai-blue);
-    color: #000;
-    box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
-}
-
-.add-member-btn {
-    background: var(--gold); color: #000; border: none;
-    width: 32px; height: 32px; border-radius: 6px;
-    font-size: 20px; font-weight: bold; cursor: pointer;
-    display: flex; justify-content: center; align-items: center;
-}
-
-.data-list-container { max-height: 400px; overflow-y: auto; }
-
-.item-card {
-    background: #131922; border: 1px solid var(--border-color);
-    border-radius: 10px; padding: 16px; margin-bottom: 15px;
-}
-.item-card h4 { color: var(--gold); margin-bottom: 6px; }
-.item-card p { font-size: 13px; color: #cbd5e1; margin: 4px 0; }
-
-.lock-screen { max-width: 450px; margin: 40px auto; text-align: center; }
-
-.swat-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-.swat-table th { background: #17202c; color: var(--gold); padding: 12px; text-align: right; }
-.swat-table td { padding: 12px; border-bottom: 1px solid var(--border-color); font-size: 14px; }
-
-.shaar-box {
-    text-align: center; margin-top: 25px; padding: 15px;
-    border-top: 1px solid var(--border-color); color: var(--gold); font-weight: bold;
-}
-
-.inline-lock-box {
-    background: #1c1515; border: 1px dashed var(--danger);
-    padding: 15px; border-radius: 8px; margin-bottom: 15px;
-}
-.inline-lock-box h5 { color: var(--danger); margin-bottom: 10px; }
-.flex-inputs { display: flex; gap: 10px; }
-
-.delete-table-btn {
-    background: rgba(229, 62, 62, 0.2); border: 1px solid var(--danger);
-    color: var(--danger); padding: 4px 8px; border-radius: 4px; cursor: pointer;
-}
-.delete-table-btn:hover { background: var(--danger); color: white; }
+::-webkit-scrollbar{ width:7px; }
+::-webkit-scrollbar-thumb{ background:var(--line); border-radius:4px; }
 </style>
 </head>
 <body>
 
-    <!-- 📋 الشريط الجانبي التكتيكي -->
-    <div class="sidebar">
-        <div class="logo-area">
-            <div class="logo-icon">🤖</div>
-            <div class="logo-text">اسألني AI</div>
+<div class="topnav">
+  <div class="brand">
+    <svg viewBox="0 0 100 100"><polygon points="50,4 92,26 92,60 50,96 8,60 8,26" fill="none" stroke="#c98a2e" stroke-width="4"/><path d="M50 26 L60 48 L50 74 L40 48 Z" fill="#c98a2e"/></svg>
+    <div class="brand-txt"><b>غرفة القيادة</b><span>JOINT FORCES</span></div>
+  </div>
+  <div class="tabs" id="tabs">
+    <button class="tab-btn active" data-page="opsPage" onclick="go('opsPage')">📻 غرفة العمليات</button>
+    <button class="tab-btn" data-page="mapPage" onclick="go('mapPage')">🗺️ الخريطة</button>
+    <button class="tab-btn" data-page="wantedPage" onclick="go('wantedPage')">🎯 المطلوبين</button>
+    <button class="tab-btn" data-page="upcomingPage" onclick="go('upcomingPage')">📆 المهام القادمة</button>
+    <button class="tab-btn" data-page="distPage" onclick="go('distPage')">📑 المناوبات</button>
+    <button class="tab-btn" data-page="investPage" onclick="go('investPage')">🔍 التحقيق</button>
+    <button class="tab-btn" data-page="uniformPage" onclick="go('uniformPage')">🎖️ اللبس</button>
+  </div>
+  <div class="top-right">
+    <input id="loginEmail" placeholder="بريدك الإلكتروني">
+    <button class="pill" onclick="loginByEmail()">دخول</button>
+    <span class="session" id="sessionBadge">غير مسجل</span>
+    <button class="pill" onclick="openModal('ranksModal')">➕ الرتب</button>
+  </div>
+</div>
+
+<div class="body-wrap">
+  <div class="rail">
+    <h4>الحالة العامة</h4>
+    <div class="stat-row"><span>عمليات جارية</span><b id="statOps">0</b></div>
+    <div class="stat-row"><span>مطلوبون كبار</span><b id="statWanted">0</b></div>
+    <div class="stat-row"><span>مهام قادمة</span><b id="statMissions">0</b></div>
+    <div class="stat-row"><span>عناصر بالمناوبة</span><b id="statDuty">0</b></div>
+    <h4 style="margin-top:20px;">تنبيه</h4>
+    <p style="font-size:11.5px; color:var(--muted); line-height:1.8;">تسجيل الدخول بالبريد هنا لأغراض تنظيم الرول بلاي فقط، وليس حماية أمنية حقيقية.</p>
+  </div>
+
+  <div class="stage">
+
+    <div id="opsPage" class="page active">
+      <div class="hero">
+        <b>غرفة العمليات المشتركة</b>
+        <span>تابع كل العمليات الجارية والمخطط لها، وأضف عملية جديدة مع تحديد الوحدات المشاركة وحالتها.</span>
+      </div>
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-title">تسجيل عملية جديدة</div>
+          <input id="opTitle" placeholder="🆔 عنوان العملية">
+          <input id="opUnits" placeholder="👥 الوحدات المشاركة">
+          <select id="opStatus">
+            <option value="تخطيط">📝 مرحلة التخطيط</option>
+            <option value="جارية">🟢 جارية</option>
+            <option value="منتهية">✅ منتهية</option>
+          </select>
+          <textarea id="opNotes" placeholder="📝 موجز العملية" style="height:85px;"></textarea>
+          <label style="display:flex; gap:8px; align-items:center; margin-bottom:11px; cursor:pointer; font-size:12px; color:var(--muted);">
+            <input id="opClassified" type="checkbox" style="width:auto; margin:0;"> سري (رتبة قائد فريق فأعلى)
+          </label>
+          <button class="btn" id="addOp">حفظ العملية</button>
         </div>
-        <button id="btn-dashboardPanel" class="nav-btn active" onclick="switchPage('dashboardPanel')">🖥️ لوحة التحكم والـ AI</button>
-        <button id="btn-rulesPanel" class="nav-btn" onclick="switchPage('rulesPanel')">📜 اللائحة والقوانين</button>
-        <button id="btn-clothingPanel" class="nav-btn" onclick="switchPage('clothingPanel')">👕 قائمة اللبس</button>
-        <button id="btn-schedulePanel" class="nav-btn" onclick="switchPage('schedulePanel')">📅 جدول الفرقة</button>
-        <button id="btn-wantedGate" class="nav-btn" onclick="switchPage('wantedGate')">🚨 خلية المطلوبين</button>
-        <button id="btn-missionsPanel" class="nav-btn" onclick="switchPage('missionsPanel')">🎯 إدارة العمليات</button>
-        <button id="btn-nominationsPanel" class="nav-btn" onclick="switchPage('nominationsPanel')">🎖️ شؤون الترشيحات</button>
-        <button id="btn-reportsPanel" class="nav-btn" onclick="switchPage('reportsPanel')">📄 مركز التقارير</button>
+        <div class="panel"><div class="panel-title">العمليات المسجلة</div><div id="opsList" class="list"></div></div>
+      </div>
     </div>
 
-    <!-- 🖥️ مساحة العرض الرئيسية -->
-    <div class="main-content">
-        <div class="top-bar">
-            <h2 id="pageTitle">منصة الذكاء الاصطناعي التكتيكي الموحد</h2>
-            <div class="system-status">
-                <div class="pulse"></div> النظام العقلاني الذكي نشط ومستقر 100%
-            </div>
+    <div id="mapPage" class="page">
+
+      <!-- بوابة إنشاء / دخول مجموعة -->
+      <div id="mapGate">
+        <div class="hero">
+          <b>خريطة المجموعة</b>
+          <span>كل مجموعة لها خريطتها الخاصة. مسؤول المجموعة هو من يتحكم بالتكبير والتصغير والدبابيس، وبإمكانه منح صلاحية التحكم لأي عضو يريده. أنشئ مجموعة جديدة أو ادخل مجموعة موجودة.</span>
         </div>
-
-        <!-- ================= 1. لوحة القيادة مع الذكاء الاصطناعي ================= -->
-        <div id="dashboardPanel" class="page active">
-            <div class="dashboard-layout">
-                <div class="card-panel">
-                    <h3 class="panel-title" style="color: var(--ai-blue);">🤖 عقل الذكاء الاصطناعي الفائق (المحرك المحدث لفرز الأسماء)</h3>
-                    <div class="chat-container">
-                        <div class="chat-messages" id="chatMessages">
-                            <div class="msg ai">مرحباً بك سيادة القائد. تم تحديث برمجتي كلياً لحفظ وتصنيف الأسماء. 
-
-يمكنك الآن أن تطلب مني بشكل مباشر:
-- "اسماء رتبة member"
-- "اسماء فرقة الفا" أو "فرقة برافو"
-- "اسماء فرقة السوات كاملة"
-- الاستعلام عن كود معين أو مصطلح عسكري. سأقوم بسرد الأسماء كاملة فوراً!</div>
-                        </div>
-                        <div class="chat-input-area">
-                            <input id="chatInput" placeholder="اكتب سؤالك (مثال: طلع لي اسماء رتبة member أو اسماء فرقة الفا)..." autocomplete="off">
-                            <button class="action-btn" style="border-color: var(--ai-blue); color: var(--ai-blue);" onclick="sendChatMessage()">إرسال</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card-panel">
-                    <h3 class="panel-title">📡 التعاميم الإدارية الفورية</h3>
-                    <p style="color: var(--text-muted); line-height: 1.8; margin-bottom: 15px;">تم دمج الذكاء الاصطناعي الفيدرالي في هذه اللوحة للتحكم ومراقبة الأنشطة الميدانية وإعطاء تقديرات فورية للمخاطر وسيناريوهات الاقتحام السريعة.</p>
-                    <ul style="list-style: none; color: #cbd5e1; line-height: 2;">
-                        <li style="margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
-                            <span style="color: var(--ai-blue); font-weight: bold;">[تحديث ذكي]</span> يقوم النظام الآن بتحليل سلوك المطلوبين وإصدار تنبيهات مسبقة للقوات الميدانية.
-                        </li>
-                        <li style="margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
-                            <span style="color: var(--gold); font-weight: bold;">[أمن البيانات]</span> التشفير مفعل ومزامنة سحابية مستمرة عبر خوادم Firebase المشفرة بمستوى SHA-256.
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- إحصائيات الفرقة -->
-                <div class="stats-container">
-                    <div class="stat-card"><div class="num" id="statMembersCount">13</div><div class="label">الأعضاء الرسميين بالجدول</div></div>
-                    <div class="stat-card"><div class="num" style="color: var(--warning);" id="statActiveUnits">Alpha / Bravo</div><div class="label">الوحدات القتالية النشطة</div></div>
-                    <div class="stat-card"><div class="num" style="color: var(--ai-blue);">مفعل</div><div class="label">تحليل الذكاء الاصطناعي البنيوي</div></div>
-                    <div class="stat-card"><div class="num" style="color: var(--danger);">LEVEL 1</div><div class="label">حالة الجاهزية والاستعداد</div></div>
-                </div>
-            </div>
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-title">إنشاء مجموعة</div>
+            <p class="gate-note">أدخل اسمك ثم اسم المجموعة. ستكون تلقائيًا مسؤول هذه المجموعة.</p>
+            <input id="gateNameCreate" placeholder="👤 اسمك">
+            <input id="newGroupName" placeholder="🆕 اسم المجموعة">
+            <button class="btn" id="createGroupBtn">إنشاء المجموعة والدخول كمسؤول</button>
+          </div>
+          <div class="panel">
+            <div class="panel-title">دخول مجموعة</div>
+            <p class="gate-note">أدخل اسمك ثم اختر مجموعة من القائمة للانضمام إليها.</p>
+            <input id="gateNameJoin" placeholder="👤 اسمك">
+            <div id="groupsList" class="list"></div>
+          </div>
         </div>
+      </div>
 
-        <!-- ================= باقي الصفحات والقوائم ================= -->
-        <div id="rulesPanel" class="page">
-            <div class="card-panel">
-                <h3 class="panel-title">قوانين الفرقة الصارمة واللائحة الكاملة</h3>
-                <ol style="padding-right: 20px; line-height: 2.2; color: #cbd5e1; font-size: 15px;">
-                    <li><b>الالتزام التام بالأوامر العسكرية:</b> الطاعة العمياء لكافة توجيهات قائد الفريق والمسؤول الأعلى رتبة دون أي تهاون.</li>
-                    <li><b>تصاريح المداهمات والدوريات:</b> يمنع منعاً باتاً خروج أي دورية ميدانية أو التخطيط لعملية اقتحام إلا بعد أخذ إذن خطي أو لفظي مباشر من القيادة.</li>
-                    <li><b>الجدية والانضباط الميداني:</b> يمنع الحديث الجانبي، المزاح، أو خفض السلاح أثناء الاصطفاف التفتيشي أو المداهمات والمهام الحرجة.</li>
-                    <li><b>بروتوكول الهندام العسكري:</b> الالتزام الصارم بالزي الرسمي الكامل والمعدات والخوذات المصنفة والمعتمدة في اللوحة.</li>
-                    <li><b>سرية المعلومات والأرشيف:</b> جميع المستندات، التقارير الجنائية، والخطط التكتيكية تعتبر سرية للغاية ومحمية بنظام "اسألني AI"، وتداولها خارج المنصة يعرض صاحبه للمساءلة العاجلة.</li>
-                    <li><b>احترام التسلسل الرتبي:</b> يمنع التخطي الإداري، ويجب رفع البلاغات والطلبات خطوة بخطوة عبر الرتب المتسلسلة.</li>
-                    <li><b>تأمين العتاد القتالي:</b> يمنع تسليم أو إعارة الأسلحة الرسمية والمعدات لأي شخص خارج القوة البشرية المعتمدة.</li>
-                    <li><b>بند الطوارئ والجاهزية:</b> على كافة الأعضاء تلبية نداء الاستدعاء الطارئ فور تفعيله عبر اللوحة والنزول للميدان في أسرع وقت.</li>
-                    <li style="color: #ff9800; font-weight: bold; background: rgba(216, 194, 122, 0.05); padding: 10px; border-radius: 6px; border-right: 3px solid var(--gold); margin-top: 10px;">[بند السيادة والمشروعية العليا] قانون الولاء المطلق: يظل الولاء والشرعية كاملة وثابتة لقائد الفرقة الحالي (Chief) فهد المطيري دون غيره، وإذا حدث أي نزاع أو عصيان إداري، تُلغى صلاحيات الأطراف المنقلبة وتُحظر رقمياً فوراً.</li>
-                </ol>
-                <div class="shaar-box">💥 شعار الفرقة: الانضباط - السرية - التنفيذ 💥</div>
-            </div>
+      <!-- محتوى الخريطة داخل المجموعة -->
+      <div id="mapGroupView" style="display:none;">
+        <div class="hero" style="padding:16px 20px;">
+          <span style="color:var(--amber-light); font-weight:700; font-size:14px;">🗺️ مجموعة: <span id="curGroupName"></span></span>
+          <span style="margin-top:6px;">أنت: <b id="curMyRole" style="color:var(--amber-light);"></b> — <button class="pill" style="margin-top:8px;" onclick="leaveGroup()">🚪 مغادرة المجموعة</button></span>
         </div>
+        <div class="map-layout">
+          <div class="map-main">
+            <div class="panel">
+              <div class="panel-title">الخريطة التكتيكية للمجموعة</div>
+              <div class="map-toolbar">
+                <button class="btn" onclick="zoomMap(1.2)">تكبير +</button>
+                <button class="btn" onclick="zoomMap(0.8)">تصغير -</button>
+                <button class="btn" onclick="resetMap()">إعادة ضبط</button>
+                <button class="btn" id="toggleMapModeBtn" onclick="toggleMapMode()">🌍 عرض خريطة GTA5 الحقيقية</button>
+                <span style="align-self:center; font-size:11.5px; color:var(--muted);" id="mapPermNote">اضغط لإضافة دبوس، اسحب للتحريك، عجلة الفأرة للتكبير</span>
+              </div>
 
-        <div id="clothingPanel" class="page">
-            <div class="card-panel">
-                <h3 class="panel-title">👕 الزي الرسمي والمعدات المعتمدة</h3>
-                <div style="line-height: 2; color: #cbd5e1;">
-                    <p style="margin-bottom: 15px; color: var(--gold);">⚠️ تجهيزات القتال المعتمدة رسمياً:</p>
-                    <ul>
-                        <li><b>الزي المعتمد:</b> البدلة التكتيكية السوداء المقاومة للرصاص وحامي الرأس المخصص.</li>
-                        <li><b>الأسلحة:</b> الرشاش الهجومي الأساسي، المسدس التكتيكي، والقنابل الصوتية التكتيكية.</li>
-                    </ul>
+              <div id="tacticalMapWrap">
+                <div id="mapViewport"><div id="mapInner">
+                  <svg width="1400" height="1000" viewBox="0 0 1400 1000">
+                    <rect width="1400" height="1000" fill="#0a0c0e"/>
+                    <defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0 L0 0 0 40" fill="none" stroke="#161c20" stroke-width="1"/></pattern></defs>
+                    <rect width="1400" height="1000" fill="url(#grid)"/>
+                    <rect x="520" y="330" width="360" height="260" rx="14" fill="#161c20" stroke="#c98a2e"/><text x="700" y="465" fill="#e8b25c" font-size="22" text-anchor="middle">وسط المدينة</text>
+                    <rect x="900" y="250" width="260" height="180" rx="14" fill="#161c20" stroke="#c98a2e"/><text x="1030" y="345" fill="#e8b25c" font-size="18" text-anchor="middle">الأحياء الراقية</text>
+                    <rect x="220" y="240" width="260" height="200" rx="14" fill="#161c20" stroke="#c98a2e"/><text x="350" y="345" fill="#e8b25c" font-size="18" text-anchor="middle">المنطقة الصناعية</text>
+                    <rect x="120" y="600" width="300" height="220" rx="14" fill="#161c20" stroke="#c98a2e"/><text x="270" y="715" fill="#e8b25c" font-size="18" text-anchor="middle">الأحياء الجنوبية</text>
+                    <rect x="500" y="700" width="340" height="220" rx="14" fill="#161c20" stroke="#c98a2e"/><text x="670" y="815" fill="#e8b25c" font-size="18" text-anchor="middle">الساحل</text>
+                    <rect x="950" y="600" width="300" height="240" rx="14" fill="#161c20" stroke="#c98a2e"/><text x="1100" y="725" fill="#e8b25c" font-size="18" text-anchor="middle">الريف والمزارع</text>
+                    <rect x="1000" y="60" width="320" height="160" rx="14" fill="#161c20" stroke="#c98a2e"/><text x="1160" y="145" fill="#e8b25c" font-size="18" text-anchor="middle">القاعدة العسكرية</text>
+                    <rect x="60" y="60" width="280" height="150" rx="14" fill="#161c20" stroke="#c98a2e"/><text x="200" y="140" fill="#e8b25c" font-size="18" text-anchor="middle">المطار</text>
+                    <path d="M400 440 L520 460" stroke="#c98a2e" stroke-width="3"/>
+                    <path d="M880 460 L1000 350" stroke="#c98a2e" stroke-width="3"/>
+                    <path d="M600 590 L650 700" stroke="#c98a2e" stroke-width="3"/>
+                    <path d="M840 590 L1050 610" stroke="#c98a2e" stroke-width="3"/>
+                    <path d="M700 330 L700 210" stroke="#c98a2e" stroke-width="3"/>
+                  </svg>
+                </div></div>
+              </div>
+
+              <div id="gtaMapWrap" style="display:none;">
+                <div style="border:1px solid var(--line); border-radius:8px; overflow:hidden; height:600px;">
+                  <iframe id="gtaMapFrame" src="https://gta-5-map.com/" style="width:100%; height:100%; border:0;" loading="lazy"></iframe>
                 </div>
+                <p class="gate-note" style="margin-top:8px;">هذه خريطة GTA5 الحقيقية معروضة داخل التطبيق مباشرة للاطّلاع والتنقل. لا يمكن وضع دبابيس المجموعة عليها لأنها موقع خارجي منفصل — للدبابيس المشتركة استخدمي "الخريطة التكتيكية".</p>
+              </div>
             </div>
-        </div>
-
-        <div id="schedulePanel" class="page">
-            <div class="card-panel">
-                <div class="panel-title">
-                    <span>📅 كشف وجدول أعضاء الفرقة والقوة البشرية الكاملة</span>
-                    <button class="add-member-btn" onclick="showInlineLock()">+</button>
-                </div>
-                
-                <div id="inlineLockBox" class="inline-lock-box" style="display: none;">
-                    <h5>🔒 يتطلب صلاحيات الإدارة - أدخل الرمز السري للتعديل</h5>
-                    <div class="flex-inputs">
-                        <input id="inlineCodeInput" type="password" placeholder="أدخل الرمز السري" autocomplete="off">
-                        <button class="action-btn" onclick="verifyInlineCode()">تحقق ودخول</button>
-                    </div>
-                </div>
-
-                <div id="addMemberForm" style="display:none; background:#121822; padding:15px; border-radius:8px; margin-bottom:15px; border:1px solid var(--ai-blue);">
-                    <h4 style="color:var(--ai-blue); margin-bottom:10px;">➕ إضافة عضو جديد للجدول السحابي</h4>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom: 10px;">
-                        <input id="newMemNo" placeholder="الرقم الإداري">
-                        <input id="newMemName" placeholder="الاسم الكامل">
-                        <input id="newMemRank" placeholder="الرتبة">
-                        <input id="newMemUnit" placeholder="الوحدة">
-                    </div>
-                    <button class="action-btn" onclick="saveNewMemberToFirebase()">تأكيد الحفظ بالسيرفر</button>
-                </div>
-
-                <table class="swat-table">
-                    <thead>
-                        <tr><th>الرقم</th><th>الاسم</th><th>الرتبة</th><th>الوحدة</th><th>الإجراءات</th></tr>
-                    </thead>
-                    <tbody id="staticMembersTable">
-                        <tr style="background: rgba(216, 194, 122, 0.03);"><td style="font-weight: bold; color: var(--gold);">01</td><td style="font-weight: bold;">FAHAD ALMUTAIRI</td><td style="color: var(--gold); font-weight: bold;">R-0 SWAT Chief</td><td style="font-weight: bold;">Command</td><td>-</td></tr>
-                        <tr><td>02</td><td>KARLOS ALMUTAIRI</td><td style="color: #cbd5e1;">R-1 Deputy Chief</td><td>Command</td><td>-</td></tr>
-                        <tr><td>03</td><td>Turki Al-Mutairi</td><td>R-2 Assistant Chief</td><td>Leader Alpha</td><td>-</td></tr>
-                        <tr><td>04</td><td>James Morgan</td><td>R-3 Supervisor</td><td>Leader Bravo</td><td>-</td></tr>
-                        <tr><td>05</td><td>Mov Marley</td><td>R-4 Member</td><td>Alpha</td><td>-</td></tr>
-                        <tr><td>06</td><td>Sicr Exxon</td><td>R-5 Member</td><td>Alpha</td><td>-</td></tr>
-                        <tr><td>07</td><td>Marcus Leno</td><td>R-6 Member</td><td>Alpha</td><td>-</td></tr>
-                        <tr><td>08</td><td>James Kruise</td><td>R-7 Member</td><td>Alpha</td><td>-</td></tr>
-                        <tr><td>09</td><td>Older Mohammed</td><td>R-8 Member</td><td>Alpha</td><td>-</td></tr>
-                        <tr><td>10</td><td>Badr Al-Mutairi</td><td>R-9 Member</td><td>Bravo</td><td>-</td></tr>
-                        <tr><td>11</td><td>ريان خالد</td><td>R-10 Member</td><td>Bravo</td><td>-</td></tr>
-                        <tr><td>12</td><td>JOHN Marly</td><td>R-11 Member</td><td>Bravo</td><td>-</td></tr>
-                        <tr><td>13</td><td>Ahmed Almutairi</td><td>R-12 Member</td><td>Bravo</td><td>-</td></tr>
-                    </tbody>
-                    <tbody id="dynamicMembersTable"></tbody>
-                </table>
+          </div>
+          <div class="map-side">
+            <div class="panel">
+              <div class="panel-title">أعضاء المجموعة</div>
+              <div id="membersList" class="list"></div>
             </div>
+          </div>
         </div>
-
-        <div id="wantedGate" class="page">
-            <div class="card-panel lock-screen">
-                <h3>🔒 تصريح أمني - بوابة كشف المطلوبين والتحري الميداني</h3>
-                <input id="wantedPass" type="password" placeholder="رمز الدخول المشفر" autocomplete="off">
-                <button class="action-btn" onclick="unlockSection('wantedPass', 'wantedRealPanel')">فك التشفير ودخول</button>
-            </div>
-        </div>
-        
-        <div id="wantedRealPanel" class="page">
-            <div class="dashboard-layout">
-                <div class="card-panel">
-                    <h3 class="panel-title">➕ تسجيل مطلوب جديد للعدالة</h3>
-                    <input id="wantedName" placeholder="الاسم الكامل المستهدف" autocomplete="off">
-                    <input id="wantedCrime" placeholder="نوع الجرم / التهديد المصنف" autocomplete="off">
-                    <button class="action-btn" id="addWanted">تعميم وإرسال للميدان فوراً</button>
-                </div>
-                <div class="card-panel">
-                    <h3 class="panel-title" style="color: var(--danger);">🚨 Elements العناصر المطلوبة جنائياً حالياً</h3>
-                    <div id="wantedList" class="data-list-container"></div>
-                </div>
-            </div>
-        </div>
-
-        <div id="missionsPanel" class="page">
-            <div class="dashboard-layout">
-                <div class="card-panel">
-                    <h3 class="panel-title">🎯 تخطيط وتوزيع مهمة عسكرية جديدة</h3>
-                    <input id="missionTitle" placeholder="عنوان العمليات" autocomplete="off">
-                    <input id="missionLeader" placeholder="👮 القائد الميداني المسؤول" autocomplete="off">
-                    <input id="missionMembers" placeholder="👥 أطقم الإسناد والمشاركين" autocomplete="off">
-                    <select id="missionStatus">
-                        <option value="مستمرة">⏳ مهمة مستمرة / قيد التنفيذ</option>
-                        <option value="ناجحة">✅ تم التنفيذ بنجاح</option>
-                        <option value="فاشلة">❌ عملية مجهضة / فاشلة</option>
-                    </select>
-                    <textarea id="missionDesc" placeholder="📝 الأوامر والتفاصيل المطلوبة..." style="height:90px;" autocomplete="off"></textarea>
-                    
-                    <button class="action-btn ai-btn" onclick="generateAIMissionPlan()">🤖 توليد خطة اقتحام ذكية (اسألني AI)</button>
-                    <button class="action-btn" id="addMission">حفظ وتعميم البيانات الميدانية</button>
-                </div>
-                
-                <div class="card-panel lock-screen" id="missionsLockArea">
-                    <h3>🔒 تصريح أمني - الأرشيف التكتيكي للمهمات</h3>
-                    <input id="missPass" type="password" placeholder="أدخل رمز الدخول لعرض العمليات" autocomplete="off">
-                    <button class="action-btn" onclick="unlockSection('missPass', 'missionsRealView')">عرض أرشيف العمليات</button>
-                </div>
-                
-                <div id="missionsRealView" class="card-panel" style="display:none;">
-                    <h3 class="panel-title">📋 سجل المهمات والعمليات الموثقة بالفايربيس</h3>
-                    <div id="missionsList" class="data-list-container"></div>
-                </div>
-            </div>
-        </div>
-
-        <div id="nominationsPanel" class="page">
-            <div class="dashboard-layout">
-                <div class="card-panel">
-                    <h3 class="panel-title">🎖️ نموذج ترشيح وتزكية كادر للقيادة</h3>
-                    <input id="nomineeCharName" placeholder="👤 اسم العضو المرشح" autocomplete="off">
-                    <input id="nomineeCurrentRank" placeholder="🎖️ الرتبة العسكرية الحالية" autocomplete="off">
-                    <input id="nomineeSector" placeholder="🏢 القطاع الحالي المعين به" autocomplete="off">
-                    <textarea id="nominationReason" placeholder="📝 مسببات الترشيح بالتفصيل..." style="height:90px;" autocomplete="off"></textarea>
-                    
-                    <button class="action-btn ai-btn" onclick="evaluateNomineeAI()">🤖 تقييم كفاءة المرشح بالذكاء الاصطناعي</button>
-                    <button class="action-btn" id="addNomination">إرسال التزكية إلى الإدارة العليا</button>
-                </div>
-                <div class="card-panel" id="nomLockArea">
-                    <div class="lock-screen" style="margin:0;">
-                        <h3>🔒 تصريح أمني - قرارات الإدارة العليا</h3>
-                        <input id="nomPass" type="password" placeholder="أدخل رمز الدخول لعرض المرشحين" autocomplete="off">
-                        <button class="action-btn" onclick="unlockSection('nomPass', 'nominationsRealView')">استعراض المرشحين</button>
-                    </div>
-                </div>
-                <div id="nominationsRealView" class="card-panel" style="display:none;">
-                    <h3 class="panel-title">📋 كشوفات المتقدمين وقرارات اللجنة</h3>
-                    <div id="nominationsList" class="data-list-container"></div>
-                </div>
-            </div>
-        </div>
-
-        <div id="reportsPanel" class="page">
-            <div class="dashboard-layout">
-                <div class="card-panel">
-                    <h3 class="panel-title">📤 صياغة تقرير عمليات نهائي</h3>
-                    <input id="repId" placeholder="🆔 المعرف الرقمي للتقرير" autocomplete="off">
-                    <div style="display:flex; gap:10px;"><input id="repDate" type="date"><input id="repTime" type="time"></div>
-                    <input id="repLeader" placeholder="👮 القائد المسؤول عن صياغة التقرير" autocomplete="off">
-                    <input id="repMembers" placeholder="👥 أسماء القوة المشاركة" autocomplete="off">
-                    <select id="repType">
-                        <option>مداهمة خاطفة</option><option>اقتحام تكتيكي</option><option>إنقاذ رهائن وتأمين</option><option>عملية سرية خاصة</option>
-                    </select>
-                    <input id="repLocation" placeholder="📍 إحداثيات وموقع العملية" autocomplete="off">
-                    <textarea id="repDetails" placeholder="📝 كتابة تفاصيل وسيناريو العملية..." style="height:100px;" autocomplete="off"></textarea>
-                    
-                    <button class="action-btn ai-btn" onclick="generateAIReportSummary()">🤖 صياغة بأسلوب جنائي احترافي (اسألني AI)</button>
-                    <label style="display:flex; align-items:center; gap:8px; margin-bottom:15px; cursor:pointer;"><input id="secretReport" type="checkbox" style="width:auto; margin:0;"> 🔒 تقرير سري للغاية للمستوى الأحمر</label>
-                    <button class="action-btn" id="saveReportBtn">حفظ التقرير نهائياً بالسيرفر</button>
-                </div>
-                
-                <div class="card-panel" style="display:flex; flex-direction:column; gap:15px;">
-                    <h3 class="panel-title">📂 أرشيف الملفات المحمية بالرقم السري</h3>
-                    
-                    <div id="repGeneralLock" class="lock-screen" style="margin: 0 0 15px 0; border-bottom: 1px solid var(--border-color); padding-bottom: 15px;">
-                        <h4>📄 فتح الأرشيف العام للتقارير</h4>
-                        <input id="repPass" type="password" placeholder="أدخل رمز الأرشيف العام" style="margin-top: 8px;" autocomplete="off">
-                        <button class="action-btn" onclick="unlockSection('repPass', 'reportsNormalView')">دخول الأرشيف العام</button>
-                    </div>
-
-                    <div id="repSecretLock" class="lock-screen" style="margin: 0;">
-                        <h4 style="color: var(--danger);">🚨 فتح الخزنة السرية للمستوى الأحمر</h4>
-                        <input id="secRepPass" type="password" placeholder="رمز الوصول الرئاسي الخاص" style="margin-top: 8px;" autocomplete="off">
-                        <button class="action-btn" onclick="unlockSection('secRepPass', 'reportsSecretView')" style="background: var(--danger); border-color: var(--danger); color: white;">تأكيد الهوية الرقمية</button>
-                    </div>
-                    
-                    <div id="reportsNormalView" style="display:none; margin-top:15px;">
-                        <h4 style="color:var(--gold); margin-bottom:10px;">📋 التقارير العادية المعروضة</h4>
-                        <div id="normalReportsContainer" class="data-list-container"></div>
-                    </div>
-                    
-                    <div id="reportsSecretView" style="display:none; margin-top:15px;">
-                        <h4 style="color:var(--danger); margin-bottom:10px;">🔒 المستندات المصنفة سرية جداً</h4>
-                        <div id="secretReportsContainer" class="data-list-container"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
 
     </div>
 
-<!-- ================= سكريبتات الأنظمة وقاعدة البيانات والـ AI ================= -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    <div id="wantedPage" class="page">
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-title">تسجيل مطلوب كبير</div>
+          <input id="wName" placeholder="👤 الاسم / الاسم المستعار">
+          <input id="wCharge" placeholder="⚖️ التهم">
+          <select id="wDanger"><option value="متوسط">🟡 متوسط</option><option value="عالي">🟠 عالي</option><option value="أقصى">🔴 أقصى</option></select>
+          <input id="wLocation" placeholder="📍 آخر موقع مرصود (سري)">
+          <button class="btn red" id="addWanted">تعميم المطلوب</button>
+        </div>
+        <div class="panel"><div class="panel-title" style="color:var(--crimson-light);">قائمة كبار المطلوبين</div><div id="wantedList" class="list"></div></div>
+      </div>
+    </div>
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBTTj1ww1VPYIHu1SyMg_KSYHZRcF8dRHI",
-  authDomain: "swat-system-384b0.firebaseapp.com",
-  projectId: "swat-system-384b0",
-  storageBucket: "swat-system-384b0.firebasestorage.app",
-  messagingSenderId: "874029124115",
-  appId: "1:874029124115:web:27657c0137fe73ec50cde6",
-  measurementId: "G-MVNRHGCGZE"
+    <div id="upcomingPage" class="page">
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-title">جدولة مهمة قادمة</div>
+          <input id="upTitle" placeholder="🆔 عنوان المهمة">
+          <input id="upDate" type="date"><input id="upTime" type="time">
+          <textarea id="upBrief" placeholder="📝 موجز المهمة" style="height:85px;"></textarea>
+          <button class="btn" id="addUpcoming">إضافة للجدول</button>
+        </div>
+        <div class="panel"><div class="panel-title">المهام المجدولة</div><div id="upcomingList" class="list"></div></div>
+      </div>
+    </div>
+
+    <div id="distPage" class="page">
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-title">توزيع مناوبة</div>
+          <input id="distName" placeholder="👤 اسم العنصر">
+          <input id="distUnit" placeholder="🎯 الوحدة">
+          <select id="distShift"><option value="الصباحية">☀️ الصباحية</option><option value="المسائية">🌆 المسائية</option><option value="الليلية">🌙 الليلية</option></select>
+          <input id="distZone" placeholder="📍 منطقة التغطية">
+          <button class="btn" id="addDist">حفظ التوزيع</button>
+        </div>
+        <div class="panel">
+          <div class="panel-title">جدول المناوبات</div>
+          <table><thead><tr><th>الاسم</th><th>الوحدة</th><th>الفترة</th><th>المنطقة</th><th>-</th></tr></thead><tbody id="distTable"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <div id="investPage" class="page">
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-title">فتح ملف تحقيق</div>
+          <input id="invCase" placeholder="🆔 رقم/عنوان القضية">
+          <input id="invLead" placeholder="👮 المحقق المسؤول">
+          <select id="invStatus"><option value="مفتوحة">🟢 مفتوحة</option><option value="قيد المتابعة">🟠 قيد المتابعة</option><option value="مغلقة">⚪ مغلقة</option></select>
+          <textarea id="invNotes" placeholder="📝 تفاصيل القضية" style="height:85px;"></textarea>
+          <label style="display:flex; gap:8px; align-items:center; margin-bottom:11px; cursor:pointer; font-size:12px; color:var(--muted);">
+            <input id="invClassified" type="checkbox" style="width:auto; margin:0;"> سري (رتبة قائد فريق فأعلى)
+          </label>
+          <button class="btn" id="addInvest">حفظ القضية</button>
+        </div>
+        <div class="panel"><div class="panel-title">القضايا المسجلة</div><div id="investList" class="list"></div></div>
+      </div>
+    </div>
+
+    <div id="uniformPage" class="page">
+      <div class="panel">
+        <div class="panel-title">اللبس الرسمي للوحدات المشتركة</div>
+        <div class="uniform-grid" id="uniformGrid"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal-overlay" id="ranksModal">
+  <div class="modal-box">
+    <h3>➕ إضافة عنصر لسجل الرتب</h3>
+    <input id="rankAdminCode" type="password" placeholder="رمز صلاحية الإدارة">
+    <input id="rankEmail" placeholder="البريد الإلكتروني">
+    <input id="rankName" placeholder="الاسم">
+    <select id="rankLevel">
+      <option value="1">فرد</option><option value="2">مشرف</option><option value="3">قائد فريق</option><option value="4">نائب قائد</option><option value="5">القائد العام</option>
+    </select>
+    <button class="btn" onclick="addRank()">حفظ</button>
+    <button class="close-modal" onclick="closeModal('ranksModal')">إغلاق</button>
+  </div>
+</div>
+
+<script>
+const ADMIN_CODE = "1029";
+let currentUser = { email:null, level:0, name:null };
+
+/* ===== تخزين دائم مشترك ===== */
+async function loadArr(key, shared=true){ try{ const r = await window.storage.get(key, shared); return r ? JSON.parse(r.value) : []; }catch(e){ return []; } }
+async function saveArr(key, arr, shared=true){ try{ await window.storage.set(key, JSON.stringify(arr), shared); }catch(e){ console.error(e); } }
+async function loadObj(key, shared=true){ try{ const r = await window.storage.get(key, shared); return r ? JSON.parse(r.value) : null; }catch(e){ return null; } }
+async function saveObj(key, obj, shared=true){ try{ await window.storage.set(key, JSON.stringify(obj), shared); }catch(e){ console.error(e); } }
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+
+/* هوية شخصية دائمة لهذا الجهاز/الحساب (تُستخدم للعضوية والصلاحيات) */
+async function myUid(){
+  let id = await loadObj('jf_my_uid', false);
+  if(!id){ id = uid(); await saveObj('jf_my_uid', id, false); }
+  return id;
+}
+
+/* ===== تنقل ===== */
+window.go = function(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelector(`.tab-btn[data-page="${id}"]`).classList.add('active');
+  if(id==='mapPage'){ checkGroupGate(); }
+};
+window.openModal = (id)=>document.getElementById(id).classList.add('open');
+window.closeModal = (id)=>document.getElementById(id).classList.remove('open');
+
+/* ===== الرتب وتسجيل الدخول ===== */
+window.addRank = async function(){
+  const code = document.getElementById('rankAdminCode').value;
+  const email = document.getElementById('rankEmail').value.trim().toLowerCase();
+  const name = document.getElementById('rankName').value.trim();
+  const level = parseInt(document.getElementById('rankLevel').value);
+  if(code !== ADMIN_CODE){ alert('رمز الإدارة غير صحيح.'); return; }
+  if(!email || !name){ alert('أكمل البريد والاسم.'); return; }
+  const list = await loadArr('jf_ranks');
+  list.push({ id:uid(), email, name, level });
+  await saveArr('jf_ranks', list);
+  document.getElementById('rankAdminCode').value='';
+  document.getElementById('rankEmail').value='';
+  document.getElementById('rankName').value='';
+  closeModal('ranksModal');
+  alert('تمت إضافة الرتبة.');
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+window.loginByEmail = async function(){
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  if(!email) return;
+  const list = await loadArr('jf_ranks');
+  const found = list.find(r=>r.email===email);
+  const levelNames = {1:'فرد',2:'مشرف',3:'قائد فريق',4:'نائب قائد',5:'القائد العام'};
+  if(!found){
+    currentUser = { email:null, level:0, name:null };
+    document.getElementById('sessionBadge').innerText = 'لا يوجد سجل بهذا البريد';
+  } else {
+    currentUser = { email, level:found.level, name:found.name };
+    document.getElementById('sessionBadge').innerHTML = `مسجل: <b>${found.name}</b> (${levelNames[found.level]})`;
+  }
+  renderInvest(); renderOps(); renderWanted();
+};
 
-const GLOBAL_SECURITY_CODE = "1029";
+function lockedBox(minLevel){
+  const levelNames = {1:'فرد',2:'مشرف',3:'قائد فريق',4:'نائب قائد',5:'القائد العام'};
+  return `<div class="locked">🔒 محتوى مصنّف — يتطلب رتبة "${levelNames[minLevel]}" فأعلى</div>`;
+}
 
-// 👥 قاعدة البيانات المخزنة كلياً داخل ذكاء المنصة
-const armyDatabase = [
-    { code: "01", name: "FAHAD ALMUTAIRI", rank: "R-0 SWAT Chief", rankType: "chief", unit: "Command" },
-    { code: "02", name: "KARLOS ALMUTAIRI", rank: "R-1 Deputy Chief", rankType: "chief", unit: "Command" },
-    { code: "03", name: "Turki Al-Mutairi", rank: "R-2 Assistant Chief", rankType: "chief", unit: "Alpha" },
-    { code: "04", name: "James Morgan", rank: "R-3 Supervisor", rankType: "supervisor", unit: "Bravo" },
-    { code: "05", name: "Mov Marley", rank: "R-4 Member", rankType: "member", unit: "Alpha" },
-    { code: "06", name: "Sicr Exxon", rank: "R-5 Member", rankType: "member", unit: "Alpha" },
-    { code: "07", name: "Marcus Leno", rank: "R-6 Member", rankType: "member", unit: "Alpha" },
-    { code: "08", name: "James Kruise", rank: "R-7 Member", rankType: "member", unit: "Alpha" },
-    { code: "09", name: "Older Mohammed", rank: "R-8 Member", rankType: "member", unit: "Alpha" },
-    { code: "10", name: "Badr Al-Mutairi", rank: "R-9 Member", rankType: "member", unit: "Bravo" },
-    { code: "11", name: "ريان خالد", rank: "R-10 Member", rankType: "member", unit: "Bravo" },
-    { code: "12", name: "JOHN Marly", rank: "R-11 Member", rankType: "member", unit: "Bravo" },
-    { code: "13", name: "Ahmed Almutairi", rank: "R-12 Member", rankType: "member", unit: "Bravo" }
+/* ===== اللبس (ثابت) ===== */
+const uniforms = [
+  { name:'وحدة القيادة', color:'#c98a2e', desc:'بدلة رسمية داكنة بشارات، تُلبس بالمكتب والمؤتمرات الرسمية.' },
+  { name:'فرقة الاقتحام (Alpha)', color:'#33393e', desc:'بدلة تكتيكية سوداء كاملة، خوذة وحماية، للمداهمات.' },
+  { name:'فرقة الإسناد (Bravo)', color:'#3f4a44', desc:'زي ميداني، لتأمين المحيط والدعم اللوجستي.' },
+  { name:'وحدة التحقيق', color:'#4a3f33', desc:'زي مدني رسمي مع شارة مثبتة، للاستجواب وجمع الأدلة.' },
+  { name:'وحدة الكلاب (K9)', color:'#5a3f2a', desc:'زي ميداني مقوّى للتعامل مع الكلاب المدرّبة.' },
+  { name:'الدعم الجوي', color:'#2e4552', desc:'بدلة طيران داكنة لطواقم المروحية والمراقبة الجوية.' },
 ];
+(function renderUniforms(){
+  const box = document.getElementById('uniformGrid'); box.innerHTML='';
+  uniforms.forEach(u=>{
+    const d = document.createElement('div'); d.className='uni';
+    d.innerHTML = `<div class="sw" style="background:${u.color}"></div><h4>${u.name}</h4><p>${u.desc}</p>`;
+    box.appendChild(d);
+  });
+})();
 
-function clearAllInputs() {
-    document.querySelectorAll("input").forEach(input => {
-        if(input.type !== "checkbox" && input.type !== "radio" && input.id !== "chatInput") {
-            input.value = "";
-        }
-    });
-}
-
-window.switchPage = function(pageId) {
-    clearAllInputs();
-    document.querySelectorAll('.page').forEach(p => {
-        p.classList.remove('active');
-        p.style.setProperty('display', 'none', 'important');
-    });
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    
-    const targetPage = document.getElementById(pageId);
-    if(targetPage) {
-        targetPage.classList.add('active');
-        targetPage.style.setProperty('display', 'block', 'important');
-    }
-    const targetBtn = document.getElementById('btn-' + pageId);
-    if(targetBtn) targetBtn.classList.add('active');
-};
-
-window.unlockSection = function(inputId, targetPanelId) {
-    const passValue = document.getElementById(inputId).value;
-    if(passValue === GLOBAL_SECURITY_CODE) {
-        if(targetPanelId.includes('View') || targetPanelId.includes('Panel')) {
-            const lockArea = document.getElementById(inputId).parentElement;
-            if(lockArea) lockArea.style.display = "none";
-            if(targetPanelId === 'wantedRealPanel') {
-                switchPage('wantedRealPanel');
-            } else {
-                document.getElementById(targetPanelId).style.display = "block";
-            }
-        } else {
-            switchPage(targetPanelId);
-        }
+/* ===== غرفة العمليات ===== */
+async function renderOps(){
+  const list = await loadArr('jf_operations');
+  const box = document.getElementById('opsList'); box.innerHTML='';
+  document.getElementById('statOps').innerText = list.filter(i=>i.status==='جارية').length;
+  list.slice().reverse().forEach(item=>{
+    const div = document.createElement('div'); div.className='card';
+    if(item.classified && currentUser.level < 3){
+      div.innerHTML = `<h4>📻 ${item.title} <span class="tag warn">سري</span></h4>` + lockedBox(3);
     } else {
-        alert("❌ رمز التصريح الأمني غير صحيح!");
+      const tc = item.status==='جارية'?'ok':(item.status==='منتهية'?'':'warn');
+      div.innerHTML = `<h4>📻 ${item.title} <span class="tag ${tc}">${item.status}</span></h4><p>👥 ${item.units}</p><p>📝 ${item.notes||'—'}</p><button class="del" onclick="delItem('jf_operations','${item.id}',renderOps)">أرشفة</button>`;
     }
-};
-
-window.showInlineLock = function() {
-    document.getElementById('inlineLockBox').style.display = "block";
-};
-
-window.verifyInlineCode = function() {
-    const code = document.getElementById('inlineCodeInput').value;
-    if(code === GLOBAL_SECURITY_CODE) {
-        document.getElementById('inlineLockBox').style.display = "none";
-        document.getElementById('addMemberForm').style.display = "block";
-    } else {
-        alert("❌ رمز الإدارة خاطئ!");
-    }
-};
-
-/* ================= 🧠 محرك الـ AI المطور والذكي لفرز وقراءة الأسماء والفرق ================= */
-window.sendChatMessage = function() {
-    const input = document.getElementById('chatInput');
-    const msgText = input.value.trim();
-    if(!msgText) return;
-
-    appendMessage(msgText, 'user');
-    input.value = "";
-
-    setTimeout(() => {
-        let response = "";
-        const query = msgText.toLowerCase();
-
-        // 1. استخراج وفرز الأسماء حسب الرتبة المطلوبة
-        if (query.includes('رتبة') || query.includes('الرتبة')) {
-            if (query.includes('member') || query.includes('ممبر') || query.includes('عضو')) {
-                const list = armyDatabase.filter(m => m.rankType === 'member');
-                response = `📋 أسماء الأعضاء برتبة **Member** (${list.length} أعضاء):\n` + list.map(m => `🔹 [${m.code}] - ${m.name} (${m.unit})`).join('\n');
-            } 
-            else if (query.includes('chief') || query.includes('تشيف') || query.includes('قائد') || query.includes('قيادة')) {
-                const list = armyDatabase.filter(m => m.rankType === 'chief');
-                response = `👑 أسماء الضباط برتبة **Chief**:\n` + list.map(m => `🔹 [${m.code}] - ${m.name} (${m.rank})`).join('\n');
-            } 
-            else if (query.includes('supervisor') || query.includes('مشرف')) {
-                const list = armyDatabase.filter(m => m.rankType === 'supervisor');
-                response = `👮 أسماء المسؤولين برتبة **Supervisor**:\n` + list.map(m => `🔹 [${m.code}] - ${m.name} (${m.rank})`).join('\n');
-            } else {
-                response = "❓ لم أستطع تحديد الرتبة المطلوبة بدقة، يرجى كتابة: (اسماء رتبة member) أو (اسماء رتبة chief).";
-            }
-        }
-        
-        // 2. استخراج وفرز الأسماء حسب الفرقة والوحدة الميدانية
-        else if (query.includes('فرقة') || query.includes('الفرقة') || query.includes('فرقت')) {
-            if (query.includes('الفا') || query.includes('alpha') || query.includes('ألفا')) {
-                const list = armyDatabase.filter(m => m.unit.toLowerCase().includes('alpha'));
-                response = `⚔️ أسماء القوة المسجلة في **فرقة Alpha**:\n` + list.map(m => `🔹 [${m.code}] - ${m.name} (${m.rank})`).join('\n');
-            } 
-            else if (query.includes('برافو') || query.includes('bravo')) {
-                const list = armyDatabase.filter(m => m.unit.toLowerCase().includes('bravo'));
-                response = `🛡️ أسماء القوة المسجلة في **فرقة Bravo**:\n` + list.map(m => `🔹 [${m.code}] - ${m.name} (${m.rank})`).join('\n');
-            } 
-            else if (query.includes('سوات') || query.includes('swat') || query.includes('كاملة')) {
-                response = "📋 القائمة الكاملة والأسماء لجميع أفراد فرقة السوات العسكرية:\n\n";
-                armyDatabase.forEach(m => {
-                    response += `🔹 كود [${m.code}] - ${m.name} | ${m.rank} (${m.unit})\n`;
-                });
-            } else {
-                response = "❓ يرجى تحديد الفرقة المطلوبة، مثل: (اسماء فرقة الفا) أو (اسماء فرقة برافو) أو (اسماء فرقة السوات).";
-            }
-        }
-
-        // 3. البحث بالأكواد الرقمية الفردية (01، 02، إلخ)
-        else if (/\b(0[1-9]|1[0-3])\b/.test(query)) {
-            const matchedCode = query.match(/\b(0[1-9]|1[0-3])\b/)[0];
-            const member = armyDatabase.find(m => m.code === matchedCode);
-            if (member) {
-                response = `🔍 ملف العضو الرقمي للكود [${member.code}]:\n• الاسم الكامل: ${member.name}\n• الرتبة العسكرية: ${member.rank}\n• الفرقة/الوحدة: ${member.unit}`;
-            }
-        }
-
-        // 4. استعلامات القادة المباشرة
-        else if (query.includes('فهد') || query.includes('fahad')) {
-            const m = armyDatabase[0];
-            response = `👑 ملف قائد الفرقة الأعلى:\n• الاسم: ${m.name}\n• الكود: ${m.code}\n• الرتبة: ${m.rank}\n• الوحدة: ${m.unit}`;
-        }
-        else if (query.includes('كارلوس') || query.includes('karlos')) {
-            const m = armyDatabase[1];
-            response = `👤 ملف نائب القيادة:\n• الاسم: ${m.name}\n• الكود: ${m.code}\n• الرتبة: ${m.rank}\n• الوحدة: ${m.unit}`;
-        }
-
-        // 5. قاموس المصطلحات
-        else if (query.includes('مصطلح') || query.includes('معنى') || query.includes('قاموس')) {
-            response = "📖 قاموس المصطلحات المعتمد:\n" +
-                       "• **Alpha**: وحدة الهجوم والاقتحام المباشر السريع.\n" +
-                       "• **Bravo**: وحدة الدعم والتطويق والتأمين الخلفي للموقع.\n" +
-                       "• **Command**: مركز القيادة والسيطرة المسؤول عن إصدار الأوامر.\n" +
-                       "• **الصمت اللاسلكي**: منع التحدث في الأجهزة إلا للضرورة القصوى أثناء المداهمة.";
-        }
-
-        // 6. رسالة إرشادية في حال كان السؤال عاماً
-        else {
-            response = "👋 أهلاً بك يا سيادة القائد. نظام الذكاء الاصطناعي محدث وجاهز لاستدعاء الأسماء فوراً.\n\n💡 **طريقة توجيه الأسئلة لي:**\n- 'طلع لي اسماء رتبة member'\n- 'اعطني اسماء فرقة الفا'\n- 'من هو كود 05؟'\n- 'اسماء فرقة السوات كاملة'";
-        }
-
-        appendMessage(response, 'ai');
-    }, 400);
-};
-
-function appendMessage(text, sender) {
-    const box = document.getElementById('chatMessages');
-    const div = document.createElement('div');
-    div.className = `msg ${sender}`;
-    div.innerText = text;
     box.appendChild(div);
-    box.scrollTop = box.scrollHeight;
+  });
+}
+document.getElementById('addOp').addEventListener('click', async ()=>{
+  const title = document.getElementById('opTitle').value.trim();
+  const units = document.getElementById('opUnits').value.trim();
+  const status = document.getElementById('opStatus').value;
+  const notes = document.getElementById('opNotes').value.trim();
+  const classified = document.getElementById('opClassified').checked;
+  if(!title){ alert('أدخل عنوان العملية.'); return; }
+  const list = await loadArr('jf_operations');
+  list.push({ id:uid(), title, units, status, notes, classified });
+  await saveArr('jf_operations', list);
+  document.getElementById('opTitle').value=''; document.getElementById('opUnits').value='';
+  document.getElementById('opNotes').value=''; document.getElementById('opClassified').checked=false;
+  renderOps();
+});
+
+/* ===== المطلوبين الكبار ===== */
+async function renderWanted(){
+  const list = await loadArr('jf_wanted_major');
+  const box = document.getElementById('wantedList'); box.innerHTML='';
+  document.getElementById('statWanted').innerText = list.length;
+  list.slice().reverse().forEach(item=>{
+    const div = document.createElement('div'); div.className='card';
+    const tc = item.danger==='أقصى'?'danger':(item.danger==='عالي'?'warn':'');
+    const loc = (currentUser.level>=4) ? `<p>📍 آخر موقع: ${item.location||'غير متوفر'}</p>` : lockedBox(4);
+    div.innerHTML = `<h4>🎯 ${item.name} <span class="tag ${tc}">خطورة ${item.danger}</span></h4><p>⚖️ ${item.charge}</p>${loc}<button class="del" onclick="delItem('jf_wanted_major','${item.id}',renderWanted)">تم القبض</button>`;
+    box.appendChild(div);
+  });
+}
+document.getElementById('addWanted').addEventListener('click', async ()=>{
+  const name = document.getElementById('wName').value.trim();
+  const charge = document.getElementById('wCharge').value.trim();
+  const danger = document.getElementById('wDanger').value;
+  const location = document.getElementById('wLocation').value.trim();
+  if(!name||!charge){ alert('أكمل الاسم والتهم.'); return; }
+  const list = await loadArr('jf_wanted_major');
+  list.push({ id:uid(), name, charge, danger, location });
+  await saveArr('jf_wanted_major', list);
+  document.getElementById('wName').value=''; document.getElementById('wCharge').value=''; document.getElementById('wLocation').value='';
+  renderWanted();
+});
+
+/* ===== المهام القادمة ===== */
+async function renderUpcoming(){
+  const list = await loadArr('jf_upcoming');
+  const box = document.getElementById('upcomingList'); box.innerHTML='';
+  document.getElementById('statMissions').innerText = list.length;
+  list.slice().sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).forEach(item=>{
+    const div = document.createElement('div'); div.className='card';
+    div.innerHTML = `<h4>📆 ${item.title}</h4><p>🗓️ ${item.date} — ${item.time}</p><p>📝 ${item.brief||'—'}</p><button class="del" onclick="delItem('jf_upcoming','${item.id}',renderUpcoming)">حذف</button>`;
+    box.appendChild(div);
+  });
+}
+document.getElementById('addUpcoming').addEventListener('click', async ()=>{
+  const title = document.getElementById('upTitle').value.trim();
+  const date = document.getElementById('upDate').value;
+  const time = document.getElementById('upTime').value;
+  const brief = document.getElementById('upBrief').value.trim();
+  if(!title||!date){ alert('أكمل العنوان والتاريخ.'); return; }
+  const list = await loadArr('jf_upcoming');
+  list.push({ id:uid(), title, date, time, brief });
+  await saveArr('jf_upcoming', list);
+  document.getElementById('upTitle').value=''; document.getElementById('upDate').value='';
+  document.getElementById('upTime').value=''; document.getElementById('upBrief').value='';
+  renderUpcoming();
+});
+
+/* ===== المناوبات ===== */
+async function renderDist(){
+  const list = await loadArr('jf_duty');
+  const tbody = document.getElementById('distTable'); tbody.innerHTML='';
+  document.getElementById('statDuty').innerText = list.length;
+  list.forEach(d=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${d.name}</td><td>${d.unit}</td><td>${d.shift}</td><td>${d.zone}</td><td><button class="del" onclick="delItem('jf_duty','${d.id}',renderDist)">حذف</button></td>`;
+    tbody.appendChild(tr);
+  });
+}
+document.getElementById('addDist').addEventListener('click', async ()=>{
+  const name = document.getElementById('distName').value.trim();
+  const unit = document.getElementById('distUnit').value.trim();
+  const shift = document.getElementById('distShift').value;
+  const zone = document.getElementById('distZone').value.trim();
+  if(!name||!unit){ alert('أكمل الاسم والوحدة.'); return; }
+  const list = await loadArr('jf_duty');
+  list.push({ id:uid(), name, unit, shift, zone });
+  await saveArr('jf_duty', list);
+  document.getElementById('distName').value=''; document.getElementById('distUnit').value=''; document.getElementById('distZone').value='';
+  renderDist();
+});
+
+/* ===== التحقيق ===== */
+async function renderInvest(){
+  const list = await loadArr('jf_investigations');
+  const box = document.getElementById('investList'); box.innerHTML='';
+  list.slice().reverse().forEach(item=>{
+    const div = document.createElement('div'); div.className='card';
+    if(item.classified && currentUser.level < 3){
+      div.innerHTML = `<h4>🔍 ${item.caseTitle} <span class="tag warn">سري</span></h4>` + lockedBox(3);
+    } else {
+      const tc = item.status==='مفتوحة'?'ok':(item.status==='مغلقة'?'':'warn');
+      div.innerHTML = `<h4>🔍 ${item.caseTitle} <span class="tag ${tc}">${item.status}</span></h4><p>👮 ${item.lead}</p><p>📝 ${item.notes||'—'}</p><button class="del" onclick="delItem('jf_investigations','${item.id}',renderInvest)">أرشفة</button>`;
+    }
+    box.appendChild(div);
+  });
+}
+document.getElementById('addInvest').addEventListener('click', async ()=>{
+  const caseTitle = document.getElementById('invCase').value.trim();
+  const lead = document.getElementById('invLead').value.trim();
+  const status = document.getElementById('invStatus').value;
+  const notes = document.getElementById('invNotes').value.trim();
+  const classified = document.getElementById('invClassified').checked;
+  if(!caseTitle||!lead){ alert('أكمل رقم القضية والمحقق.'); return; }
+  const list = await loadArr('jf_investigations');
+  list.push({ id:uid(), caseTitle, lead, status, notes, classified });
+  await saveArr('jf_investigations', list);
+  document.getElementById('invCase').value=''; document.getElementById('invLead').value='';
+  document.getElementById('invNotes').value=''; document.getElementById('invClassified').checked=false;
+  renderInvest();
+});
+
+/* ===== حذف عام ===== */
+window.delItem = async function(key, id, refreshFn){
+  const code = prompt('رمز الحذف:');
+  if(code !== ADMIN_CODE){ alert('رمز خاطئ.'); return; }
+  const list = await loadArr(key);
+  await saveArr(key, list.filter(i=>i.id!==id));
+  refreshFn();
+};
+
+/* =========================================================
+   نظام مجموعات الخريطة: إنشاء / دخول / صلاحيات / خريطة مشتركة
+   ========================================================= */
+let myGroup = null;       // {id, name}
+let myMembership = null;  // {uid, name, isLeader, canControl}
+let groupPollTimer = null;
+
+async function checkGroupGate(){
+  myGroup = await loadObj('jf_my_group', false);
+  if(myGroup){
+    // تأكد أن المجموعة ما زالت موجودة
+    const groups = await loadArr('jf_groups');
+    if(!groups.find(g=>g.id===myGroup.id)){
+      myGroup = null; await saveObj('jf_my_group', null, false);
+    }
+  }
+  if(myGroup){
+    document.getElementById('mapGate').style.display='none';
+    document.getElementById('mapGroupView').style.display='block';
+    await enterGroupView();
+  } else {
+    document.getElementById('mapGate').style.display='block';
+    document.getElementById('mapGroupView').style.display='none';
+    if(groupPollTimer){ clearInterval(groupPollTimer); groupPollTimer=null; }
+    renderGroupsList();
+  }
 }
 
-window.generateAIMissionPlan = function() {
-    const title = document.getElementById('missionTitle').value;
-    if(!title) { alert("يرجى كتابة عنوان المهمة أولاً!"); return; }
-    document.getElementById('missionDesc').value = `[خطة تكتيكية من اسألني AI للعملية: ${title}]:\n1. تتحرك فرقة ألفا كموجة اقتحام أولى.\n2. تؤمن فرقة برافو محيط الموقع بالكامل.\n3. يتم رمي قنابل الغاز المجهدة تليها المداهمة الفورية.`;
+async function renderGroupsList(){
+  const groups = await loadArr('jf_groups');
+  const box = document.getElementById('groupsList'); box.innerHTML='';
+  if(groups.length===0){ box.innerHTML = `<p class="gate-note">لا توجد مجموعات حاليًا. أنشئ مجموعة من اليسار.</p>`; return; }
+  groups.slice().reverse().forEach(g=>{
+    const d = document.createElement('div'); d.className='group-card';
+    d.innerHTML = `<div><h4>${g.name}</h4><p>المسؤول: ${g.leaderName}</p></div><button class="btn small" onclick="joinGroup('${g.id}')">دخول</button>`;
+    box.appendChild(d);
+  });
+}
+
+document.getElementById('createGroupBtn').addEventListener('click', async ()=>{
+  const name = document.getElementById('gateNameCreate').value.trim();
+  const gname = document.getElementById('newGroupName').value.trim();
+  if(!name){ alert('أدخل اسمك أولاً.'); return; }
+  if(!gname){ alert('أدخل اسم المجموعة.'); return; }
+  const id = uid();
+  const u = await myUid();
+  const groups = await loadArr('jf_groups');
+  groups.push({ id, name:gname, leaderUid:u, leaderName:name });
+  await saveArr('jf_groups', groups);
+  await saveArr('jf_group_members:'+id, [{ uid:u, name, isLeader:true, canControl:true }]);
+  await saveObj('jf_group_map:'+id, { scale:0.6, panX:60, panY:30, markers:[] });
+  await saveObj('jf_my_group', { id, name:gname }, false);
+  document.getElementById('gateNameCreate').value=''; document.getElementById('newGroupName').value='';
+  checkGroupGate();
+});
+
+window.joinGroup = async function(groupId){
+  const name = document.getElementById('gateNameJoin').value.trim();
+  if(!name){ alert('أدخل اسمك أولاً قبل الدخول للمجموعة.'); return; }
+  const groups = await loadArr('jf_groups');
+  const g = groups.find(x=>x.id===groupId);
+  if(!g){ alert('هذه المجموعة لم تعد موجودة.'); renderGroupsList(); return; }
+  const u = await myUid();
+  const members = await loadArr('jf_group_members:'+groupId);
+  if(!members.find(m=>m.uid===u)){
+    members.push({ uid:u, name, isLeader:false, canControl:false });
+    await saveArr('jf_group_members:'+groupId, members);
+  }
+  await saveObj('jf_my_group', { id:g.id, name:g.name }, false);
+  checkGroupGate();
 };
 
-window.evaluateNomineeAI = function() {
-    const name = document.getElementById('nomineeCharName').value;
-    if(!name) { alert("أدخل اسم المرشح للتقييم!"); return; }
-    document.getElementById('nominationReason').value = `بناءً على السجلات المرفقة، يظهر العضو ${name} انضباطاً تكتيكياً عالياً وتوافقاً تاماً مع بند السيادة والولاء المطلق. نوصي بالموافقة على الترقية.`;
+window.leaveGroup = async function(){
+  if(!myGroup) return;
+  await saveObj('jf_my_group', null, false);
+  checkGroupGate();
 };
 
-window.generateAIReportSummary = function() {
-    const type = document.getElementById('repType').value;
-    const loc = document.getElementById('repLocation').value || "الموقع المحدد";
-    document.getElementById('repDetails').value = `نحيطكم علماً أنه تم تنفيذ المأمورية بنجاح وهي عبارة عن (${type}) في منطقة (${loc}). تم السيطرة على الموقف بالكامل وتطهير العناصر الخطرة وإحالة المطلوبين إلى وحدة التحقيق.`;
+async function enterGroupView(){
+  document.getElementById('curGroupName').innerText = myGroup.name;
+  if(groupPollTimer) clearInterval(groupPollTimer);
+  await refreshGroupState();
+  groupPollTimer = setInterval(refreshGroupState, 3000);
+}
+
+async function refreshGroupState(){
+  if(!myGroup) return;
+  const u = await myUid();
+  const members = await loadArr('jf_group_members:'+myGroup.id);
+  myMembership = members.find(m=>m.uid===u) || null;
+  if(!myMembership){ // تمت إزالتي أو المجموعة انحذفت
+    await saveObj('jf_my_group', null, false);
+    checkGroupGate();
+    return;
+  }
+  document.getElementById('curMyRole').innerText = myMembership.isLeader ? 'مسؤول المجموعة' : (myMembership.canControl ? 'لديك صلاحية تحكم' : 'مشاهد فقط');
+  document.getElementById('mapPermNote').innerText = (myMembership.isLeader || myMembership.canControl)
+    ? 'اضغط لإضافة دبوس، اسحب للتحريك، عجلة الفأرة للتكبير'
+    : 'أنت في وضع المشاهدة فقط — لا تملك صلاحية التحكم بالخريطة';
+  renderMembers(members);
+
+  const mapState = await loadObj('jf_group_map:'+myGroup.id);
+  if(mapState && !mapDragging){
+    scale = mapState.scale; panX = mapState.panX; panY = mapState.panY;
+    applyTransform();
+    renderPins(mapState.markers||[]);
+  }
+  const viewport = document.getElementById('mapViewport');
+  if(myMembership.isLeader || myMembership.canControl){ viewport.classList.remove('readonly'); }
+  else { viewport.classList.add('readonly'); }
+}
+
+function renderMembers(members){
+  const box = document.getElementById('membersList'); box.innerHTML='';
+  members.forEach(m=>{
+    const row = document.createElement('div'); row.className='member-row';
+    row.innerHTML = `<span class="mname">${m.name}${m.isLeader?'<span class="badge-leader">مسؤول</span>':''}${(!m.isLeader && m.canControl)?'<span class="badge-ctl">تحكم</span>':''}</span>`;
+    if(myMembership && myMembership.isLeader && !m.isLeader){
+      const btn = document.createElement('button');
+      btn.className = 'btn small';
+      btn.innerText = m.canControl ? 'إزالة الصلاحية' : 'منح صلاحية التحكم';
+      btn.onclick = ()=>toggleControl(m.uid);
+      row.appendChild(btn);
+    }
+    box.appendChild(row);
+  });
+}
+
+async function toggleControl(targetUid){
+  const members = await loadArr('jf_group_members:'+myGroup.id);
+  const m = members.find(x=>x.uid===targetUid);
+  if(!m) return;
+  m.canControl = !m.canControl;
+  await saveArr('jf_group_members:'+myGroup.id, members);
+  refreshGroupState();
+}
+
+async function saveMapState(){
+  if(!myGroup) return;
+  const markers = Array.from(document.querySelectorAll('.pin')).map(p=>({ id:p.dataset.id, x:parseFloat(p.dataset.x), y:parseFloat(p.dataset.y), label:p.dataset.label }));
+  await saveObj('jf_group_map:'+myGroup.id, { scale, panX, panY, markers });
+}
+function iHaveControl(){ return myMembership && (myMembership.isLeader || myMembership.canControl); }
+
+window.toggleMapMode = function(){
+  const tac = document.getElementById('tacticalMapWrap');
+  const gta = document.getElementById('gtaMapWrap');
+  const btn = document.getElementById('toggleMapModeBtn');
+  const showingGta = gta.style.display !== 'none';
+  if(showingGta){
+    gta.style.display='none'; tac.style.display='block';
+    btn.innerText = '🌍 عرض خريطة GTA5 الحقيقية';
+  } else {
+    tac.style.display='none'; gta.style.display='block';
+    btn.innerText = '🎯 عرض الخريطة التكتيكية';
+  }
 };
 
-/* ================= 🔥 ربط وقراءة قاعدة البيانات السحابية بالكامل ================= */
-window.saveNewMemberToFirebase = async function() {
-    const no = document.getElementById('newMemNo').value;
-    const name = document.getElementById('newMemName').value;
-    const rank = document.getElementById('newMemRank').value;
-    const unit = document.getElementById('newMemUnit').value;
-
-    if(!no || !name || !rank || !unit) { alert("أكمل جميع حقول العضو!"); return; }
-    try {
-        await addDoc(collection(db, "members"), { no, name, rank, unit, timestamp: Date.now() });
-        clearAllInputs();
-        document.getElementById('addMemberForm').style.display = "none";
-    } catch(e) { console.error(e); }
+/* ===== الخريطة (منطق العرض/التحكم) ===== */
+let scale=0.6, panX=60, panY=30, mapDragging=false, dragStartX=0, dragStartY=0, moved=false;
+const viewport = document.getElementById('mapViewport');
+const inner = document.getElementById('mapInner');
+function applyTransform(){ inner.style.transform = `translate(${panX}px,${panY}px) scale(${scale})`; }
+applyTransform();
+window.zoomMap = function(f){
+  if(!iHaveControl()) return;
+  scale = Math.min(2.5, Math.max(0.3, scale*f)); applyTransform(); saveMapState();
 };
-
-onSnapshot(collection(db, "members"), (snapshot) => {
-    const tbody = document.getElementById('dynamicMembersTable');
-    tbody.innerHTML = "";
-    let count = 13; 
-    snapshot.forEach((docSnap) => {
-        const data = docSnap.data();
-        count++;
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${data.no}</td>
-            <td>${data.name}</td>
-            <td>${data.rank}</td>
-            <td>${data.unit}</td>
-            <td><button class="delete-table-btn" onclick="deleteRecord('members', '${docSnap.id}')">شطب</button></td>
-        `;
-        tbody.appendChild(tr);
-    });
-    document.getElementById('statMembersCount').innerText = count;
-});
-
-document.getElementById('addWanted').addEventListener('click', async () => {
-    const name = document.getElementById('wantedName').value;
-    const crime = document.getElementById('wantedCrime').value;
-    if(!name || !crime) return;
-    await addDoc(collection(db, "wanted"), { name, crime });
-    clearAllInputs();
-});
-
-onSnapshot(collection(db, "wanted"), (snapshot) => {
-    const list = document.getElementById('wantedList');
-    list.innerHTML = "";
-    snapshot.forEach((docSnap) => {
-        const data = docSnap.data();
-        const div = document.createElement('div');
-        div.className = "item-card";
-        div.innerHTML = `
-            <h4>🎯 المستهدف: ${data.name}</h4>
-            <p>🚨 تصنيف الجرم: ${data.crime}</p>
-            <button class="delete-table-btn" style="margin-top:8px;" onclick="deleteRecord('wanted', '${docSnap.id}')">تم القبض</button>
-        `;
-        list.appendChild(div);
-    });
-});
-
-document.getElementById('addMission').addEventListener('click', async () => {
-    const title = document.getElementById('missionTitle').value;
-    const leader = document.getElementById('missionLeader').value;
-    const members = document.getElementById('missionMembers').value;
-    const status = document.getElementById('missionStatus').value;
-    const desc = document.getElementById('missionDesc').value;
-
-    if(!title || !leader) return;
-    await addDoc(collection(db, "missions"), { title, leader, members, status, desc });
-    clearAllInputs();
-});
-
-onSnapshot(collection(db, "missions"), (snapshot) => {
-    const list = document.getElementById('missionsList');
-    list.innerHTML = "";
-    snapshot.forEach((docSnap) => {
-        const data = docSnap.data();
-        const div = document.createElement('div');
-        div.className = "item-card";
-        div.innerHTML = `
-            <h4>🎬 المهمة: ${data.title}</h4>
-            <p>👮 القائد: ${data.leader} | الحالة: <b>${data.status}</b></p>
-            <p>📝 تفاصيل: ${data.desc}</p>
-            <button class="delete-table-btn" style="margin-top:8px;" onclick="deleteRecord('missions', '${docSnap.id}')">أرشفة</button>
-        `;
-        list.appendChild(div);
-    });
-});
-
-document.getElementById('addNomination').addEventListener('click', async () => {
-    const name = document.getElementById('nomineeCharName').value;
-    const rank = document.getElementById('nomineeCurrentRank').value;
-    const sector = document.getElementById('nomineeSector').value;
-    const reason = document.getElementById('nominationReason').value;
-
-    if(!name || !rank) return;
-    await addDoc(collection(db, "nominations"), { name, rank, sector, reason });
-    clearAllInputs();
-});
-
-onSnapshot(collection(db, "nominations"), (snapshot) => {
-    const list = document.getElementById('nominationsList');
-    list.innerHTML = "";
-    snapshot.forEach((docSnap) => {
-        const data = docSnap.data();
-        const div = document.createElement('div');
-        div.className = "item-card";
-        div.innerHTML = `
-            <h4>🎖️ المرشح: ${data.name}</h4>
-            <p>الطلب: ${data.rank} | المسببات: ${data.reason}</p>
-            <button class="delete-table-btn" onclick="deleteRecord('nominations', '${docSnap.id}')">إغلاق الملف</button>
-        `;
-        list.appendChild(div);
-    });
-});
-
-document.getElementById('saveReportBtn').addEventListener('click', async () => {
-    const repId = document.getElementById('repId').value;
-    const date = document.getElementById('repDate').value;
-    const time = document.getElementById('repTime').value;
-    const leader = document.getElementById('repLeader').value;
-    const members = document.getElementById('repMembers').value;
-    const type = document.getElementById('repType').value;
-    const location = document.getElementById('repLocation').value;
-    const details = document.getElementById('repDetails').value;
-    const isSecret = document.getElementById('secretReport').checked;
-
-    if(!repId || !leader) { alert("أكمل البيانات الحسابية!"); return; }
-    await addDoc(collection(db, "reports"), { repId, date, time, leader, members, type, location, details, isSecret });
-    clearAllInputs();
-    alert("🚀 تم حفظ التقرير بسيرفر المنصة بنجاح.");
-});
-
-onSnapshot(collection(db, "reports"), (snapshot) => {
-    const normalCont = document.getElementById('normalReportsContainer');
-    const secretCont = document.getElementById('secretReportsContainer');
-    normalCont.innerHTML = "";
-    secretCont.innerHTML = "";
-
-    snapshot.forEach((docSnap) => {
-        const data = docSnap.data();
-        const div = document.createElement('div');
-        div.className = "item-card";
-        div.innerHTML = `
-            <h4>📄 تقرير: ${data.repId} (${data.type})</h4>
-            <p>📝 المضمون والتفاصيل: ${data.details}</p>
-            <button class="delete-table-btn" onclick="deleteRecord('reports', '${docSnap.id}')">إتلاف مستندي</button>
-        `;
-        if(data.isSecret) {
-            div.style.borderRight = "3px solid var(--danger)";
-            secretCont.appendChild(div);
-        } else {
-            normalCont.appendChild(div);
-        }
-    });
-});
-
-window.deleteRecord = async function(collectionName, id) {
-    const code = prompt("🔒 أدخل رمز الأمان الموحد للحذف:");
-    if(code === GLOBAL_SECURITY_CODE) {
-        try { await deleteDoc(doc(db, collectionName, id)); } catch(e) { console.error(e); }
-    } else { alert("❌ الرمز خاطئ!"); }
+window.resetMap = function(){
+  if(!iHaveControl()) return;
+  scale=0.6; panX=60; panY=30; applyTransform(); saveMapState();
 };
+viewport.addEventListener('wheel', (e)=>{
+  if(!iHaveControl()) return;
+  e.preventDefault(); window.zoomMap(e.deltaY<0?1.1:0.9);
+});
+viewport.addEventListener('mousedown', (e)=>{
+  if(!iHaveControl()) return;
+  mapDragging=true; moved=false; dragStartX=e.clientX-panX; dragStartY=e.clientY-panY; viewport.classList.add('dragging');
+});
+window.addEventListener('mousemove', (e)=>{ if(!mapDragging) return; moved=true; panX=e.clientX-dragStartX; panY=e.clientY-dragStartY; applyTransform(); });
+window.addEventListener('mouseup', async (e)=>{
+  if(!iHaveControl()){ mapDragging=false; return; }
+  if(mapDragging && !moved){
+    const rect = viewport.getBoundingClientRect();
+    const x = (e.clientX-rect.left-panX)/scale;
+    const y = (e.clientY-rect.top-panY)/scale;
+    const label = prompt('اسم الدبوس:');
+    if(label){
+      const mapState = await loadObj('jf_group_map:'+myGroup.id) || { scale, panX, panY, markers:[] };
+      mapState.markers = mapState.markers || [];
+      mapState.markers.push({ id:uid(), x, y, label });
+      mapState.scale = scale; mapState.panX = panX; mapState.panY = panY;
+      await saveObj('jf_group_map:'+myGroup.id, mapState);
+      renderPins(mapState.markers);
+    }
+  } else if(mapDragging){
+    saveMapState();
+  }
+  mapDragging=false; viewport.classList.remove('dragging');
+});
+function renderPins(markers){
+  document.querySelectorAll('.pin').forEach(p=>p.remove());
+  (markers||[]).forEach(d=>{
+    const pin = document.createElement('div'); pin.className='pin';
+    pin.style.left = d.x+'px'; pin.style.top = d.y+'px';
+    pin.dataset.id=d.id; pin.dataset.x=d.x; pin.dataset.y=d.y; pin.dataset.label=d.label;
+    pin.innerHTML = `📍<span class="pin-label">${d.label}</span>`;
+    pin.title = iHaveControl() ? 'اضغط ضغطتين للحذف' : d.label;
+    pin.ondblclick = async ()=>{
+      if(!iHaveControl()) return;
+      const mapState = await loadObj('jf_group_map:'+myGroup.id);
+      if(!mapState) return;
+      mapState.markers = (mapState.markers||[]).filter(i=>i.id!==d.id);
+      await saveObj('jf_group_map:'+myGroup.id, mapState);
+      renderPins(mapState.markers);
+    };
+    inner.appendChild(pin);
+  });
+}
+
+/* ===== تحميل أولي ===== */
+(async function init(){
+  if(typeof window.storage === 'undefined'){
+    const warn = document.createElement('div');
+    warn.style.cssText = 'background:#3a1414; border:1px solid var(--crimson-light); color:#f0b8b6; padding:12px 16px; font-size:12.5px; text-align:center;';
+    warn.innerText = '⚠️ ميزات المجموعات والحفظ المشترك لن تعمل الآن — هذا الملف مفتوح خارج بيئة Claude (كملف محلي). لتشتغل الميزات لازم فتح نفس رابط الأداة من داخل محادثة Claude، وليس تنزيل الملف وفتحه من الجهاز مباشرة.';
+    document.body.insertBefore(warn, document.body.firstChild);
+  }
+  await renderOps(); await renderWanted(); await renderUpcoming(); await renderDist(); await renderInvest();
+})();
 </script>
 </body>
 </html>
